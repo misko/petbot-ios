@@ -1,15 +1,21 @@
-//
-//  ViewController.h
-//  petbot
-//
-//  Created by Misko Dzamba on 2016-04-13.
-//  Copyright © 2016 PetBot. All rights reserved.
-//
+//#import <UIKit/UIKit.h>
+#import "GStreamerBackendDelegate.h"
 
-#import <UIKit/UIKit.h>
+@interface ViewController : UIViewController <GStreamerBackendDelegate> {
+    IBOutlet UILabel *message_label;
+    IBOutlet UIBarButtonItem *play_button;
+    IBOutlet UIBarButtonItem *pause_button;
+    IBOutlet UIView *video_view;
+    IBOutlet UIView *video_container_view;
+    IBOutlet NSLayoutConstraint *video_width_constraint;
+    IBOutlet NSLayoutConstraint *video_height_constraint;
+}
 
-@interface ViewController : UIViewController
+-(IBAction) play:(id)sender;
+-(IBAction) pause:(id)sender;
 
+/* From GStreamerBackendDelegate */
+-(void) gstreamerInitialized;
+-(void) gstreamerSetUIMessage:(NSString *)message;
 
 @end
-

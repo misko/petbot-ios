@@ -1,0 +1,25 @@
+-add tcp_utils.c/h nice.c/h
+-add libcrypto.a/libssl.a 
+-add libstdc++.6.tbd
+-add Gstreamer framework
+-add libiconv.2.tbd
+-add UIKIT,Foundation
+-add coregraphics
+-add Build Settings -> APPLE LLVM custom compiler flags -DPBSSL,-DPBTHREADS
+-add search paths 
+	always search user paths -> Yes
+	Framework Search Paths 
+		~/Library/Developer/GStreamer/iPhone.sdk
+		"$(SYSTEM_APPS_DIR)/Xcode.app/Contents/Developer/Library/Frameworks"
+		$(LOCAL_LIBRARY_DIR)/Frameworks
+	Header search paths
+		"~/Library/Developer/GStreamer/iPhone.sdk/GStreamer.framework/Headers"
+	Library search paths
+		/Users/miskodzamba/research/petbot/petbot_2015/openssl-1.0.2f-iOS/lib
+	User header search paths
+		/Users/miskodzamba/research/petbot/petbot_2015/openssl-1.0.2f-iOS/include
+-set C++ standard library to libstdc++ GNU c++ standard
+-add linker flags
+	-lresolv
+
+	
