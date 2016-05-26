@@ -12,6 +12,8 @@
 #include <openssl/pem.h>
 #include <openssl/ssl.h>
 
+char * pbhost = "159.203.252.147";
+
 GST_DEBUG_CATEGORY_STATIC (debug_category);
 #define GST_CAT_DEFAULT debug_category
 
@@ -138,9 +140,19 @@ static void state_changed_cb (GstBus *bus, GstMessage *msg, GStreamerBackend *se
 /* Main method for the bus monitoring code */
 -(void) app_function
 {
+    /* Create our own GLib Main Context and make it the default one */
+    context = g_main_context_new ();
+    g_main_context_push_thread_default(context);
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        GST_DEBUG ("Entering main loop...");
+        main_loop = g_main_loop_new (NULL, FALSE);
+        g_main_loop_run (main_loop);
+        GST_DEBUG ("Exited main loop");
+    });
 
     //load up the nice connection here
-    char * host = "petbot.ca";
+    //char * host = "petbot.ca";
     int port = 8888;
     char * key = "petbot1";
 
@@ -151,21 +163,19 @@ static void state_changed_cb (GstBus *bus, GstMessage *msg, GStreamerBackend *se
     OpenSSL_add_ssl_algorithms();
     SSL_load_error_strings();
     ctx = SSL_CTX_new (SSLv23_client_method());
-    pbs = connect_to_server_with_key(host,port,ctx,key);
+    pbs = connect_to_server_with_key(pbhost,port,ctx,key);
 #else
-    pbs = connect_to_server_with_key(host,port,key);
+    pbs = connect_to_server_with_key(pbhost,port,key);
 #endif
     
     start_nice(pbs);
-    
+
     GstBus *bus;
     GSource *bus_source;
 
     GST_DEBUG ("Creating pipeline");
 
-    /* Create our own GLib Main Context and make it the default one */
-    context = g_main_context_new ();
-    g_main_context_push_thread_default(context);
+    
     
     /* Build pipeline */
     GstElement *nicesrc, *rtph264depay, *avdec_h264, *videoconvert, *autovideosink;
@@ -227,26 +237,26 @@ static void state_changed_cb (GstBus *bus, GstMessage *msg, GStreamerBackend *se
     bus = gst_element_get_bus (pipeline);
     bus_source = gst_bus_create_watch (bus);
     g_source_set_callback (bus_source, (GSourceFunc) gst_bus_async_signal_func, NULL, NULL);
-    g_source_attach (bus_source, context);
+    g_source_attach (bus_source, NULL);
     g_source_unref (bus_source);
     g_signal_connect (G_OBJECT (bus), "message::error", (GCallback)error_cb, (__bridge void *)self);
     g_signal_connect (G_OBJECT (bus), "message::state-changed", (GCallback)state_changed_cb, (__bridge void *)self);
     gst_object_unref (bus);
     
     /* Create a GLib Main Loop and set it to run */
-    GST_DEBUG ("Entering main loop...");
-    main_loop = g_main_loop_new (context, FALSE);
+    //GST_DEBUG ("Entering main loop...");
+    //main_loop = g_main_loop_new (context, FALSE);
     [self check_initialization_complete];
     g_main_loop_run (main_loop);
-    GST_DEBUG ("Exited main loop");
-    g_main_loop_unref (main_loop);
-    main_loop = NULL;
+    //GST_DEBUG ("Exited main loop");
+    //g_main_loop_unref (main_loop);
+    //main_loop = NULL;
     
     /* Free resources */
-    g_main_context_pop_thread_default(context);
-    g_main_context_unref (context);
-    gst_element_set_state (pipeline, GST_STATE_NULL);
-    gst_object_unref (pipeline);
+    //g_main_context_pop_thread_default(context);
+    //g_main_context_unref (context);
+    //gst_element_set_state (pipeline, GST_STATE_NULL);
+    //gst_object_unref (pipeline);
     
     return;
 }

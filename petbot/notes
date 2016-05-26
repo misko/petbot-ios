@@ -21,5 +21,10 @@
 -set C++ standard library to libstdc++ GNU c++ standard
 -add linker flags
 	-lresolv
+-Build Options - > enable bit code -> no
+-Deployment ios deployment target -> ios7.0
+-Linker flags
+	-lresolv -lstdc++ -framework CoreFoundation -framework Foundation -framework AVFoundation -framework CoreMedia -framework CoreVideo -framework CoreAudio -framework AudioToolbox -framework OpenGLES -framework AssetsLibrary -framework QuartzCore -framework AssetsLibrary -weak_framework VideoToolBox
+
 
 	

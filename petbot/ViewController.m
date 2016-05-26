@@ -23,8 +23,8 @@
     pause_button.enabled = FALSE;
     
     /* Make these constant for now, later tutorials will change them */
-    media_width = 320;
-    media_height = 240;
+    media_width = 640;
+    media_height = 480;
 
     gst_backend = [[GStreamerBackend alloc] init:self videoView:video_view];
 }
@@ -83,5 +83,7 @@
         message_label.text = message;
     });
 }
+
+
 
 @end

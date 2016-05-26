@@ -123,7 +123,7 @@ void *keep_alive_handler(void * v ) {
 			//other side disconnected!
 			assert(pbs->state!=PBSOCK_CONNECTED);
 			//TODO CALL A HANDLER? SEND A SIGNAL? UNLOCK A MUTEX?
-			break;
+			//break;
 		} else {
 			fprintf(stderr,"SENT KEEP ALIVE!\n");
 		}	

@@ -2,6 +2,8 @@
 #import <UIKit/UIKit.h>
 #import "GStreamerBackendDelegate.h"
 
+
+
 @interface GStreamerBackend : NSObject
 
 /* Initialization method. Pass the delegate that will take care of the UI.

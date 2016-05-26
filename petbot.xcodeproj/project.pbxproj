@@ -29,6 +29,7 @@
 		CC2448C51CC6D9240036CEB3 /* gst_ios_init.m in Sources */ = {isa = PBXBuildFile; fileRef = CC2448BE1CC6D9240036CEB3 /* gst_ios_init.m */; };
 		CC2448C61CC6D9240036CEB3 /* GStreamerBackend.m in Sources */ = {isa = PBXBuildFile; fileRef = CC2448C01CC6D9240036CEB3 /* GStreamerBackend.m */; };
 		CC2448C71CC6D9240036CEB3 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CC2448C31CC6D9240036CEB3 /* ViewController.m */; };
+		CCE22D531CE12ED30096CA68 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CCE22D521CE12ED30096CA68 /* LoginViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -87,6 +88,8 @@
 		CC2448C11CC6D9240036CEB3 /* GStreamerBackendDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GStreamerBackendDelegate.h; sourceTree = "<group>"; };
 		CC2448C21CC6D9240036CEB3 /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		CC2448C31CC6D9240036CEB3 /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		CCE22D511CE12ED30096CA68 /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LoginViewController.h; path = ../LoginViewController.h; sourceTree = "<group>"; };
+		CCE22D521CE12ED30096CA68 /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LoginViewController.m; path = ../LoginViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -154,6 +157,8 @@
 		CC23F8571CBEDA4B00EA0E62 /* petbot */ = {
 			isa = PBXGroup;
 			children = (
+				CCE22D511CE12ED30096CA68 /* LoginViewController.h */,
+				CCE22D521CE12ED30096CA68 /* LoginViewController.m */,
 				CC2448B91CC6D7CE0036CEB3 /* notes */,
 				CC23F88B1CC5FCE100EA0E62 /* nice.c */,
 				CC23F88C1CC5FCE100EA0E62 /* nice.h */,
@@ -342,6 +347,7 @@
 				CC2448C71CC6D9240036CEB3 /* ViewController.m in Sources */,
 				CC2448C51CC6D9240036CEB3 /* gst_ios_init.m in Sources */,
 				CC2448C61CC6D9240036CEB3 /* GStreamerBackend.m in Sources */,
+				CCE22D531CE12ED30096CA68 /* LoginViewController.m in Sources */,
 				CC23F88F1CC5FCE100EA0E62 /* nice.c in Sources */,
 				CC23F8901CC5FCE100EA0E62 /* tcp_utils.c in Sources */,
 				CC23F85A1CBEDA4B00EA0E62 /* main.m in Sources */,

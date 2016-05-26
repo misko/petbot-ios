@@ -11,4 +11,5 @@
  * to the screen. */
 -(void) gstreamerSetUIMessage:(NSString *)message;
 
+
 @end
