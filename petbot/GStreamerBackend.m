@@ -12,7 +12,6 @@
 #include <openssl/pem.h>
 #include <openssl/ssl.h>
 
-char * pbhost = "159.203.252.147";
 
 GST_DEBUG_CATEGORY_STATIC (debug_category);
 #define GST_CAT_DEFAULT debug_category
@@ -31,30 +30,127 @@ GST_DEBUG_CATEGORY_STATIC (debug_category);
     GMainLoop *main_loop;  /* GLib main loop */
     gboolean initialized;  /* To avoid informing the UI multiple times about the initialization */
     UIView *ui_video_view; /* UIView that holds the video */
+    NSDictionary * loginInfo;
+    const char * pubsubserver_secret;
+    const char * pubsubserver_server;
+    const char * pubsubserver_username;
+    const char * pubsubserver_protocol;
+    int pubsubserver_port;
+    pbsock * pbs;
+    NSString * petbot_state; //connecting, ice_request, ice_negotiate, streaming, logoff
 }
+
+-(void) listenForEvents {
+    pbmsg * m = recv_pbmsg(pbs);
+    if ((m->pbmsg_type ^  (PBMSG_EVENT | PBMSG_RESPONSE_SUCCESS | PBMSG_ICE_EVENT))==0) {
+        fprintf(stderr,"GOT A ICE RESPONSE BACK!\n");
+        [self ice_negotiate:m];
+    }
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [self listenForEvents];
+    });
+}
+
+-(void) connect {
+    fprintf(stderr, "pbstate: Connecting...");
+#ifdef PBSSL
+    SSL_CTX* ctx;
+    OpenSSL_add_ssl_algorithms();
+    SSL_load_error_strings();
+    ctx = SSL_CTX_new (SSLv23_client_method());
+    pbs = connect_to_server_with_key(pubsubserver_server,pubsubserver_port,ctx,pubsubserver_secret);
+#else
+    pbs = connect_to_server_with_key(pbhost,port,key);
+#endif
+    if (pbs==NULL) {
+        //TODO error handling!!!!
+        exit(1);
+    }
+    
+    //start up the listener
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [self listenForEvents];
+    });
+    
+    start_nice_thread();
+    
+    petbot_state = @"pbstate: ice_request";
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [self ice_request];
+    });
+}
+
+-(void) ice_request {
+    pbmsg * ice_request_m = make_ice_request();
+    fprintf(stderr,"make the ice request!\n");
+    send_pbmsg(pbs, ice_request_m);
+    fprintf(stderr,"made the ice request\n");
+}
+
+-(void) ice_negotiate:(pbmsg *)m {
+    recvd_ice_response(m);
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [self app_function];
+    });
+    fprintf(stderr,"LAUNCHED APP FUNCTION\n");
+}
+
 
 /*
  * Interface methods
  */
 
--(id) init:(id) uiDelegate videoView:(UIView *)video_view
+-(id) init:(id) uiDelegate videoView:(UIView *)video_view serverInfo:(NSDictionary *)loginInfo
 {
+    petbot_state = @"connecting";
+    //TODO check for errors here?
+    self->loginInfo=loginInfo;
+    pubsubserver_port = [[self->loginInfo objectForKey:@"port"] intValue];
+    pubsubserver_secret = [[self->loginInfo objectForKey:@"secret"] UTF8String];
+    pubsubserver_server = [[self->loginInfo objectForKey:@"server"] UTF8String];
+    pubsubserver_username = [[self->loginInfo objectForKey:@"username"] UTF8String];
     if (self = [super init])
     {
+        
         self->ui_delegate = uiDelegate;
         self->ui_video_view = video_view;
-
+        
         GST_DEBUG_CATEGORY_INIT (debug_category, "tutorial-3", 0, "iOS tutorial 3");
         gst_debug_set_threshold_for_name("tutorial-3", GST_LEVEL_DEBUG);
-
+        
+        
         /* Start the bus monitoring task */
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            [self app_function];
+            [self init_glib];
         });
+        
+        /* Start the bus monitoring task */
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            [self connect];
+        });
+        
+        
+
     }
 
     return self;
 }
+
+-(void) init_glib {
+    /* Create our own GLib Main Context and make it the default one */
+    context = g_main_context_new ();
+    g_main_context_push_thread_default(context);
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        GST_DEBUG ("Entering main loop...");
+        main_loop = g_main_loop_new (NULL, FALSE);
+        g_main_loop_run (main_loop);
+        GST_DEBUG ("Exited main loop");
+    });
+    fprintf(stderr,"Glib loop started\n");
+}
+
 
 -(void) dealloc
 {
@@ -140,35 +236,7 @@ static void state_changed_cb (GstBus *bus, GstMessage *msg, GStreamerBackend *se
 /* Main method for the bus monitoring code */
 -(void) app_function
 {
-    /* Create our own GLib Main Context and make it the default one */
-    context = g_main_context_new ();
-    g_main_context_push_thread_default(context);
-    
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        GST_DEBUG ("Entering main loop...");
-        main_loop = g_main_loop_new (NULL, FALSE);
-        g_main_loop_run (main_loop);
-        GST_DEBUG ("Exited main loop");
-    });
 
-    //load up the nice connection here
-    //char * host = "petbot.ca";
-    int port = 8888;
-    char * key = "petbot1";
-
-    pbsock * pbs=NULL;
-
-#ifdef PBSSL
-    SSL_CTX* ctx;
-    OpenSSL_add_ssl_algorithms();
-    SSL_load_error_strings();
-    ctx = SSL_CTX_new (SSLv23_client_method());
-    pbs = connect_to_server_with_key(pbhost,port,ctx,key);
-#else
-    pbs = connect_to_server_with_key(pbhost,port,key);
-#endif
-    
-    start_nice(pbs);
 
     GstBus *bus;
     GSource *bus_source;

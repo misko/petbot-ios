@@ -1,23 +1,36 @@
 #import "ViewController.h"
 #import "GStreamerBackend.h"
 
+
+#include "tcp_utils.h"
+#include "nice.h"
+
 @interface ViewController () {
     GStreamerBackend *gst_backend;
     int media_width;
     int media_height;
+    NSDictionary * loginArray;
+    pbsock * pbs ;
 }
 
 @end
 
 @implementation ViewController
 
+
 /*
  * Methods from UIViewController
  */
 
+-(void)setLoginArray:(NSDictionary *)dictionary {
+    NSLog(@"Someone called login array");
+    loginArray = dictionary;
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
     
     play_button.enabled = FALSE;
     pause_button.enabled = FALSE;
@@ -26,7 +39,7 @@
     media_width = 640;
     media_height = 480;
 
-    gst_backend = [[GStreamerBackend alloc] init:self videoView:video_view];
+    gst_backend = [[GStreamerBackend alloc] init:self videoView:video_view serverInfo:[loginArray objectForKey:@"pubsubserver"]];
 }
 
 - (void)didReceiveMemoryWarning

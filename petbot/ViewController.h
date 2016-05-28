@@ -17,5 +17,6 @@
 /* From GStreamerBackendDelegate */
 -(void) gstreamerInitialized;
 -(void) gstreamerSetUIMessage:(NSString *)message;
+-(void) setLoginArray:(NSDictionary *)dictionary;
 
 @end

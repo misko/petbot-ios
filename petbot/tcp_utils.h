@@ -87,21 +87,21 @@ pbsock_state pbsock_wait_state(pbsock * pbs);
 
 #ifdef PBSSL
 pbsock* new_pbsock(int client_sock, SSL_CTX* ctx, int accept);
-pbsock* connect_to_server_with_key(char * hostname, int portno, SSL_CTX*ctx, char * key);
-pbsock* connect_to_server(char * hostname, int portno, SSL_CTX* ctx);
+pbsock* connect_to_server_with_key(const char * hostname, int portno, SSL_CTX*ctx, const char * key);
+pbsock* connect_to_server(const char * hostname, int portno, SSL_CTX* ctx);
 #else
 pbsock* new_pbsock(int client_sock);
-pbsock* connect_to_server_with_key(char * hostname, int portno, char * key);
-pbsock* connect_to_server(char * hostname, int portno);
+pbsock* connect_to_server_with_key(const char * hostname, int portno, const char * key);
+pbsock* connect_to_server(const char * hostname, int portno);
 #endif
 
 extern char * bb_new_user;
 
 void free_pbmsg(pbmsg * m);
 pbmsg * new_pbmsg();
-pbmsg * new_pbmsg_from_str(char *s);
-pbmsg * new_pbmsg_from_file(char *s);
-int pbmsg_to_file(pbmsg * m, char * fn);
+pbmsg * new_pbmsg_from_str(const char *s);
+pbmsg * new_pbmsg_from_file(const char *s);
+int pbmsg_to_file(pbmsg * m, const char * fn);
 //Send / recv pbmsg over pbsock
 pbmsg * recv_pbmsg(pbsock * pbs);
 size_t send_pbmsg(pbsock *, pbmsg *m);
@@ -109,6 +109,6 @@ size_t send_pbmsg(pbsock *, pbmsg *m);
 pbmsg * recv_fd_pbmsg(int fd);
 size_t send_fd_pbmsg(int fd, pbmsg *m);
 
-char * read_file(char *fn, size_t * len);
-int write_file(char *fn , char * buffer, size_t len);
+char * read_file(const char *fn, size_t * len);
+int write_file(const char *fn , char * buffer, size_t len);
 #endif

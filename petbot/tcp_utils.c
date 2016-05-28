@@ -31,20 +31,20 @@
 
 #ifdef PBSSL
 pbsock * new_pbsock(int client_sock, SSL_CTX* ctx, int accept);
-pbsock* connect_to_server_with_key(char * hostname, int portno, SSL_CTX*ctx, char * key);
-pbsock* connect_to_server(char * hostname, int portno, SSL_CTX* ctx);
+pbsock* connect_to_server_with_key(const char * hostname, int portno, SSL_CTX*ctx, const char * key);
+pbsock* connect_to_server(const char * hostname, int portno, SSL_CTX* ctx);
 #else
 pbsock * new_pbsock(int client_sock);
-pbsock* connect_to_server_with_key(char * hostname, int portno, char * key);
-pbsock* connect_to_server(char * hostname, int portno);
+pbsock* connect_to_server_with_key(const char * hostname, int portno, const char * key);
+pbsock* connect_to_server(const char * hostname, int portno);
 #endif
 
 
 #ifdef PBSSL
-pbsock * connect_to_server_with_key(char * hostname, int portno, SSL_CTX* ctx, char * key) {
+pbsock * connect_to_server_with_key(const char * hostname, int portno, SSL_CTX* ctx, const char * key) {
 	pbsock *pbs = connect_to_server(hostname,portno,ctx);
 #else
-pbsock * connect_to_server_with_key(char * hostname, int portno, char * key) {
+pbsock * connect_to_server_with_key(const char * hostname, int portno, const char * key) {
 	pbsock *pbs = connect_to_server(hostname,portno);
 #endif
 	if (pbs==NULL ){
@@ -58,9 +58,9 @@ pbsock * connect_to_server_with_key(char * hostname, int portno, char * key) {
 }
 
 #ifdef PBSSL
-pbsock* connect_to_server(char * hostname, int portno, SSL_CTX* ctx) {
+pbsock* connect_to_server(const char * hostname, int portno, SSL_CTX* ctx) {
 #else
-pbsock* connect_to_server(char * hostname, int portno) {
+pbsock* connect_to_server(const char * hostname, int portno) {
 #endif
     /* socket: create the socket */
     int sockfd = socket(AF_INET, SOCK_STREAM, 0);
@@ -309,7 +309,7 @@ pbmsg * new_pbmsg() {
 	return m;
 }
 
-pbmsg * new_pbmsg_from_str(char * s) {
+pbmsg * new_pbmsg_from_str(const char * s) {
 	pbmsg * m = new_pbmsg();
 	m->pbmsg_len=strlen(s)+1;
 	m->pbmsg=strdup(s);
@@ -483,7 +483,7 @@ size_t send_fd_pbmsg(int fd, pbmsg * m) {
 
 
 //some basic file ops
-char * read_file(char *fn, size_t * len) {
+char * read_file(const char *fn, size_t * len) {
 	fprintf(stderr,"READING A FILE!, |%s|\n",fn); 
 	FILE * fptr = fopen(fn, "rb");
 	if (!fptr) {
@@ -502,11 +502,14 @@ char * read_file(char *fn, size_t * len) {
 		return NULL;
 	}
 	size_t r = fread(buffer, *len, 1, fptr);
+	if (r!=1) {
+		fprintf(stderr,"Errror in reading file?\n");
+	}
 	fclose(fptr);
 	return buffer;
 }
 
-int write_file(char *fn , char * buffer, size_t len) {
+int write_file(const char *fn , char * buffer, size_t len) {
 	//Open file
 	FILE *fptr = fopen(fn, "wb");
 	if (!fptr) {
@@ -519,7 +522,7 @@ int write_file(char *fn , char * buffer, size_t len) {
 }
 
 
-pbmsg * new_pbmsg_from_file(char * fn) {
+pbmsg * new_pbmsg_from_file(const char * fn) {
 	size_t len=0; 
 	char * data = read_file(fn,&len);
 	if (data==NULL) {
@@ -533,7 +536,7 @@ pbmsg * new_pbmsg_from_file(char * fn) {
 	return m;
 }
 
-int pbmsg_to_file(pbmsg *m , char * fn) {
+int pbmsg_to_file(pbmsg *m , const char * fn) {
 	int ret = write_file(fn, m->pbmsg, m->pbmsg_len);
 	return ret;
 }

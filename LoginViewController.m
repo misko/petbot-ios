@@ -7,12 +7,17 @@
 //
 
 #import "LoginViewController.h"
+#import "ViewController.h"
 
-@interface LoginViewController ()
+
+@interface LoginViewController () {
+NSDictionary * loginArray;
+}
 
 @end
 
 @implementation LoginViewController
+
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -24,6 +29,15 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if ([[segue identifier] isEqualToString:@"streamSegue"]) {
+        ViewController * vc = [segue destinationViewController];
+        [vc setLoginArray:loginArray];
+        //ViewController.user = [self.users objectInListAtIndex:[self.tableView indexPathForSelectedRow].row];
+    }
+}
+
 - (IBAction)loginPressed:(id)sender {
     //TODO should be ASYNC!!
     
@@ -58,16 +72,17 @@
         else
         {
             NSLog(@"%@", [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
-            NSDictionary* dictionary = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
-            NSLog(@"Statuses: %@", dictionary[@"status"]);
-            NSNumber *status = dictionary[@"status"];
+            loginArray = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
+            NSLog(@"Statuses: %@", loginArray[@"status"]);
+            NSNumber *status = loginArray[@"status"];
             if ([status isEqual:@0]) {
                 fprintf(stderr,"Not logged in!");
             } else {
                 fprintf(stderr,"Logged in!");
+                
                 [self performSegueWithIdentifier:@"streamSegue" sender:self];
             }
-            for (NSArray *aDay in dictionary){
+            for (NSArray *aDay in loginArray){
                 //Do something
                 NSLog(@"Array: %@", aDay);
             }
