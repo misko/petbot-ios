@@ -32,8 +32,6 @@
     [super viewDidLoad];
     
     
-    play_button.enabled = FALSE;
-    pause_button.enabled = FALSE;
     
     /* Make these constant for now, later tutorials will change them */
     media_width = 640;
@@ -48,17 +46,6 @@
     // Dispose of any resources that can be recreated.
 }
 
-/* Called when the Play button is pressed */
--(IBAction) play:(id)sender
-{
-    [gst_backend play];
-}
-
-/* Called when the Pause button is pressed */
--(IBAction) pause:(id)sender
-{
-    [gst_backend pause];
-}
 
 - (void)viewDidLayoutSubviews
 {
@@ -84,8 +71,6 @@
 -(void) gstreamerInitialized
 {
     dispatch_async(dispatch_get_main_queue(), ^{
-        play_button.enabled = TRUE;
-        pause_button.enabled = TRUE;
         message_label.text = @"Ready";
     });
 }

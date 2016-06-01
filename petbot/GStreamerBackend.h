@@ -11,10 +11,5 @@
  * Pass also the UIView object that will hold the video window. */
 -(id) init:(id) uiDelegate videoView:(UIView*) video_view serverInfo:(NSDictionary *)loginInfo;
 
-/* Set the pipeline to PLAYING */
--(void) play;
-
-/* Set the pipeline to PAUSED */
--(void) pause;
 
 @end

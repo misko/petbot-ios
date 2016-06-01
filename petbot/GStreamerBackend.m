@@ -292,7 +292,10 @@ static void state_changed_cb (GstBus *bus, GstMessage *msg, GStreamerBackend *se
     }*/
 
     /* Set the pipeline to READY, so it can already accept a window handle */
-    gst_element_set_state(pipeline, GST_STATE_READY);
+    //gst_element_set_state(pipeline, GST_STATE_READY);
+    if(gst_element_set_state(pipeline, GST_STATE_PLAYING) == GST_STATE_CHANGE_FAILURE) {
+        [self setUIMessage:"Failed to set pipeline to playing"];
+    }
     
     video_sink = gst_bin_get_by_interface(GST_BIN(pipeline), GST_TYPE_VIDEO_OVERLAY);
     if (!video_sink) {

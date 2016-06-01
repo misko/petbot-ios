@@ -59,11 +59,11 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rz3-DE-1dW" userLabel="VideoContainer">
+                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rz3-DE-1dW" userLabel="VideoContainer">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="539"/>
                                 <subviews>
-                                    <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Th9-8M-pM3" userLabel="Video" customClass="EaglUIView">
-                                        <rect key="frame" x="0.0" y="0.0" width="600" height="539"/>
+                                    <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Th9-8M-pM3" userLabel="Video" customClass="EaglUIView">
+                                        <rect key="frame" x="0.0" y="0.0" width="600" height="571"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="539" id="Uo7-xJ-aVF"/>
@@ -73,6 +73,8 @@
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
+                                    <constraint firstItem="Th9-8M-pM3" firstAttribute="width" secondItem="rz3-DE-1dW" secondAttribute="width" id="2kF-1v-HN3"/>
+                                    <constraint firstItem="Th9-8M-pM3" firstAttribute="height" secondItem="rz3-DE-1dW" secondAttribute="height" id="DBw-gC-ayx"/>
                                     <constraint firstItem="Th9-8M-pM3" firstAttribute="centerY" secondItem="rz3-DE-1dW" secondAttribute="centerY" id="arc-Ym-626"/>
                                     <constraint firstItem="Th9-8M-pM3" firstAttribute="centerX" secondItem="rz3-DE-1dW" secondAttribute="centerX" id="ohW-V4-VMR"/>
                                 </constraints>
@@ -83,44 +85,19 @@
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jpS-jC-KP6">
-                                <rect key="frame" x="0.0" y="556" width="600" height="44"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="44" id="9p6-DK-Q4o"/>
-                                </constraints>
-                                <items>
-                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="jiL-MQ-nkK"/>
-                                    <barButtonItem systemItem="play" id="1x2-vG-e1I">
-                                        <connections>
-                                            <action selector="play:" destination="BYZ-38-t0r" id="0yr-4F-p4U"/>
-                                        </connections>
-                                    </barButtonItem>
-                                    <barButtonItem systemItem="pause" id="PCf-6L-NjE">
-                                        <connections>
-                                            <action selector="pause:" destination="BYZ-38-t0r" id="6IN-5t-q5y"/>
-                                        </connections>
-                                    </barButtonItem>
-                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="KMh-JP-DwV"/>
-                                </items>
-                            </toolbar>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="rz3-DE-1dW" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="4Sg-My-JNw"/>
-                            <constraint firstItem="jpS-jC-KP6" firstAttribute="bottom" secondItem="8bC-Xf-vdC" secondAttribute="bottom" id="4f3-p4-hHb"/>
                             <constraint firstItem="DGb-Sr-ZUM" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="9eu-rU-yl4"/>
-                            <constraint firstItem="jpS-jC-KP6" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailing" id="ADg-hh-K13"/>
                             <constraint firstItem="rz3-DE-1dW" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailing" id="CUr-Mi-dhz"/>
                             <constraint firstAttribute="trailing" secondItem="rz3-DE-1dW" secondAttribute="trailing" id="FtJ-L0-aNT"/>
-                            <constraint firstItem="DGb-Sr-ZUM" firstAttribute="bottom" secondItem="jpS-jC-KP6" secondAttribute="top" id="bcG-cb-XFt"/>
-                            <constraint firstItem="jpS-jC-KP6" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="i9z-6A-yDt"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="DGb-Sr-ZUM" secondAttribute="bottom" id="fJ0-yB-UeJ"/>
                             <constraint firstItem="DGb-Sr-ZUM" firstAttribute="top" secondItem="rz3-DE-1dW" secondAttribute="bottom" id="pvc-Or-6Z8"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="message_label" destination="DGb-Sr-ZUM" id="mjn-aZ-AsJ"/>
-                        <outlet property="pause_button" destination="PCf-6L-NjE" id="IGR-G1-ygR"/>
-                        <outlet property="play_button" destination="1x2-vG-e1I" id="0nY-2w-bXu"/>
                         <outlet property="video_container_view" destination="rz3-DE-1dW" id="sx6-qi-ADv"/>
                         <outlet property="video_height_constraint" destination="Uo7-xJ-aVF" id="3m9-3O-Pz6"/>
                         <outlet property="video_view" destination="Th9-8M-pM3" id="akr-W5-A53"/>
