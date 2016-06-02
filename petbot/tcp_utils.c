@@ -28,6 +28,30 @@
 #include <openssl/err.h>
 #endif
 
+const char * PBMSG_TYPES_STRING[] = {
+	"UNKNOWN",
+	"MESSAGE",
+	"FILE",
+	"EVENT",
+	"SERVER",
+	"KEEP_ALIVE",
+	"REQUEST",
+	"RESPONSE_SUCCESS",
+	"RESPONSE_FAIL",
+	"ICE_EVENT",
+	"RESET_EVENT",
+	"FULL_EVENT",
+	"TREAT_EVENT",
+	"SOUND_EVENT",
+	"PICTURE_EVENT",
+	"SELFIE_EVENT",
+	"CONFIG_SET_EVENT",
+	"CONFIG_GET_EVENT",
+	"STREAM_EVENT",
+	"QOS_EVENT",
+	"CONNNECTED_EVENT",
+	"DISCONNECTED_EVENT"
+};
 
 #ifdef PBSSL
 pbsock * new_pbsock(int client_sock, SSL_CTX* ctx, int accept);
@@ -118,14 +142,14 @@ void *keep_alive_handler(void * v ) {
 		pthread_cond_timedwait(&(pbs->cond), &(pbs->send_mutex), &ts);
 		pthread_mutex_unlock(&(pbs->send_mutex));
 		//sleep(pbs->keep_alive_time);
-		if (send_pbmsg(pbs, m)!=8) {
+		if (send_pbmsg(pbs, m)!=12) {
 			fprintf(stderr,"KEEP ALIVE HAS DETECTED A DISCONNECT!\n");
 			//other side disconnected!
 			assert(pbs->state!=PBSOCK_CONNECTED);
 			//TODO CALL A HANDLER? SEND A SIGNAL? UNLOCK A MUTEX?
 			//break;
 		} else {
-			fprintf(stderr,"SENT KEEP ALIVE!\n");
+			//fprintf(stderr,"SENT KEEP ALIVE!\n");
 		}	
 	}
 	fprintf(stderr,"Keep alive handler exit\n");
@@ -306,6 +330,7 @@ pbmsg * new_pbmsg() {
 	m->pbmsg_len=0;
 	m->pbmsg_type=PBMSG_UNKNOWN;
 	m->pbmsg=NULL;
+	m->pbmsg_from=0;
 	return m;
 }
 
@@ -318,6 +343,10 @@ pbmsg * new_pbmsg_from_str(const char * s) {
 }
 
 pbmsg * recv_pbmsg(pbsock *pbs) {
+	return recv_all_pbmsg(pbs,0);
+}
+
+pbmsg * recv_all_pbmsg(pbsock *pbs, int read_all) {
 	if (pbs->state!=PBSOCK_CONNECTED) {
 		return NULL;
 	}
@@ -334,7 +363,8 @@ pbmsg * recv_pbmsg(pbsock *pbs) {
 	do {
 		read_size = SSL_read (pbs->ssl, &m->pbmsg_len, 4);                 
 		read_size += SSL_read (pbs->ssl, &m->pbmsg_type, 4);                 
-		if (read_size!=8) {
+		read_size += SSL_read (pbs->ssl, &m->pbmsg_from, 4);                 
+		if (read_size!=12) {
 			fprintf(stderr,"Failed to recieve correct size... %d\n",read_size);
 			pbs->state=PBSOCK_DISCONNECTED;
 			#ifdef PBTHREADS
@@ -346,7 +376,7 @@ pbmsg * recv_pbmsg(pbsock *pbs) {
 		if ( (m->pbmsg_type & PBMSG_KEEP_ALIVE) !=0 ) {
 			//fprintf(stderr,"GOT A KEEP ALIVE\n");
 		}
-	} while ( (m->pbmsg_type & PBMSG_KEEP_ALIVE) !=0);
+	} while ( (m->pbmsg_type & PBMSG_KEEP_ALIVE) !=0 && read_all==0);
 	//read the payload
 	m->pbmsg = (char*)malloc(sizeof(char)*m->pbmsg_len);
 	if (m->pbmsg==NULL) {
@@ -394,7 +424,8 @@ size_t send_pbmsg(pbsock *pbs, pbmsg * m) {
 	//send the length and type
 	int r = SSL_write(pbs->ssl, &m->pbmsg_len, 4); 
 	r += SSL_write(pbs->ssl, &m->pbmsg_type, 4); 
-	if (r!=8) {
+	r += SSL_write(pbs->ssl, &m->pbmsg_from, 4); 
+	if (r!=12) {
 		pbsock_set_state(pbs,PBSOCK_DISCONNECTED);
 		#ifdef PBTHREADS
 		pthread_mutex_unlock(&(pbs->send_mutex));
@@ -425,20 +456,25 @@ size_t send_pbmsg(pbsock *pbs, pbmsg * m) {
 }
 
 pbmsg * recv_fd_pbmsg(int fd) {
+	return recv_all_fd_pbmsg(fd,0);
+}
+
+pbmsg * recv_all_fd_pbmsg(int fd, int read_all) {
 	pbmsg * m = new_pbmsg(); 
 	//read the msglen
 	size_t read_size=0;
 	do {
 		read_size = read(fd,&m->pbmsg_len, 4);
 		read_size += read(fd,&m->pbmsg_type, 4);
-		if (read_size!=8) {
+		read_size += read(fd,&m->pbmsg_from, 4);
+		if (read_size!=12) {
 			free_pbmsg(m);
 			return NULL;
 		}
 		if ((m->pbmsg_type & PBMSG_KEEP_ALIVE) !=0) {
 			//fprintf(stderr,"GOT A KEEP ALIVE FD\n");
 		}
-	} while ( (m->pbmsg_type & PBMSG_KEEP_ALIVE) !=0);
+	} while ( (m->pbmsg_type & PBMSG_KEEP_ALIVE) !=0 && read_all==0);
 	//now read the msg
 	m->pbmsg = (char*)malloc(sizeof(char)*m->pbmsg_len);
 	if (m->pbmsg==NULL) {
@@ -464,7 +500,8 @@ size_t send_fd_pbmsg(int fd, pbmsg * m) {
 	//send the length
 	size_t r = write(fd, &m->pbmsg_len, 4);
 	r += write(fd, &m->pbmsg_type, 4);
-	if (r!=8) {
+	r += write(fd, &m->pbmsg_from, 4);
+	if (r!=12) {
 		fprintf(stderr,"Failed to send_pbmsg write length\n");
 		return -1;
 	}
@@ -539,5 +576,27 @@ pbmsg * new_pbmsg_from_file(const char * fn) {
 int pbmsg_to_file(pbmsg *m , const char * fn) {
 	int ret = write_file(fn, m->pbmsg, m->pbmsg_len);
 	return ret;
+}
+
+
+char * pbmsg_type_to_string(pbmsg *m) {
+	size_t len = 0;
+	for (int i=0; i<=PBMSG_MAX_TYPE; i++) {
+		if ( (m->pbmsg_type & (1<<i)) != 0) { 
+			len+=strlen(PBMSG_TYPES_STRING[i])+1;
+		}
+	}
+	char * ret=(char*)malloc(len);
+	if (ret==NULL) {
+		fprintf(stderr,"Failed to malloc sstring for type\n");
+		exit(1);
+	}
+	ret[0]='\0';
+	for (int i=0; i<=PBMSG_MAX_TYPE; i++) {
+		if ( (m->pbmsg_type & (1<<i)) != 0) { 
+			strncat(ret,PBMSG_TYPES_STRING[i],len-strlen(ret));
+		}
+	}
+	return ret;	
 }
 

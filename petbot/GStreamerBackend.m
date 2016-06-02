@@ -35,6 +35,7 @@ GST_DEBUG_CATEGORY_STATIC (debug_category);
     const char * pubsubserver_server;
     const char * pubsubserver_username;
     const char * pubsubserver_protocol;
+    int bb_streamer_id;
     int pubsubserver_port;
     pbsock * pbs;
     NSString * petbot_state; //connecting, ice_request, ice_negotiate, streaming, logoff
@@ -45,6 +46,9 @@ GST_DEBUG_CATEGORY_STATIC (debug_category);
     if ((m->pbmsg_type ^  (PBMSG_EVENT | PBMSG_RESPONSE_SUCCESS | PBMSG_ICE_EVENT))==0) {
         fprintf(stderr,"GOT A ICE RESPONSE BACK!\n");
         [self ice_negotiate:m];
+    } else if ((m->pbmsg_type & PBMSG_DISCONNECTED_EVENT) !=0  && m->pbmsg_from==bb_streamer_id) {
+        fprintf(stderr,"The other side exited!\n");
+        
     }
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         [self listenForEvents];
@@ -89,6 +93,7 @@ GST_DEBUG_CATEGORY_STATIC (debug_category);
 }
 
 -(void) ice_negotiate:(pbmsg *)m {
+    bb_streamer_id = m->pbmsg_from;
     recvd_ice_response(m);
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         [self app_function];
@@ -110,6 +115,8 @@ GST_DEBUG_CATEGORY_STATIC (debug_category);
     pubsubserver_secret = [[self->loginInfo objectForKey:@"secret"] UTF8String];
     pubsubserver_server = [[self->loginInfo objectForKey:@"server"] UTF8String];
     pubsubserver_username = [[self->loginInfo objectForKey:@"username"] UTF8String];
+    bb_streamer_id=0;
+   // pubsubserver_server = "127.0.0.1"; // TODO UNCOMMENT FOR LIVE!
     if (self = [super init])
     {
         

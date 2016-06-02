@@ -19,7 +19,7 @@
 
 #ifdef PBTHREADS
 #include <pthread.h>
-#define PBTHREAD_DEFAULT_KEEP_ALIVE 30
+#define PBTHREAD_DEFAULT_KEEP_ALIVE 6
 #endif
 
 typedef enum {
@@ -29,6 +29,9 @@ typedef enum {
 	PBSOCK_UNKNOWN,
 	PBSOCK_EXIT
 } pbsock_state;
+
+extern const char * PBMSG_TYPES_STRING[];
+
 
 typedef enum {
 	PBMSG_UNKNOWN = (1<<0),
@@ -50,12 +53,17 @@ typedef enum {
 	PBMSG_CONFIG_SET_EVENT = (1<<16),
 	PBMSG_CONFIG_GET_EVENT = (1<<17),
 	PBMSG_STREAM_EVENT = (1<<18),
-	PBMSG_QOS_EVENT = (1<<19)
+	PBMSG_QOS_EVENT = (1<<19),
+        PBMSG_CONNECTED_EVENT = (1<<20),
+        PBMSG_DISCONNECTED_EVENT = (1<<21)
 } pbmsg_type;
+
+#define PBMSG_MAX_TYPE 21
 
 typedef struct pbmsg {
 	uint32_t pbmsg_type;
 	uint32_t pbmsg_len;
+	uint32_t pbmsg_from;
 	char * pbmsg; 
 } pbmsg;
 typedef struct pbsock {
@@ -104,11 +112,15 @@ pbmsg * new_pbmsg_from_file(const char *s);
 int pbmsg_to_file(pbmsg * m, const char * fn);
 //Send / recv pbmsg over pbsock
 pbmsg * recv_pbmsg(pbsock * pbs);
+pbmsg * recv_all_pbmsg(pbsock * pbs,int read_all);
 size_t send_pbmsg(pbsock *, pbmsg *m);
 //Send / recv pbmsg over file descriptor
 pbmsg * recv_fd_pbmsg(int fd);
+pbmsg * recv_all_fd_pbmsg(int fd,int read_all);
 size_t send_fd_pbmsg(int fd, pbmsg *m);
 
 char * read_file(const char *fn, size_t * len);
 int write_file(const char *fn , char * buffer, size_t len);
+
+char * pbmsg_type_to_string(pbmsg *m) ;
 #endif
