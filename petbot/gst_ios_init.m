@@ -1,5 +1,8 @@
 #include "gst_ios_init.h"
 
+#if defined(GST_IOS_PLUGIN_NLE) || defined(GST_IOS_PLUGINS_GES)
+GST_PLUGIN_STATIC_DECLARE(nle);
+#endif
 #if defined(GST_IOS_PLUGIN_COREELEMENTS) || defined(GST_IOS_PLUGINS_CORE)
 GST_PLUGIN_STATIC_DECLARE(coreelements);
 #endif
@@ -110,6 +113,12 @@ GST_PLUGIN_STATIC_DECLARE(realmedia);
 #endif
 #if defined(GST_IOS_PLUGIN_X264) || defined(GST_IOS_PLUGINS_CODECS_RESTRICTED)
 GST_PLUGIN_STATIC_DECLARE(x264);
+#endif
+#if defined(GST_IOS_PLUGIN_LAME) || defined(GST_IOS_PLUGINS_CODECS_RESTRICTED)
+GST_PLUGIN_STATIC_DECLARE(lame);
+#endif
+#if defined(GST_IOS_PLUGIN_MPG123) || defined(GST_IOS_PLUGINS_CODECS_RESTRICTED)
+GST_PLUGIN_STATIC_DECLARE(mpg123);
 #endif
 #if defined(GST_IOS_PLUGIN_LIBAV) || defined(GST_IOS_PLUGINS_CODECS_RESTRICTED)
 GST_PLUGIN_STATIC_DECLARE(libav);
@@ -255,14 +264,14 @@ GST_PLUGIN_STATIC_DECLARE(gaudieffects);
 #if defined(GST_IOS_PLUGIN_GEOMETRICTRANSFORM) || defined(GST_IOS_PLUGINS_EFFECTS)
 GST_PLUGIN_STATIC_DECLARE(geometrictransform);
 #endif
+#if defined(GST_IOS_PLUGIN_INTER) || defined(GST_IOS_PLUGINS_EFFECTS)
+GST_PLUGIN_STATIC_DECLARE(inter);
+#endif
 #if defined(GST_IOS_PLUGIN_INTERLACE) || defined(GST_IOS_PLUGINS_EFFECTS)
 GST_PLUGIN_STATIC_DECLARE(interlace);
 #endif
 #if defined(GST_IOS_PLUGIN_IVTC) || defined(GST_IOS_PLUGINS_EFFECTS)
 GST_PLUGIN_STATIC_DECLARE(ivtc);
-#endif
-#if defined(GST_IOS_PLUGIN_LIVEADDER) || defined(GST_IOS_PLUGINS_EFFECTS)
-GST_PLUGIN_STATIC_DECLARE(liveadder);
 #endif
 #if defined(GST_IOS_PLUGIN_RAWPARSE) || defined(GST_IOS_PLUGINS_EFFECTS)
 GST_PLUGIN_STATIC_DECLARE(rawparse);
@@ -279,8 +288,17 @@ GST_PLUGIN_STATIC_DECLARE(smooth);
 #if defined(GST_IOS_PLUGIN_SPEED) || defined(GST_IOS_PLUGINS_EFFECTS)
 GST_PLUGIN_STATIC_DECLARE(speed);
 #endif
+#if defined(GST_IOS_PLUGIN_SOUNDTOUCH) || defined(GST_IOS_PLUGINS_EFFECTS)
+GST_PLUGIN_STATIC_DECLARE(soundtouch);
+#endif
 #if defined(GST_IOS_PLUGIN_VIDEOFILTERSBAD) || defined(GST_IOS_PLUGINS_EFFECTS)
 GST_PLUGIN_STATIC_DECLARE(videofiltersbad);
+#endif
+#if defined(GST_IOS_PLUGIN_AUDIOMIXER) || defined(GST_IOS_PLUGINS_EFFECTS)
+GST_PLUGIN_STATIC_DECLARE(audiomixer);
+#endif
+#if defined(GST_IOS_PLUGIN_COMPOSITOR) || defined(GST_IOS_PLUGINS_EFFECTS)
+GST_PLUGIN_STATIC_DECLARE(compositor);
 #endif
 #if defined(GST_IOS_PLUGIN_SUBPARSE) || defined(GST_IOS_PLUGINS_CODECS)
 GST_PLUGIN_STATIC_DECLARE(subparse);
@@ -293,6 +311,9 @@ GST_PLUGIN_STATIC_DECLARE(theora);
 #endif
 #if defined(GST_IOS_PLUGIN_VORBIS) || defined(GST_IOS_PLUGINS_CODECS)
 GST_PLUGIN_STATIC_DECLARE(vorbis);
+#endif
+#if defined(GST_IOS_PLUGIN_OPUS) || defined(GST_IOS_PLUGINS_CODECS)
+GST_PLUGIN_STATIC_DECLARE(opus);
 #endif
 #if defined(GST_IOS_PLUGIN_IVORBISDEC) || defined(GST_IOS_PLUGINS_CODECS)
 GST_PLUGIN_STATIC_DECLARE(ivorbisdec);
@@ -384,8 +405,8 @@ GST_PLUGIN_STATIC_DECLARE(dvbsuboverlay);
 #if defined(GST_IOS_PLUGIN_DVDSPU) || defined(GST_IOS_PLUGINS_CODECS)
 GST_PLUGIN_STATIC_DECLARE(dvdspu);
 #endif
-#if defined(GST_IOS_PLUGIN_FRAGMENTED) || defined(GST_IOS_PLUGINS_CODECS)
-GST_PLUGIN_STATIC_DECLARE(fragmented);
+#if defined(GST_IOS_PLUGIN_HLS) || defined(GST_IOS_PLUGINS_CODECS)
+GST_PLUGIN_STATIC_DECLARE(hls);
 #endif
 #if defined(GST_IOS_PLUGIN_ID3TAG) || defined(GST_IOS_PLUGINS_CODECS)
 GST_PLUGIN_STATIC_DECLARE(id3tag);
@@ -399,8 +420,11 @@ GST_PLUGIN_STATIC_DECLARE(midi);
 #if defined(GST_IOS_PLUGIN_MXF) || defined(GST_IOS_PLUGINS_CODECS)
 GST_PLUGIN_STATIC_DECLARE(mxf);
 #endif
-#if defined(GST_IOS_PLUGIN_OPUS) || defined(GST_IOS_PLUGINS_CODECS)
-GST_PLUGIN_STATIC_DECLARE(opus);
+#if defined(GST_IOS_PLUGIN_OPENH264) || defined(GST_IOS_PLUGINS_CODECS)
+GST_PLUGIN_STATIC_DECLARE(openh264);
+#endif
+#if defined(GST_IOS_PLUGIN_OPUSPARSE) || defined(GST_IOS_PLUGINS_CODECS)
+GST_PLUGIN_STATIC_DECLARE(opusparse);
 #endif
 #if defined(GST_IOS_PLUGIN_PCAPPARSE) || defined(GST_IOS_PLUGINS_CODECS)
 GST_PLUGIN_STATIC_DECLARE(pcapparse);
@@ -438,6 +462,12 @@ GST_PLUGIN_STATIC_DECLARE(gdp);
 #if defined(GST_IOS_PLUGIN_RSVG) || defined(GST_IOS_PLUGINS_CODECS)
 GST_PLUGIN_STATIC_DECLARE(rsvg);
 #endif
+#if defined(GST_IOS_PLUGIN_OPENJPEG) || defined(GST_IOS_PLUGINS_CODECS)
+GST_PLUGIN_STATIC_DECLARE(openjpeg);
+#endif
+#if defined(GST_IOS_PLUGIN_SPANDSP) || defined(GST_IOS_PLUGINS_CODECS)
+GST_PLUGIN_STATIC_DECLARE(spandsp);
+#endif
 #if defined(GST_IOS_PLUGIN_TCP) || defined(GST_IOS_PLUGINS_NET)
 GST_PLUGIN_STATIC_DECLARE(tcp);
 #endif
@@ -462,53 +492,61 @@ GST_PLUGIN_STATIC_DECLARE(dataurisrc);
 #if defined(GST_IOS_PLUGIN_SDP) || defined(GST_IOS_PLUGINS_NET)
 GST_PLUGIN_STATIC_DECLARE(sdp);
 #endif
-#if defined(GST_IOS_PLUGIN_GNONLIN) || defined(GST_IOS_PLUGINS_EDITING)
-GST_PLUGIN_STATIC_DECLARE(gnonlin);
+#if defined(GST_IOS_PLUGIN_SRTP) || defined(GST_IOS_PLUGINS_NET)
+GST_PLUGIN_STATIC_DECLARE(srtp);
+#endif
+#if defined(GST_IOS_PLUGIN_RTSPCLIENTSINK) || defined(GST_IOS_PLUGINS_NET)
+GST_PLUGIN_STATIC_DECLARE(rtspclientsink);
 #endif
 
-GST_PLUGIN_STATIC_DECLARE(nice); //MISKO
+GST_PLUGIN_STATIC_DECLARE(nice);
 
 #if defined(GST_IOS_GIO_MODULE_GNUTLS)
-  #include <gio/gio.h>
-  GST_G_IO_MODULE_DECLARE(gnutls);
+#include <gio/gio.h>
+GST_G_IO_MODULE_DECLARE(gnutls);
 #endif
 
 void
 gst_ios_init (void)
 {
-  GstPluginFeature *plugin;
-  GstRegistry *reg;
-  NSString *resources = [[NSBundle mainBundle] resourcePath];
-  NSString *tmp = NSTemporaryDirectory();
-  NSString *cache = [NSHomeDirectory() stringByAppendingPathComponent:@"Library/Caches"];
-  NSString *docs = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents"];
+    GstPluginFeature *plugin;
+    GstRegistry *reg;
+    NSString *resources = [[NSBundle mainBundle] resourcePath];
+    NSString *tmp = NSTemporaryDirectory();
+    NSString *cache = [NSHomeDirectory() stringByAppendingPathComponent:@"Library/Caches"];
+    NSString *docs = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents"];
     
-  const gchar *resources_dir = [resources UTF8String];
-  const gchar *tmp_dir = [tmp UTF8String];
-  const gchar *cache_dir = [cache UTF8String];
-  const gchar *docs_dir = [docs UTF8String];
-  gchar *ca_certificates;
+    const gchar *resources_dir = [resources UTF8String];
+    const gchar *tmp_dir = [tmp UTF8String];
+    const gchar *cache_dir = [cache UTF8String];
+    const gchar *docs_dir = [docs UTF8String];
+    gchar *ca_certificates;
     
-  g_setenv ("TMP", tmp_dir, TRUE);
-  g_setenv ("TEMP", tmp_dir, TRUE);
-  g_setenv ("TMPDIR", tmp_dir, TRUE);
-  g_setenv ("XDG_RUNTIME_DIR", resources_dir, TRUE);
-  g_setenv ("XDG_CACHE_HOME", cache_dir, TRUE);
+    g_setenv ("TMP", tmp_dir, TRUE);
+    g_setenv ("TEMP", tmp_dir, TRUE);
+    g_setenv ("TMPDIR", tmp_dir, TRUE);
+    g_setenv ("XDG_RUNTIME_DIR", resources_dir, TRUE);
+    g_setenv ("XDG_CACHE_HOME", cache_dir, TRUE);
     
-  g_setenv ("HOME", docs_dir, TRUE);
-  g_setenv ("XDG_DATA_DIRS", resources_dir, TRUE);
-  g_setenv ("XDG_CONFIG_DIRS", resources_dir, TRUE);
-  g_setenv ("XDG_CONFIG_HOME", cache_dir, TRUE);
-  g_setenv ("XDG_DATA_HOME", resources_dir, TRUE);
-  g_setenv ("FONTCONFIG_PATH", resources_dir, TRUE);
-
-  ca_certificates = g_build_filename (resources_dir, "ssl", "certs", "ca-certifcates.crt", NULL);
-  g_setenv ("CA_CERTIFICATES", ca_certificates, TRUE);
-  g_free (ca_certificates);
+    g_setenv ("HOME", docs_dir, TRUE);
+    g_setenv ("XDG_DATA_DIRS", resources_dir, TRUE);
+    g_setenv ("XDG_CONFIG_DIRS", resources_dir, TRUE);
+    g_setenv ("XDG_CONFIG_HOME", cache_dir, TRUE);
+    g_setenv ("XDG_DATA_HOME", resources_dir, TRUE);
+    g_setenv ("FONTCONFIG_PATH", resources_dir, TRUE);
     
-  gst_init (NULL, NULL);
-GST_PLUGIN_STATIC_REGISTER(nice); //MISKO
-  #if defined(GST_IOS_PLUGIN_COREELEMENTS) || defined(GST_IOS_PLUGINS_CORE)
+    ca_certificates = g_build_filename (resources_dir, "ssl", "certs", "ca-certifcates.crt", NULL);
+    g_setenv ("CA_CERTIFICATES", ca_certificates, TRUE);
+    g_free (ca_certificates);
+    
+    gst_init (NULL, NULL);
+    
+    GST_PLUGIN_STATIC_REGISTER(nice);
+    
+#if defined(GST_IOS_PLUGIN_NLE) || defined(GST_IOS_PLUGINS_GES)
+    GST_PLUGIN_STATIC_REGISTER(nle);
+#endif
+#if defined(GST_IOS_PLUGIN_COREELEMENTS) || defined(GST_IOS_PLUGINS_CORE)
     GST_PLUGIN_STATIC_REGISTER(coreelements);
 #endif
 #if defined(GST_IOS_PLUGIN_ADDER) || defined(GST_IOS_PLUGINS_CORE)
@@ -618,6 +656,12 @@ GST_PLUGIN_STATIC_REGISTER(nice); //MISKO
 #endif
 #if defined(GST_IOS_PLUGIN_X264) || defined(GST_IOS_PLUGINS_CODECS_RESTRICTED)
     GST_PLUGIN_STATIC_REGISTER(x264);
+#endif
+#if defined(GST_IOS_PLUGIN_LAME) || defined(GST_IOS_PLUGINS_CODECS_RESTRICTED)
+    GST_PLUGIN_STATIC_REGISTER(lame);
+#endif
+#if defined(GST_IOS_PLUGIN_MPG123) || defined(GST_IOS_PLUGINS_CODECS_RESTRICTED)
+    GST_PLUGIN_STATIC_REGISTER(mpg123);
 #endif
 #if defined(GST_IOS_PLUGIN_LIBAV) || defined(GST_IOS_PLUGINS_CODECS_RESTRICTED)
     GST_PLUGIN_STATIC_REGISTER(libav);
@@ -763,14 +807,14 @@ GST_PLUGIN_STATIC_REGISTER(nice); //MISKO
 #if defined(GST_IOS_PLUGIN_GEOMETRICTRANSFORM) || defined(GST_IOS_PLUGINS_EFFECTS)
     GST_PLUGIN_STATIC_REGISTER(geometrictransform);
 #endif
+#if defined(GST_IOS_PLUGIN_INTER) || defined(GST_IOS_PLUGINS_EFFECTS)
+    GST_PLUGIN_STATIC_REGISTER(inter);
+#endif
 #if defined(GST_IOS_PLUGIN_INTERLACE) || defined(GST_IOS_PLUGINS_EFFECTS)
     GST_PLUGIN_STATIC_REGISTER(interlace);
 #endif
 #if defined(GST_IOS_PLUGIN_IVTC) || defined(GST_IOS_PLUGINS_EFFECTS)
     GST_PLUGIN_STATIC_REGISTER(ivtc);
-#endif
-#if defined(GST_IOS_PLUGIN_LIVEADDER) || defined(GST_IOS_PLUGINS_EFFECTS)
-    GST_PLUGIN_STATIC_REGISTER(liveadder);
 #endif
 #if defined(GST_IOS_PLUGIN_RAWPARSE) || defined(GST_IOS_PLUGINS_EFFECTS)
     GST_PLUGIN_STATIC_REGISTER(rawparse);
@@ -787,8 +831,17 @@ GST_PLUGIN_STATIC_REGISTER(nice); //MISKO
 #if defined(GST_IOS_PLUGIN_SPEED) || defined(GST_IOS_PLUGINS_EFFECTS)
     GST_PLUGIN_STATIC_REGISTER(speed);
 #endif
+#if defined(GST_IOS_PLUGIN_SOUNDTOUCH) || defined(GST_IOS_PLUGINS_EFFECTS)
+    GST_PLUGIN_STATIC_REGISTER(soundtouch);
+#endif
 #if defined(GST_IOS_PLUGIN_VIDEOFILTERSBAD) || defined(GST_IOS_PLUGINS_EFFECTS)
     GST_PLUGIN_STATIC_REGISTER(videofiltersbad);
+#endif
+#if defined(GST_IOS_PLUGIN_AUDIOMIXER) || defined(GST_IOS_PLUGINS_EFFECTS)
+    GST_PLUGIN_STATIC_REGISTER(audiomixer);
+#endif
+#if defined(GST_IOS_PLUGIN_COMPOSITOR) || defined(GST_IOS_PLUGINS_EFFECTS)
+    GST_PLUGIN_STATIC_REGISTER(compositor);
 #endif
 #if defined(GST_IOS_PLUGIN_SUBPARSE) || defined(GST_IOS_PLUGINS_CODECS)
     GST_PLUGIN_STATIC_REGISTER(subparse);
@@ -801,6 +854,9 @@ GST_PLUGIN_STATIC_REGISTER(nice); //MISKO
 #endif
 #if defined(GST_IOS_PLUGIN_VORBIS) || defined(GST_IOS_PLUGINS_CODECS)
     GST_PLUGIN_STATIC_REGISTER(vorbis);
+#endif
+#if defined(GST_IOS_PLUGIN_OPUS) || defined(GST_IOS_PLUGINS_CODECS)
+    GST_PLUGIN_STATIC_REGISTER(opus);
 #endif
 #if defined(GST_IOS_PLUGIN_IVORBISDEC) || defined(GST_IOS_PLUGINS_CODECS)
     GST_PLUGIN_STATIC_REGISTER(ivorbisdec);
@@ -892,8 +948,8 @@ GST_PLUGIN_STATIC_REGISTER(nice); //MISKO
 #if defined(GST_IOS_PLUGIN_DVDSPU) || defined(GST_IOS_PLUGINS_CODECS)
     GST_PLUGIN_STATIC_REGISTER(dvdspu);
 #endif
-#if defined(GST_IOS_PLUGIN_FRAGMENTED) || defined(GST_IOS_PLUGINS_CODECS)
-    GST_PLUGIN_STATIC_REGISTER(fragmented);
+#if defined(GST_IOS_PLUGIN_HLS) || defined(GST_IOS_PLUGINS_CODECS)
+    GST_PLUGIN_STATIC_REGISTER(hls);
 #endif
 #if defined(GST_IOS_PLUGIN_ID3TAG) || defined(GST_IOS_PLUGINS_CODECS)
     GST_PLUGIN_STATIC_REGISTER(id3tag);
@@ -907,8 +963,11 @@ GST_PLUGIN_STATIC_REGISTER(nice); //MISKO
 #if defined(GST_IOS_PLUGIN_MXF) || defined(GST_IOS_PLUGINS_CODECS)
     GST_PLUGIN_STATIC_REGISTER(mxf);
 #endif
-#if defined(GST_IOS_PLUGIN_OPUS) || defined(GST_IOS_PLUGINS_CODECS)
-    GST_PLUGIN_STATIC_REGISTER(opus);
+#if defined(GST_IOS_PLUGIN_OPENH264) || defined(GST_IOS_PLUGINS_CODECS)
+    GST_PLUGIN_STATIC_REGISTER(openh264);
+#endif
+#if defined(GST_IOS_PLUGIN_OPUSPARSE) || defined(GST_IOS_PLUGINS_CODECS)
+    GST_PLUGIN_STATIC_REGISTER(opusparse);
 #endif
 #if defined(GST_IOS_PLUGIN_PCAPPARSE) || defined(GST_IOS_PLUGINS_CODECS)
     GST_PLUGIN_STATIC_REGISTER(pcapparse);
@@ -946,6 +1005,12 @@ GST_PLUGIN_STATIC_REGISTER(nice); //MISKO
 #if defined(GST_IOS_PLUGIN_RSVG) || defined(GST_IOS_PLUGINS_CODECS)
     GST_PLUGIN_STATIC_REGISTER(rsvg);
 #endif
+#if defined(GST_IOS_PLUGIN_OPENJPEG) || defined(GST_IOS_PLUGINS_CODECS)
+    GST_PLUGIN_STATIC_REGISTER(openjpeg);
+#endif
+#if defined(GST_IOS_PLUGIN_SPANDSP) || defined(GST_IOS_PLUGINS_CODECS)
+    GST_PLUGIN_STATIC_REGISTER(spandsp);
+#endif
 #if defined(GST_IOS_PLUGIN_TCP) || defined(GST_IOS_PLUGINS_NET)
     GST_PLUGIN_STATIC_REGISTER(tcp);
 #endif
@@ -970,21 +1035,24 @@ GST_PLUGIN_STATIC_REGISTER(nice); //MISKO
 #if defined(GST_IOS_PLUGIN_SDP) || defined(GST_IOS_PLUGINS_NET)
     GST_PLUGIN_STATIC_REGISTER(sdp);
 #endif
-#if defined(GST_IOS_PLUGIN_GNONLIN) || defined(GST_IOS_PLUGINS_EDITING)
-    GST_PLUGIN_STATIC_REGISTER(gnonlin);
+#if defined(GST_IOS_PLUGIN_SRTP) || defined(GST_IOS_PLUGINS_NET)
+    GST_PLUGIN_STATIC_REGISTER(srtp);
 #endif
-
+#if defined(GST_IOS_PLUGIN_RTSPCLIENTSINK) || defined(GST_IOS_PLUGINS_NET)
+    GST_PLUGIN_STATIC_REGISTER(rtspclientsink);
+#endif
+    
 #if defined(GST_IOS_GIO_MODULE_GNUTLS)
-  GST_G_IO_MODULE_LOAD(gnutls);
+    GST_G_IO_MODULE_LOAD(gnutls);
 #endif
-
-  /* Lower the ranks of filesrc and giosrc so iosavassetsrc is
-   * tried first in gst_element_make_from_uri() for file:// */
-  reg = gst_registry_get();
-  plugin = gst_registry_lookup_feature(reg, "filesrc");
-  if (plugin)
-    gst_plugin_feature_set_rank(plugin, GST_RANK_SECONDARY);
-  plugin = gst_registry_lookup_feature(reg, "giosrc");
-  if (plugin)
-    gst_plugin_feature_set_rank(plugin, GST_RANK_SECONDARY-1);
+    
+    /* Lower the ranks of filesrc and giosrc so iosavassetsrc is
+     * tried first in gst_element_make_from_uri() for file:// */
+    reg = gst_registry_get();
+    plugin = gst_registry_lookup_feature(reg, "filesrc");
+    if (plugin)
+        gst_plugin_feature_set_rank(plugin, GST_RANK_SECONDARY);
+    plugin = gst_registry_lookup_feature(reg, "giosrc");
+    if (plugin)
+        gst_plugin_feature_set_rank(plugin, GST_RANK_SECONDARY-1);
 }
