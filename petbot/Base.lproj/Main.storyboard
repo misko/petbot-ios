@@ -78,12 +78,8 @@
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="539"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Th9-8M-pM3" userLabel="Video" customClass="EaglUIView">
-                                        <rect key="frame" x="0.0" y="0.0" width="600" height="571"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="600" height="450"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="539" id="Uo7-xJ-aVF"/>
-                                            <constraint firstAttribute="width" constant="600" id="q8L-Ep-0eZ"/>
-                                        </constraints>
                                     </view>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -103,20 +99,20 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="rz3-DE-1dW" firstAttribute="width" secondItem="8bC-Xf-vdC" secondAttribute="width" id="0AC-x9-wpO"/>
                             <constraint firstItem="rz3-DE-1dW" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="4Sg-My-JNw"/>
                             <constraint firstItem="DGb-Sr-ZUM" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="9eu-rU-yl4"/>
                             <constraint firstItem="rz3-DE-1dW" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailing" id="CUr-Mi-dhz"/>
                             <constraint firstAttribute="trailing" secondItem="rz3-DE-1dW" secondAttribute="trailing" id="FtJ-L0-aNT"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="DGb-Sr-ZUM" secondAttribute="bottom" id="fJ0-yB-UeJ"/>
                             <constraint firstItem="DGb-Sr-ZUM" firstAttribute="top" secondItem="rz3-DE-1dW" secondAttribute="bottom" id="pvc-Or-6Z8"/>
+                            <constraint firstItem="rz3-DE-1dW" firstAttribute="height" secondItem="8bC-Xf-vdC" secondAttribute="height" id="qKf-fQ-lvC"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="message_label" destination="DGb-Sr-ZUM" id="mjn-aZ-AsJ"/>
                         <outlet property="video_container_view" destination="rz3-DE-1dW" id="sx6-qi-ADv"/>
-                        <outlet property="video_height_constraint" destination="Uo7-xJ-aVF" id="3m9-3O-Pz6"/>
                         <outlet property="video_view" destination="Th9-8M-pM3" id="akr-W5-A53"/>
-                        <outlet property="video_width_constraint" destination="q8L-Ep-0eZ" id="Y1A-YO-bsQ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
