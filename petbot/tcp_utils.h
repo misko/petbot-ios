@@ -55,10 +55,11 @@ typedef enum {
 	PBMSG_STREAM_EVENT = (1<<18),
 	PBMSG_QOS_EVENT = (1<<19),
         PBMSG_CONNECTED_EVENT = (1<<20),
-        PBMSG_DISCONNECTED_EVENT = (1<<21)
+        PBMSG_DISCONNECTED_EVENT = (1<<21),
+        PBMSG_ACTION_EVENT = (1<<22)
 } pbmsg_type;
 
-#define PBMSG_MAX_TYPE 21
+#define PBMSG_MAX_TYPE 22
 
 typedef struct pbmsg {
 	uint32_t pbmsg_type;
