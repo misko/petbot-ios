@@ -49,6 +49,8 @@
 #include <gst/video/video.h>
 #include <agent.h>
 
+#include "pb.h"
+
 //sem_t negotiation_done;
 
 static gboolean negotiation_done;
@@ -88,11 +90,14 @@ gchar * stun_addr = "159.203.252.147";
 guint stun_port = 3478;
 
 guint pipe_to_parent, pipe_from_parent;
+
+
+GThread *  start_nice_thread(int controlling, int * from_child, int * to_child);
 	
-int to_child[2];
-int from_child[2];
-GThread * ice_thread;
-int help_params[4];
+//int to_child[2];
+//int from_child[2];
+//GThread * ice_thread;
+//int help_params[4];
 
 void * start_ice_helper(void * x) {
 	int * params = (int*)x;
@@ -100,60 +105,66 @@ void * start_ice_helper(void * x) {
 	int to_parent = params[1];
 	int from_parent = params[2];
 	init_ice(controlling, to_parent, from_parent);
+	//free(params); //mem leak
     return NULL;
 }
 
-int start_nice_server(pbsock *pbs, pbmsg * ice_request) {
+char * start_nice_server_get_nice(int * to_child, int * from_child) {
 	//(1) get our nice 
 	//(2) send it back
 	//(3) negotiate
 
-	assert((ice_request->pbmsg_type ^ (PBMSG_EVENT | PBMSG_REQUEST | PBMSG_ICE_EVENT)) == 0);
-
-	//(1)
-	//make pipes	
-	int to_child[2];
-	int from_child[2];
-	if (pipe(to_child)!=0 || pipe(from_child)!=0) {
-		fprintf(stderr,"Failed to make pipes for children\n");
-		exit(1);
-	}
-	//pass parameters in an array
-	help_params[0]=1;
-	help_params[1]=from_child[1];
-	help_params[2]=to_child[0];
-	ice_thread = g_thread_new("ice thread", &start_ice_helper, help_params);
+	PBPRINTF("Starting nice server\n");
+	start_nice_thread(1,from_child,to_child);
 
 	//get our string from the child thread
 	pbmsg * m = recv_fd_pbmsg(from_child[0]);
 	char * our_nice = strdup(m->pbmsg);
-
-	//Send message to the other side
-	pbmsg * ice_response = new_pbmsg_from_str(our_nice);
-	ice_response->pbmsg_type= PBMSG_EVENT | PBMSG_RESPONSE_SUCCESS | PBMSG_ICE_EVENT;
-	send_pbmsg(pbs, ice_response);
+	//mem leak free m
+	return our_nice;
+}
+int start_nice_server_with_nice(int *to_child, int * from_child, pbmsg * ice_request, char * our_nice) {
 
 	//we started with the other nice lets negotiate
 	char * other_nice = ice_request->pbmsg;	
 
-	fprintf(stderr,"Our nice string, %s\n",our_nice);
-	fprintf(stderr,"Other nice string %s\n",other_nice);
+	PBPRINTF("Our nice string, %s\n",our_nice);
+	PBPRINTF("Other nice string %s\n",other_nice);
 	
-	m = new_pbmsg_from_str(other_nice);
+	pbmsg * m = new_pbmsg_from_str(other_nice);
 	send_fd_pbmsg(to_child[1],m);
-	//free_pbmsg(m); //done worry about this memory for now...
+	PBPRINTF("SENT OTHER NICE TO CHILD\n");
 
-	//fprintf(stderr,"Waiting for negotiation to finish\n");
+	/* try removing this for now? */
 	g_mutex_lock(&negotiate_mutex);
 	while (!negotiation_done)
 		g_cond_wait(&negotiate_cond, &negotiate_mutex);
 	g_mutex_unlock(&negotiate_mutex);
-        fprintf(stderr,"Returning from start ICE, everything went ok?\n");
+        PBPRINTF("Returning from start ICE, everything went ok?\n");
 	return 0;
 }
 
+int start_nice_server(pbsock *pbs, pbmsg * ice_request) {
+	assert(pbs!=NULL);
+	int to_child[2];
+	int from_child[2];
+	if (pipe(to_child)!=0 || pipe(from_child)!=0) {
+		PBPRINTF("Failed to make pipes for children\n");
+		exit(1);
+	}
 
-GThread *  start_nice_thread() {
+	assert((ice_request->pbmsg_type ^ (PBMSG_ICE | PBMSG_REQUEST | PBMSG_STRING)) == 0);
+	char * our_nice = start_nice_server_get_nice(to_child, from_child);
+	//Send message to the other side
+	pbmsg * ice_response = new_pbmsg_from_str(our_nice);
+	ice_response->pbmsg_type= PBMSG_ICE | PBMSG_RESPONSE | PBMSG_SUCCESS | PBMSG_STRING;
+	send_pbmsg(pbs, ice_response);
+	PBPRINTF("Starting nice server - sent request\n");
+	return start_nice_server_with_nice(to_child,from_child,ice_request,our_nice);
+}
+
+
+GThread *  start_nice_thread(int controlling, int * from_child, int * to_child) {
 	//(1)
 	//make pipes	
 	if (pipe(to_child)!=0 || pipe(from_child)!=0) {
@@ -161,37 +172,46 @@ GThread *  start_nice_thread() {
 		exit(1);
 	}
 	//pass parameters in an array
-	help_params[0]=0;
+	int * help_params = (int*)malloc(sizeof(int)*4);
+	if (help_params==NULL) {
+		PBPRINTF("Failed to malloc help params\n");
+		return NULL;
+	}
+	help_params[0]=controlling; // 0 for client, 1 for server
 	help_params[1]=from_child[1];
 	help_params[2]=to_child[0];
 	return  g_thread_new("ice thread", &start_ice_helper, help_params);
 }
 
-pbmsg * make_ice_request() { // must be called only once after start_ice_thread
+pbmsg * make_ice_request(int * from_child, int * to_child) { // must be called only once after start_ice_thread
 	//get our string from the child thread
-	fprintf(stderr,"Waiting for our nice...\n");
+	PBPRINTF("Waiting for our nice...\n");
 	pbmsg * m = recv_fd_pbmsg(from_child[0]);
 	char * our_nice = strdup(m->pbmsg);
-	fprintf(stderr,"Waiting for our nice...- %s\n",our_nice);
+	PBPRINTF("Waiting for our nice...- %s\n",our_nice);
 	free_pbmsg(m);
 	
 	//(2)
 	//Send message to the other side
 	pbmsg * ice_request = new_pbmsg_from_str(our_nice);
-	ice_request->pbmsg_type= PBMSG_EVENT | PBMSG_REQUEST | PBMSG_ICE_EVENT;
+	ice_request->pbmsg_type= PBMSG_ICE | PBMSG_REQUEST | PBMSG_STRING;
 	return ice_request;
 	fprintf(stderr,"Waiting for our nice...-sent our nice\n");
 }
 
-int recvd_ice_response(pbmsg * ice_response) {
-	assert((ice_response->pbmsg_type ^ (PBMSG_EVENT | PBMSG_RESPONSE_SUCCESS | PBMSG_ICE_EVENT)) == 0) ;
+int recvd_ice_response(pbmsg * ice_response, int * from_child, int * to_child) {
+	assert((ice_response->pbmsg_type ^ (PBMSG_ICE | PBMSG_CLIENT | PBMSG_RESPONSE | PBMSG_SUCCESS | PBMSG_STRING)) == 0) ;
+        PBPRINTF("RECVD ice response sending it to the thread\n");
 	send_fd_pbmsg(to_child[1],ice_response);
 	//fprintf(stderr,"Waiting for negotiation to finish\n");
+	
+	/* dont wait for this try to continue */
+	
 	g_mutex_lock(&negotiate_mutex);
 	while (!negotiation_done)
 		g_cond_wait(&negotiate_cond, &negotiate_mutex);
 	g_mutex_unlock(&negotiate_mutex);
-        fprintf(stderr,"Returning from start ICE, everything went ok?\n");
+        PBPRINTF("Returning from start ICE, everything went ok?\n");
 	return 0;
 }
 
@@ -200,20 +220,39 @@ int start_nice_client(pbsock *pbs) {
 	//(2) send ice string to server in ICE REQUEST
 	//(3) wait for ice response from server 
 	//(4) negotiate ICE
-	
-	ice_thread = start_nice_thread();
 
-	pbmsg * ice_request = make_ice_request();
+	//(1)
+	//make pipes	
+	int to_child[2];
+	int from_child[2];
+	if (pipe(to_child)!=0 || pipe(from_child)!=0) {
+		PBPRINTF("Failed to make pipes for children\n");
+		exit(1);
+	}
+	
+	PBPRINTF("Starting nice client\n");
+	start_nice_thread(0,from_child,to_child);
+
+	pbmsg * ice_request = make_ice_request(from_child, to_child);
+	PBPRINTF("Starting nice client - sent request\n");
 	send_pbmsg(pbs, ice_request);
 	free_pbmsg(ice_request);
 	
 	//(3)
+	PBPRINTF("Starting nice client - wait response\n");
 	pbmsg * ice_response = recv_pbmsg(pbs);
-	while ((ice_response->pbmsg_type ^ (PBMSG_EVENT | PBMSG_RESPONSE_SUCCESS | PBMSG_ICE_EVENT)) != 0) {
-		fprintf(stderr,"Got a response from server that was unexpected... try again?\n");
+	//SUCCESS,RESPONSE,ICE,CLIENT,STRING
+	while ((ice_response->pbmsg_type ^ (PBMSG_ICE | PBMSG_CLIENT | PBMSG_RESPONSE | PBMSG_SUCCESS | PBMSG_STRING)) != 0) {
+		PBPRINTF("Got a response from server that was unexpected... try again?, %s %x\n",pbmsg_type_to_string(ice_response), ice_response->pbmsg_type);
+ 		if ((ice_response->pbmsg_type & PBMSG_STRING) !=0) {
+		PBPRINTF("Got a response from server that was unexpected... try again ? - %s\n",ice_response->pbmsg);
+		}
 		ice_response = recv_pbmsg(pbs);
 	}
-	return recvd_ice_response(ice_response);
+	PBPRINTF("Starting nice client - wait response 2\n");
+	int ret = recvd_ice_response(ice_response,from_child,to_child);
+	PBPRINTF("Starting nice client - recvd response\n");
+	return ret;
 }
 
 void start_nice(pbsock * pbs) {
@@ -248,21 +287,9 @@ void start_nice(pbsock * pbs) {
 	//make ice thread
 
 	//assert(sizeof(int)==sizeof(GMainContext*));
-	help_params[0]=controlling;
-	help_params[1]=from_child[1];
-	help_params[2]=to_child[0];
 	
-
-	/*
-	pthread_t ice_thread;
-	int rc = pthread_create(&ice_thread, NULL, start_ice_helper, (void *)params);
-	if (rc!=0) {
-		fprintf(stderr,"failed to create ice thread\n");
-		exit(1);
-	}
-	*/
-	
-	ice_thread = g_thread_new("ice thread", &start_ice_helper, help_params);
+	PBPRINTF("Starting nice client\n");
+	start_nice_thread(controlling,from_child,to_child);
 
 	m = recv_fd_pbmsg(from_child[0]);
 	our_nice = strdup(m->pbmsg);
@@ -281,6 +308,9 @@ void start_nice(pbsock * pbs) {
 	free_pbmsg(m);
 
 	//fprintf(stderr,"Waiting for negotiation to finish\n");
+
+	/* dont wait for negotiate to finish */
+	
 	g_mutex_lock(&negotiate_mutex);
 	while (!negotiation_done)
 		g_cond_wait(&negotiate_cond, &negotiate_mutex);
@@ -417,7 +447,8 @@ cb_component_state_changed(NiceAgent *agent, guint _stream_id,
   fprintf(stderr,"SIGNAL: state changed %d %d %s[%d]\n",
       _stream_id, component_id, state_name[state], state);
 
-  if (state == NICE_COMPONENT_STATE_READY) {
+  //if (state == NICE_COMPONENT_STATE_READY) {
+  if (state == NICE_COMPONENT_STATE_CONNECTED) {
     NiceCandidate *local, *remote;
 
     // Get current selected candidate pair and print IP address used
@@ -540,6 +571,7 @@ str_local_data (NiceAgent *agent, guint _stream_id, guint component_id)
     fprintf(stderr,"failed to ammlloc buffer\n");
     exit(1);
   }
+  buffer[0]='\0';
 
   int ret = sprintf(buffer, "%s %s", local_ufrag, local_password);
 

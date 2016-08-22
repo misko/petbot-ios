@@ -39,14 +39,16 @@ GST_DEBUG_CATEGORY_STATIC (debug_category);
     int pubsubserver_port;
     pbsock * pbs;
     NSString * petbot_state; //connecting, ice_request, ice_negotiate, streaming, logoff
+    int ice_thread_pipes_to_child[2];
+    int ice_thread_pipes_from_child[2];
 }
 
 -(void) listenForEvents {
     pbmsg * m = recv_pbmsg(pbs);
-    if ((m->pbmsg_type ^  (PBMSG_EVENT | PBMSG_RESPONSE_SUCCESS | PBMSG_ICE_EVENT))==0) {
+    if ((m->pbmsg_type ^  (PBMSG_SUCCESS | PBMSG_RESPONSE | PBMSG_ICE | PBMSG_CLIENT | PBMSG_STRING))==0) {
         fprintf(stderr,"GOT A ICE RESPONSE BACK!\n");
         [self ice_negotiate:m];
-    } else if ((m->pbmsg_type & PBMSG_DISCONNECTED_EVENT) !=0  && m->pbmsg_from==bb_streamer_id) {
+    } else if ((m->pbmsg_type & PBMSG_DISCONNECTED) !=0  && m->pbmsg_from==bb_streamer_id) {
         fprintf(stderr,"The other side exited!\n");
         
     }
@@ -76,7 +78,12 @@ GST_DEBUG_CATEGORY_STATIC (debug_category);
         [self listenForEvents];
     });
     
-    start_nice_thread();
+    int ret = pipe(ice_thread_pipes_to_child);
+    assert(ret==0);
+    ret= pipe(ice_thread_pipes_from_child);
+    assert(ret==0);
+    start_nice_thread(0,ice_thread_pipes_from_child,ice_thread_pipes_to_child);
+    //start_nice_client(pbs);
     
     petbot_state = @"pbstate: ice_request";
     
@@ -86,7 +93,7 @@ GST_DEBUG_CATEGORY_STATIC (debug_category);
 }
 
 -(void) ice_request {
-    pbmsg * ice_request_m = make_ice_request();
+    pbmsg * ice_request_m = make_ice_request(ice_thread_pipes_from_child,ice_thread_pipes_to_child);
     fprintf(stderr,"make the ice request!\n");
     send_pbmsg(pbs, ice_request_m);
     fprintf(stderr,"made the ice request\n");
@@ -94,7 +101,7 @@ GST_DEBUG_CATEGORY_STATIC (debug_category);
 
 -(void) ice_negotiate:(pbmsg *)m {
     bb_streamer_id = m->pbmsg_from;
-    recvd_ice_response(m);
+    recvd_ice_response(m,ice_thread_pipes_from_child,ice_thread_pipes_to_child);
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         [self app_function];
     });

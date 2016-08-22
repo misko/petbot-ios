@@ -34,37 +34,38 @@ extern const char * PBMSG_TYPES_STRING[];
 
 
 typedef enum {
-	PBMSG_UNKNOWN = (1<<0),
-	PBMSG_MESSAGE = (1<<1),
-	PBMSG_FILE = (1<<2),
-	PBMSG_EVENT = (1<<3),
-	PBMSG_SERVER = (1<<4), // only server reads it
-	PBMSG_KEEP_ALIVE = (1<<5),
-	PBMSG_REQUEST = (1<<6),
-	PBMSG_RESPONSE_SUCCESS = (1<<7),
-	PBMSG_RESPONSE_FAIL = (1<<8),
-	PBMSG_ICE_EVENT = (1<<9),
-	PBMSG_RESET_EVENT = (1<<10),
-	PBMSG_FULL_EVENT = (1<<11),
-	PBMSG_TREAT_EVENT = (1<<12),
-	PBMSG_SOUND_EVENT = (1<<13),
-	PBMSG_PICTURE_EVENT = (1<<14),
-	PBMSG_SELFIE_EVENT = (1<<15),
-	PBMSG_CONFIG_SET_EVENT = (1<<16),
-	PBMSG_CONFIG_GET_EVENT = (1<<17),
-	PBMSG_STREAM_EVENT = (1<<18),
-	PBMSG_QOS_EVENT = (1<<19),
-        PBMSG_CONNECTED_EVENT = (1<<20),
-        PBMSG_DISCONNECTED_EVENT = (1<<21),
-        PBMSG_ACTION_EVENT = (1<<22)
+	PBMSG_FAIL = (1<<0),
+	PBMSG_SUCCESS = (1<<1),
+	PBMSG_BUSY = (1<<2),
+	PBMSG_REQUEST = (1<<3),
+	PBMSG_RESPONSE = (1<<4), 
+	PBMSG_EVENT = (1<<5), 
+	PBMSG_VIDEO = (1<<6),
+	PBMSG_ICE = (1<<7),
+	PBMSG_COOKIE = (1<<8),
+	PBMSG_SOUND = (1<<9),
+	PBMSG_WIFI = (1<<10),
+	PBMSG_LED = (1<<11),
+	PBMSG_CLIENT = (1<<12),
+	PBMSG_SERVER = (1<<13),
+	PBMSG_ALL = (1<<14),
+	PBMSG_CONFIG_SET = (1<<15),
+	PBMSG_CONFIG_GET = (1<<16),
+        PBMSG_CONNECTED = (1<<17),
+        PBMSG_DISCONNECTED = (1<<18),
+        PBMSG_STRING = (1<<19),
+        PBMSG_PTR = (1<<20),
+        PBMSG_BIN = (1<<21),
+        PBMSG_FILE = (1<<22),
+	PBMSG_KEEP_ALIVE = (1<<23)
 } pbmsg_type;
 
-#define PBMSG_MAX_TYPE 22
+#define PBMSG_MAX_TYPE 23
 
 typedef struct pbmsg {
 	uint32_t pbmsg_type;
 	uint32_t pbmsg_len;
-	uint32_t pbmsg_from;
+	uint32_t pbmsg_from; // filled in by BB server - using unqiue ID per client
 	char * pbmsg; 
 } pbmsg;
 typedef struct pbsock {
@@ -108,8 +109,11 @@ extern char * bb_new_user;
 
 void free_pbmsg(pbmsg * m);
 pbmsg * new_pbmsg();
+pbmsg * new_pbmsg_from_str_wtype(const char * s, int type);
 pbmsg * new_pbmsg_from_str(const char *s);
 pbmsg * new_pbmsg_from_file(const char *s);
+pbmsg * new_pbmsg_from_ptr(void * x );
+pbmsg * new_pbmsg_from_ptr_and_int(void *x , int z);
 int pbmsg_to_file(pbmsg * m, const char * fn);
 //Send / recv pbmsg over pbsock
 pbmsg * recv_pbmsg(pbsock * pbs);
@@ -124,4 +128,5 @@ char * read_file(const char *fn, size_t * len);
 int write_file(const char *fn , char * buffer, size_t len);
 
 char * pbmsg_type_to_string(pbmsg *m) ;
+int pbmsg_has_type(pbmsg *m, int ty);
 #endif

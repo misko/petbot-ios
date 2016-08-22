@@ -117,9 +117,9 @@ GST_PLUGIN_STATIC_DECLARE(x264);
 #if defined(GST_IOS_PLUGIN_LAME) || defined(GST_IOS_PLUGINS_CODECS_RESTRICTED)
 GST_PLUGIN_STATIC_DECLARE(lame);
 #endif
-#if defined(GST_IOS_PLUGIN_MPG123) || defined(GST_IOS_PLUGINS_CODECS_RESTRICTED)
-GST_PLUGIN_STATIC_DECLARE(mpg123);
-#endif
+//#if defined(GST_IOS_PLUGIN_MPG123) || defined(GST_IOS_PLUGINS_CODECS_RESTRICTED)
+//GST_PLUGIN_STATIC_DECLARE(mpg123);
+//#endif
 #if defined(GST_IOS_PLUGIN_LIBAV) || defined(GST_IOS_PLUGINS_CODECS_RESTRICTED)
 GST_PLUGIN_STATIC_DECLARE(libav);
 #endif
@@ -288,9 +288,9 @@ GST_PLUGIN_STATIC_DECLARE(smooth);
 #if defined(GST_IOS_PLUGIN_SPEED) || defined(GST_IOS_PLUGINS_EFFECTS)
 GST_PLUGIN_STATIC_DECLARE(speed);
 #endif
-#if defined(GST_IOS_PLUGIN_SOUNDTOUCH) || defined(GST_IOS_PLUGINS_EFFECTS)
-GST_PLUGIN_STATIC_DECLARE(soundtouch);
-#endif
+//#if defined(GST_IOS_PLUGIN_SOUNDTOUCH) || defined(GST_IOS_PLUGINS_EFFECTS)
+//GST_PLUGIN_STATIC_DECLARE(soundtouch);
+//#endif
 #if defined(GST_IOS_PLUGIN_VIDEOFILTERSBAD) || defined(GST_IOS_PLUGINS_EFFECTS)
 GST_PLUGIN_STATIC_DECLARE(videofiltersbad);
 #endif
@@ -405,9 +405,9 @@ GST_PLUGIN_STATIC_DECLARE(dvbsuboverlay);
 #if defined(GST_IOS_PLUGIN_DVDSPU) || defined(GST_IOS_PLUGINS_CODECS)
 GST_PLUGIN_STATIC_DECLARE(dvdspu);
 #endif
-#if defined(GST_IOS_PLUGIN_HLS) || defined(GST_IOS_PLUGINS_CODECS)
-GST_PLUGIN_STATIC_DECLARE(hls);
-#endif
+//#if defined(GST_IOS_PLUGIN_HLS) || defined(GST_IOS_PLUGINS_CODECS)
+//GST_PLUGIN_STATIC_DECLARE(hls);
+//#endif
 #if defined(GST_IOS_PLUGIN_ID3TAG) || defined(GST_IOS_PLUGINS_CODECS)
 GST_PLUGIN_STATIC_DECLARE(id3tag);
 #endif
@@ -423,9 +423,9 @@ GST_PLUGIN_STATIC_DECLARE(mxf);
 #if defined(GST_IOS_PLUGIN_OPENH264) || defined(GST_IOS_PLUGINS_CODECS)
 GST_PLUGIN_STATIC_DECLARE(openh264);
 #endif
-#if defined(GST_IOS_PLUGIN_OPUSPARSE) || defined(GST_IOS_PLUGINS_CODECS)
-GST_PLUGIN_STATIC_DECLARE(opusparse);
-#endif
+//#if defined(GST_IOS_PLUGIN_OPUSPARSE) || defined(GST_IOS_PLUGINS_CODECS)
+//GST_PLUGIN_STATIC_DECLARE(opusparse);
+//#endif
 #if defined(GST_IOS_PLUGIN_PCAPPARSE) || defined(GST_IOS_PLUGINS_CODECS)
 GST_PLUGIN_STATIC_DECLARE(pcapparse);
 #endif
@@ -465,9 +465,9 @@ GST_PLUGIN_STATIC_DECLARE(rsvg);
 #if defined(GST_IOS_PLUGIN_OPENJPEG) || defined(GST_IOS_PLUGINS_CODECS)
 GST_PLUGIN_STATIC_DECLARE(openjpeg);
 #endif
-#if defined(GST_IOS_PLUGIN_SPANDSP) || defined(GST_IOS_PLUGINS_CODECS)
-GST_PLUGIN_STATIC_DECLARE(spandsp);
-#endif
+//#if defined(GST_IOS_PLUGIN_SPANDSP) || defined(GST_IOS_PLUGINS_CODECS)
+//GST_PLUGIN_STATIC_DECLARE(spandsp);
+//#endif
 #if defined(GST_IOS_PLUGIN_TCP) || defined(GST_IOS_PLUGINS_NET)
 GST_PLUGIN_STATIC_DECLARE(tcp);
 #endif
@@ -495,9 +495,9 @@ GST_PLUGIN_STATIC_DECLARE(sdp);
 #if defined(GST_IOS_PLUGIN_SRTP) || defined(GST_IOS_PLUGINS_NET)
 GST_PLUGIN_STATIC_DECLARE(srtp);
 #endif
-#if defined(GST_IOS_PLUGIN_RTSPCLIENTSINK) || defined(GST_IOS_PLUGINS_NET)
-GST_PLUGIN_STATIC_DECLARE(rtspclientsink);
-#endif
+//#if defined(GST_IOS_PLUGIN_RTSPCLIENTSINK) || defined(GST_IOS_PLUGINS_NET)
+//GST_PLUGIN_STATIC_DECLARE(rtspclientsink);
+//#endif
 
 GST_PLUGIN_STATIC_DECLARE(nice);
 
@@ -660,9 +660,9 @@ gst_ios_init (void)
 #if defined(GST_IOS_PLUGIN_LAME) || defined(GST_IOS_PLUGINS_CODECS_RESTRICTED)
     GST_PLUGIN_STATIC_REGISTER(lame);
 #endif
-#if defined(GST_IOS_PLUGIN_MPG123) || defined(GST_IOS_PLUGINS_CODECS_RESTRICTED)
-    GST_PLUGIN_STATIC_REGISTER(mpg123);
-#endif
+//#if defined(GST_IOS_PLUGIN_MPG123) || defined(GST_IOS_PLUGINS_CODECS_RESTRICTED)
+////    GST_PLUGIN_STATIC_REGISTER(mpg123);
+//#endif
 #if defined(GST_IOS_PLUGIN_LIBAV) || defined(GST_IOS_PLUGINS_CODECS_RESTRICTED)
     GST_PLUGIN_STATIC_REGISTER(libav);
 #endif
@@ -831,9 +831,9 @@ gst_ios_init (void)
 #if defined(GST_IOS_PLUGIN_SPEED) || defined(GST_IOS_PLUGINS_EFFECTS)
     GST_PLUGIN_STATIC_REGISTER(speed);
 #endif
-#if defined(GST_IOS_PLUGIN_SOUNDTOUCH) || defined(GST_IOS_PLUGINS_EFFECTS)
-    GST_PLUGIN_STATIC_REGISTER(soundtouch);
-#endif
+//#if defined(GST_IOS_PLUGIN_SOUNDTOUCH) || defined(GST_IOS_PLUGINS_EFFECTS)
+//    GST_PLUGIN_STATIC_REGISTER(soundtouch);
+//#endif
 #if defined(GST_IOS_PLUGIN_VIDEOFILTERSBAD) || defined(GST_IOS_PLUGINS_EFFECTS)
     GST_PLUGIN_STATIC_REGISTER(videofiltersbad);
 #endif
@@ -948,9 +948,9 @@ gst_ios_init (void)
 #if defined(GST_IOS_PLUGIN_DVDSPU) || defined(GST_IOS_PLUGINS_CODECS)
     GST_PLUGIN_STATIC_REGISTER(dvdspu);
 #endif
-#if defined(GST_IOS_PLUGIN_HLS) || defined(GST_IOS_PLUGINS_CODECS)
-    GST_PLUGIN_STATIC_REGISTER(hls);
-#endif
+//#if defined(GST_IOS_PLUGIN_HLS) || defined(GST_IOS_PLUGINS_CODECS)
+//    GST_PLUGIN_STATIC_REGISTER(hls);
+//#endif
 #if defined(GST_IOS_PLUGIN_ID3TAG) || defined(GST_IOS_PLUGINS_CODECS)
     GST_PLUGIN_STATIC_REGISTER(id3tag);
 #endif
@@ -966,9 +966,9 @@ gst_ios_init (void)
 #if defined(GST_IOS_PLUGIN_OPENH264) || defined(GST_IOS_PLUGINS_CODECS)
     GST_PLUGIN_STATIC_REGISTER(openh264);
 #endif
-#if defined(GST_IOS_PLUGIN_OPUSPARSE) || defined(GST_IOS_PLUGINS_CODECS)
-    GST_PLUGIN_STATIC_REGISTER(opusparse);
-#endif
+//#if defined(GST_IOS_PLUGIN_OPUSPARSE) || defined(GST_IOS_PLUGINS_CODECS)
+//    GST_PLUGIN_STATIC_REGISTER(opusparse);
+//#endif
 #if defined(GST_IOS_PLUGIN_PCAPPARSE) || defined(GST_IOS_PLUGINS_CODECS)
     GST_PLUGIN_STATIC_REGISTER(pcapparse);
 #endif
@@ -1008,9 +1008,9 @@ gst_ios_init (void)
 #if defined(GST_IOS_PLUGIN_OPENJPEG) || defined(GST_IOS_PLUGINS_CODECS)
     GST_PLUGIN_STATIC_REGISTER(openjpeg);
 #endif
-#if defined(GST_IOS_PLUGIN_SPANDSP) || defined(GST_IOS_PLUGINS_CODECS)
-    GST_PLUGIN_STATIC_REGISTER(spandsp);
-#endif
+//#if defined(GST_IOS_PLUGIN_SPANDSP) || defined(GST_IOS_PLUGINS_CODECS)
+//    GST_PLUGIN_STATIC_REGISTER(spandsp);
+//#endif
 #if defined(GST_IOS_PLUGIN_TCP) || defined(GST_IOS_PLUGINS_NET)
     GST_PLUGIN_STATIC_REGISTER(tcp);
 #endif
@@ -1038,9 +1038,9 @@ gst_ios_init (void)
 #if defined(GST_IOS_PLUGIN_SRTP) || defined(GST_IOS_PLUGINS_NET)
     GST_PLUGIN_STATIC_REGISTER(srtp);
 #endif
-#if defined(GST_IOS_PLUGIN_RTSPCLIENTSINK) || defined(GST_IOS_PLUGINS_NET)
-    GST_PLUGIN_STATIC_REGISTER(rtspclientsink);
-#endif
+//#if defined(GST_IOS_PLUGIN_RTSPCLIENTSINK) || defined(GST_IOS_PLUGINS_NET)
+//    GST_PLUGIN_STATIC_REGISTER(rtspclientsink);
+//#endif
     
 #if defined(GST_IOS_GIO_MODULE_GNUTLS)
     GST_G_IO_MODULE_LOAD(gnutls);

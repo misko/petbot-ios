@@ -31,29 +31,30 @@
 #endif
 
 const char * PBMSG_TYPES_STRING[] = {
-	"UNKNOWN",
-	"MESSAGE",
+        "FAIL",
+        "SUCCESS",
+        "BUSY",
+        "REQUEST",
+        "RESPONSE",
+        "EVENT",
+        "VIDEO",
+        "ICE",
+        "COOKIE",
+        "SOUND",
+        "WIFI",
+        "LED",
+        "CLIENT",
+        "SERVER",
+        "ALL",
+        "CONFIG_SET",
+        "CONFIG_GET",
+        "CONNECTED",
+        "DISCONNECTED",
+        "STRING",
+        "PTR",
+        "BIN",
 	"FILE",
-	"EVENT",
-	"SERVER",
-	"KEEP_ALIVE",
-	"REQUEST",
-	"RESPONSE_SUCCESS",
-	"RESPONSE_FAIL",
-	"ICE_EVENT",
-	"RESET_EVENT",
-	"FULL_EVENT",
-	"TREAT_EVENT",
-	"SOUND_EVENT",
-	"PICTURE_EVENT",
-	"SELFIE_EVENT",
-	"CONFIG_SET_EVENT",
-	"CONFIG_GET_EVENT",
-	"STREAM_EVENT",
-	"QOS_EVENT",
-	"CONNNECTED_EVENT",
-	"DISCONNECTED_EVENT",
-	"ACTION_EVENT"
+        "KEEP_ALIVE"
 };
 
 #ifdef PBSSL
@@ -337,7 +338,7 @@ pbmsg * new_pbmsg() {
 		return NULL;
 	}
 	m->pbmsg_len=0;
-	m->pbmsg_type=PBMSG_UNKNOWN;
+	m->pbmsg_type=0;
 	m->pbmsg=NULL;
 	m->pbmsg_from=0;
 	return m;
@@ -347,7 +348,15 @@ pbmsg * new_pbmsg_from_str(const char * s) {
 	pbmsg * m = new_pbmsg();
 	m->pbmsg_len=strlen(s)+1;
 	m->pbmsg=strdup(s);
-	m->pbmsg_type=PBMSG_MESSAGE;
+	m->pbmsg_type=PBMSG_STRING;
+	return m;
+}
+
+pbmsg * new_pbmsg_from_str_wtype(const char * s, int type) {
+	pbmsg * m = new_pbmsg();
+	m->pbmsg_len=strlen(s)+1;
+	m->pbmsg=strdup(s);
+	m->pbmsg_type=type;
 	return m;
 }
 
@@ -567,6 +576,35 @@ int write_file(const char *fn , char * buffer, size_t len) {
 	return ret;
 }
 
+pbmsg * new_pbmsg_from_ptr_and_int(void * x , int z) {
+	pbmsg * m = new_pbmsg();
+	assert(sizeof(void*)==4); // fail on non interoperable systems
+	m->pbmsg_len = 2*sizeof(void *);
+	m->pbmsg_type = PBMSG_PTR;
+	m->pbmsg = (char *)malloc(2*sizeof(void *)); //TODO : this is messy
+	if (m->pbmsg==NULL) {
+		PBPRINTF("Failed to malloc right size for ptr\n");
+		return NULL;
+	};
+	void ** y = (void **)m->pbmsg;
+	*y=x;
+	*(y+1)=(void*)z;
+	return m;
+}
+
+pbmsg * new_pbmsg_from_ptr(void * x ) {
+	pbmsg * m = new_pbmsg();
+	m->pbmsg_len = sizeof(void *);
+	m->pbmsg_type = PBMSG_PTR;
+	m->pbmsg = (char *)malloc(sizeof(void *));
+	if (m->pbmsg==NULL) {
+		PBPRINTF("Failed to malloc right size for ptr\n");
+		return NULL;
+	};
+	void ** y = (void **)m->pbmsg;
+	*y=x;
+	return m;
+}
 
 pbmsg * new_pbmsg_from_file(const char * fn) {
 	size_t len=0; 
@@ -592,7 +630,7 @@ char * pbmsg_type_to_string(pbmsg *m) {
 	size_t len = 0;
 	for (int i=0; i<=PBMSG_MAX_TYPE; i++) {
 		if ( (m->pbmsg_type & (1<<i)) != 0) { 
-			len+=strlen(PBMSG_TYPES_STRING[i])+1;
+			len+=strlen(PBMSG_TYPES_STRING[i])+3;
 		}
 	}
 	char * ret=(char*)malloc(len);
@@ -604,8 +642,13 @@ char * pbmsg_type_to_string(pbmsg *m) {
 	for (int i=0; i<=PBMSG_MAX_TYPE; i++) {
 		if ( (m->pbmsg_type & (1<<i)) != 0) { 
 			strncat(ret,PBMSG_TYPES_STRING[i],len-strlen(ret));
+			strncat(ret,",",len-strlen(ret));
 		}
 	}
 	return ret;	
 }
 
+
+int pbmsg_has_type(pbmsg * m , int ty ) {
+	return (m->pbmsg_type & ty)!=0 ? 1 : 0;
+}

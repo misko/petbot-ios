@@ -27,8 +27,8 @@
 		CC2448C51CC6D9240036CEB3 /* gst_ios_init.m in Sources */ = {isa = PBXBuildFile; fileRef = CC2448BE1CC6D9240036CEB3 /* gst_ios_init.m */; };
 		CC2448C61CC6D9240036CEB3 /* GStreamerBackend.m in Sources */ = {isa = PBXBuildFile; fileRef = CC2448C01CC6D9240036CEB3 /* GStreamerBackend.m */; };
 		CC2448C71CC6D9240036CEB3 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CC2448C31CC6D9240036CEB3 /* ViewController.m */; };
+		CC5C0B7B1D6A9F9400CC4CEF /* GStreamer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC5C0B7A1D6A9F9400CC4CEF /* GStreamer.framework */; };
 		CC8B24AB1D07A52700FBE180 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CC8B24AA1D07A52700FBE180 /* libcrypto.a */; };
-		CCD38AB81D0B3BCD005EF60A /* GStreamer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CCD38AB71D0B3BCD005EF60A /* GStreamer.framework */; };
 		CCD38ABA1D0B5954005EF60A /* TODO in Resources */ = {isa = PBXBuildFile; fileRef = CCD38AB91D0B5954005EF60A /* TODO */; };
 		CCE22D531CE12ED30096CA68 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CCE22D521CE12ED30096CA68 /* LoginViewController.m */; };
 /* End PBXBuildFile section */
@@ -87,8 +87,8 @@
 		CC2448C11CC6D9240036CEB3 /* GStreamerBackendDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GStreamerBackendDelegate.h; sourceTree = "<group>"; };
 		CC2448C21CC6D9240036CEB3 /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		CC2448C31CC6D9240036CEB3 /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		CC5C0B7A1D6A9F9400CC4CEF /* GStreamer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GStreamer.framework; path = ../../../../../Library/Developer/GStreamer/iPhone.sdk/GStreamer.framework; sourceTree = "<group>"; };
 		CC8B24AA1D07A52700FBE180 /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcrypto.a; path = "petbot/libs/openssl-1.0.2f-iOS/lib/libcrypto.a"; sourceTree = "<group>"; };
-		CCD38AB71D0B3BCD005EF60A /* GStreamer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GStreamer.framework; path = ../../../../../../Library/Frameworks/GStreamer.framework; sourceTree = "<group>"; };
 		CCD38AB91D0B5954005EF60A /* TODO */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TODO; sourceTree = "<group>"; };
 		CCE22D511CE12ED30096CA68 /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LoginViewController.h; path = ../LoginViewController.h; sourceTree = "<group>"; };
 		CCE22D521CE12ED30096CA68 /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LoginViewController.m; path = ../LoginViewController.m; sourceTree = "<group>"; };
@@ -99,7 +99,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CCD38AB81D0B3BCD005EF60A /* GStreamer.framework in Frameworks */,
+				CC5C0B7B1D6A9F9400CC4CEF /* GStreamer.framework in Frameworks */,
 				CC2448A71CC61B600036CEB3 /* libiconv.2.4.0.tbd in Frameworks */,
 				CC23F89C1CC6178C00EA0E62 /* UIKit.framework in Frameworks */,
 				CC8B24AB1D07A52700FBE180 /* libcrypto.a in Frameworks */,
@@ -130,7 +130,7 @@
 		CC23F84C1CBEDA4A00EA0E62 = {
 			isa = PBXGroup;
 			children = (
-				CCD38AB71D0B3BCD005EF60A /* GStreamer.framework */,
+				CC5C0B7A1D6A9F9400CC4CEF /* GStreamer.framework */,
 				CC8B24AA1D07A52700FBE180 /* libcrypto.a */,
 				CC2448A61CC61B600036CEB3 /* libiconv.2.4.0.tbd */,
 				CC23F89F1CC617A000EA0E62 /* CoreGraphics.framework */,
