@@ -30,92 +30,9 @@ GST_DEBUG_CATEGORY_STATIC (debug_category);
     GMainLoop *main_loop;  /* GLib main loop */
     gboolean initialized;  /* To avoid informing the UI multiple times about the initialization */
     UIView *ui_video_view; /* UIView that holds the video */
-    NSDictionary * loginInfo;
-    const char * pubsubserver_secret;
-    const char * pubsubserver_server;
-    const char * pubsubserver_username;
-    const char * pubsubserver_protocol;
-    int bb_streamer_id;
-    int pubsubserver_port;
-    pbsock * pbs;
-    NSString * petbot_state; //connecting, ice_request, ice_negotiate, streaming, logoff
-    int ice_thread_pipes_to_child[2];
-    int ice_thread_pipes_from_child[2];
+
     ViewController * vc;
 }
-
--(void) listenForEvents {
-    pbmsg * m = recv_pbmsg(pbs);
-    if ((m->pbmsg_type ^  (PBMSG_SUCCESS | PBMSG_RESPONSE | PBMSG_ICE | PBMSG_CLIENT | PBMSG_STRING))==0) {
-        fprintf(stderr,"GOT A ICE RESPONSE BACK!\n");
-        [self ice_negotiate:m];
-    } else if ((m->pbmsg_type & PBMSG_DISCONNECTED) !=0) {
-        if (m->pbmsg_from==bb_streamer_id) {
-            fprintf(stderr,"The other side exited!\n");
-            g_main_loop_quit(main_loop);
-        } else {
-            fprintf(stderr,"SOMEONE ELSE DISCONNETED %d vs %d\n",bb_streamer_id,m->pbmsg_from);
-        }
-    } else {
-        fprintf(stderr,"WTF\n");
-    }
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        [self listenForEvents];
-    });
-}
-
--(void) connect {
-    fprintf(stderr, "pbstate: Connecting...");
-#ifdef PBSSL
-    SSL_CTX* ctx;
-    OpenSSL_add_ssl_algorithms();
-    SSL_load_error_strings();
-    ctx = SSL_CTX_new (SSLv23_client_method());
-    pbs = connect_to_server_with_key(pubsubserver_server,pubsubserver_port,ctx,pubsubserver_secret);
-#else
-    pbs = connect_to_server_with_key(pbhost,port,key);
-#endif
-    if (pbs==NULL) {
-        //TODO error handling!!!!
-        exit(1);
-    }
-    
-    //start up the listener
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        [self listenForEvents];
-    });
-    
-    int ret = pipe(ice_thread_pipes_to_child);
-    assert(ret==0);
-    ret= pipe(ice_thread_pipes_from_child);
-    assert(ret==0);
-    start_nice_thread(0,ice_thread_pipes_from_child,ice_thread_pipes_to_child);
-    //start_nice_client(pbs);
-    
-    petbot_state = @"pbstate: ice_request";
-    
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        [self ice_request];
-    });
-}
-
--(void) ice_request {
-    pbmsg * ice_request_m = make_ice_request(ice_thread_pipes_from_child,ice_thread_pipes_to_child);
-    fprintf(stderr,"make the ice request!\n");
-    send_pbmsg(pbs, ice_request_m);
-    fprintf(stderr,"made the ice request\n");
-}
-
--(void) ice_negotiate:(pbmsg *)m {
-    bb_streamer_id = m->pbmsg_from;
-    fprintf(stderr,"BBSTREAMER ID %d\n",bb_streamer_id);
-    recvd_ice_response(m,ice_thread_pipes_from_child,ice_thread_pipes_to_child);
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        [self app_function];
-    });
-    fprintf(stderr,"LAUNCHED APP FUNCTION\n");
-}
-
 
 /*
  * Interface methods
@@ -123,15 +40,7 @@ GST_DEBUG_CATEGORY_STATIC (debug_category);
 
 -(id) init:(id) uiDelegate videoView:(UIView *)video_view serverInfo:(NSDictionary *)loginInfo vc:(ViewController *)vc
 {
-    petbot_state = @"connecting";
     self->vc = vc;
-    //TODO check for errors here?
-    self->loginInfo=loginInfo;
-    pubsubserver_port = [[self->loginInfo objectForKey:@"port"] intValue];
-    pubsubserver_secret = [[self->loginInfo objectForKey:@"secret"] UTF8String];
-    pubsubserver_server = [[self->loginInfo objectForKey:@"server"] UTF8String];
-    pubsubserver_username = [[self->loginInfo objectForKey:@"username"] UTF8String];
-    bb_streamer_id=0;
    // pubsubserver_server = "127.0.0.1"; // TODO UNCOMMENT FOR LIVE!
     if (self = [super init])
     {
@@ -147,14 +56,6 @@ GST_DEBUG_CATEGORY_STATIC (debug_category);
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             [self init_glib];
         });
-        
-        /* Start the bus monitoring task */
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            [self connect];
-        });
-        
-        
-
     }
 
     return self;
@@ -167,11 +68,17 @@ GST_DEBUG_CATEGORY_STATIC (debug_category);
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         GST_DEBUG ("Entering main loop...");
+        fprintf(stderr,"ENTER MAIN LOOP\n");
         main_loop = g_main_loop_new (NULL, FALSE);
         g_main_loop_run (main_loop);
+        fprintf(stderr,"EXIT MAIN LOOP\n");
         GST_DEBUG ("Exited main loop");
     });
     fprintf(stderr,"Glib loop started\n");
+}
+
+-(void) quit {
+    g_main_loop_quit(main_loop);
 }
 
 

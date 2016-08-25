@@ -134,6 +134,9 @@
                                         <integer key="value" value="4"/>
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="selfiePressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="n44-Oc-F8y"/>
+                                </connections>
                             </button>
                             <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Tpb-wo-PKF" userLabel="Setup">
                                 <rect key="frame" x="490" y="550" width="90" height="30"/>
