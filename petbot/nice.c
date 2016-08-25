@@ -442,13 +442,13 @@ cb_component_state_changed(NiceAgent *agent, guint _stream_id,
     gpointer data)
 {
 
-  g_debug("SIGNAL: state changed %d %d %s[%d]\n",
+  g_debug("SIGNAL: state changedXX %d %d %s[%d]\n",
       _stream_id, component_id, state_name[state], state);
-  fprintf(stderr,"SIGNAL: state changed %d %d %s[%d]\n",
+  fprintf(stderr,"SIGNAL: state changedXX %d %d %s[%d]\n",
       _stream_id, component_id, state_name[state], state);
 
   //if (state == NICE_COMPONENT_STATE_READY) {
-  if (state == NICE_COMPONENT_STATE_CONNECTED) {
+  if (state == NICE_COMPONENT_STATE_READY || state == NICE_COMPONENT_STATE_CONNECTED) {
     NiceCandidate *local, *remote;
 
     // Get current selected candidate pair and print IP address used
@@ -479,6 +479,8 @@ cb_component_state_changed(NiceAgent *agent, guint _stream_id,
 
     //g_main_loop_quit (gloop);
     agent=NULL;
+  } else {
+      fprintf(stderr,"WEIRD STATE CHANGE??? WTF\n");
   }
 }
 

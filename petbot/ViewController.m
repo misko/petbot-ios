@@ -12,11 +12,17 @@
     NSDictionary * loginArray;
     pbsock * pbs ;
 }
-
+- (IBAction)cookiePressed:(id)sender;
+    
 @end
 
 @implementation ViewController
-
+-(void)toLogin {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        // code here
+        [self performSegueWithIdentifier:@"segueToLogin" sender:self];
+    });
+}
 
 /*
  * Methods from UIViewController
@@ -37,7 +43,7 @@
     media_width = 640;
     media_height = 480;
 
-    gst_backend = [[GStreamerBackend alloc] init:self videoView:video_view serverInfo:[loginArray objectForKey:@"pubsubserver"]];
+    gst_backend = [[GStreamerBackend alloc] init:self videoView:video_view serverInfo:[loginArray objectForKey:@"pubsubserver"] vc:self];
 }
 
 - (void)didReceiveMemoryWarning
@@ -84,4 +90,6 @@
 
 
 
+- (IBAction)cookiePressed:(id)sender {
+}
 @end

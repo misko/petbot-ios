@@ -41,6 +41,7 @@ GST_DEBUG_CATEGORY_STATIC (debug_category);
     NSString * petbot_state; //connecting, ice_request, ice_negotiate, streaming, logoff
     int ice_thread_pipes_to_child[2];
     int ice_thread_pipes_from_child[2];
+    ViewController * vc;
 }
 
 -(void) listenForEvents {
@@ -48,9 +49,15 @@ GST_DEBUG_CATEGORY_STATIC (debug_category);
     if ((m->pbmsg_type ^  (PBMSG_SUCCESS | PBMSG_RESPONSE | PBMSG_ICE | PBMSG_CLIENT | PBMSG_STRING))==0) {
         fprintf(stderr,"GOT A ICE RESPONSE BACK!\n");
         [self ice_negotiate:m];
-    } else if ((m->pbmsg_type & PBMSG_DISCONNECTED) !=0  && m->pbmsg_from==bb_streamer_id) {
-        fprintf(stderr,"The other side exited!\n");
-        
+    } else if ((m->pbmsg_type & PBMSG_DISCONNECTED) !=0) {
+        if (m->pbmsg_from==bb_streamer_id) {
+            fprintf(stderr,"The other side exited!\n");
+            g_main_loop_quit(main_loop);
+        } else {
+            fprintf(stderr,"SOMEONE ELSE DISCONNETED %d vs %d\n",bb_streamer_id,m->pbmsg_from);
+        }
+    } else {
+        fprintf(stderr,"WTF\n");
     }
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         [self listenForEvents];
@@ -101,6 +108,7 @@ GST_DEBUG_CATEGORY_STATIC (debug_category);
 
 -(void) ice_negotiate:(pbmsg *)m {
     bb_streamer_id = m->pbmsg_from;
+    fprintf(stderr,"BBSTREAMER ID %d\n",bb_streamer_id);
     recvd_ice_response(m,ice_thread_pipes_from_child,ice_thread_pipes_to_child);
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         [self app_function];
@@ -113,9 +121,10 @@ GST_DEBUG_CATEGORY_STATIC (debug_category);
  * Interface methods
  */
 
--(id) init:(id) uiDelegate videoView:(UIView *)video_view serverInfo:(NSDictionary *)loginInfo
+-(id) init:(id) uiDelegate videoView:(UIView *)video_view serverInfo:(NSDictionary *)loginInfo vc:(ViewController *)vc
 {
     petbot_state = @"connecting";
+    self->vc = vc;
     //TODO check for errors here?
     self->loginInfo=loginInfo;
     pubsubserver_port = [[self->loginInfo objectForKey:@"port"] intValue];
@@ -334,15 +343,19 @@ static void state_changed_cb (GstBus *bus, GstMessage *msg, GStreamerBackend *se
     [self check_initialization_complete];
     g_main_loop_run (main_loop);
     //GST_DEBUG ("Exited main loop");
-    //g_main_loop_unref (main_loop);
-    //main_loop = NULL;
-    
+    g_main_loop_unref (main_loop);
+    main_loop = NULL;
+    fprintf(stderr,"Exitted main loop!");
     /* Free resources */
     //g_main_context_pop_thread_default(context);
-    //g_main_context_unref (context);
-    //gst_element_set_state (pipeline, GST_STATE_NULL);
-    //gst_object_unref (pipeline);
-    
+    fprintf(stderr,"X11\n");
+    g_main_context_unref (context);
+    fprintf(stderr,"X111\n");
+    gst_element_set_state (pipeline, GST_STATE_NULL);
+    fprintf(stderr,"X11111\n");
+    gst_object_unref (pipeline);
+    fprintf(stderr,"X1\n");
+    [self->vc toLogin];
     return;
 }
 

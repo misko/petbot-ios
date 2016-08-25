@@ -14,5 +14,6 @@
 -(void) gstreamerInitialized;
 -(void) gstreamerSetUIMessage:(NSString *)message;
 -(void) setLoginArray:(NSDictionary *)dictionary;
+-(void) toLogin;
 
 @end
