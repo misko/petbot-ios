@@ -19,6 +19,7 @@ NSDictionary * loginArray;
 @implementation LoginViewController
 
 
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
@@ -90,6 +91,17 @@ NSDictionary * loginArray;
     }];
 }
 
+- (IBAction)unwindToLogin:(UIStoryboardSegue *)segue {
+    
+}
+
+- (IBAction)backToTheStart:(UIStoryboardSegue *)segue {
+    
+    // grab a reference
+    ViewController *viewController2 = segue.sourceViewController;
+    
+    // access public properties from ViewController2 here
+}
 /*
 #pragma mark - Navigation
 
