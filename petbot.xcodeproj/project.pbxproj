@@ -29,6 +29,9 @@
 		CC2448C71CC6D9240036CEB3 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CC2448C31CC6D9240036CEB3 /* ViewController.m */; };
 		CC2C33C71D702603007A886B /* SetupViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = CC2C33C61D702603007A886B /* SetupViewController.h */; };
 		CC2C33C91D702611007A886B /* SetupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CC2C33C81D702611007A886B /* SetupViewController.m */; };
+		CC2C33D31D7BEE05007A886B /* UserInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CC2C33D21D7BEE05007A886B /* UserInfoViewController.m */; };
+		CC2C33D51D7BEF0D007A886B /* WifiInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CC2C33D41D7BEF0D007A886B /* WifiInfoViewController.m */; };
+		CC2C33D81D7BEF84007A886B /* QRViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CC2C33D71D7BEF84007A886B /* QRViewController.m */; };
 		CC5C0B7B1D6A9F9400CC4CEF /* GStreamer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC5C0B7A1D6A9F9400CC4CEF /* GStreamer.framework */; };
 		CC8B24AB1D07A52700FBE180 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CC8B24AA1D07A52700FBE180 /* libcrypto.a */; };
 		CCD38ABA1D0B5954005EF60A /* TODO in Resources */ = {isa = PBXBuildFile; fileRef = CCD38AB91D0B5954005EF60A /* TODO */; };
@@ -92,6 +95,12 @@
 		CC2C33C61D702603007A886B /* SetupViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetupViewController.h; sourceTree = "<group>"; };
 		CC2C33C81D702611007A886B /* SetupViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SetupViewController.m; sourceTree = "<group>"; };
 		CC2C33CA1D702709007A886B /* pb-ios.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "pb-ios.h"; sourceTree = "<group>"; };
+		CC2C33D11D7BEDFB007A886B /* UserInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserInfoViewController.h; sourceTree = "<group>"; };
+		CC2C33D21D7BEE05007A886B /* UserInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserInfoViewController.m; sourceTree = "<group>"; };
+		CC2C33D41D7BEF0D007A886B /* WifiInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WifiInfoViewController.m; sourceTree = "<group>"; };
+		CC2C33D61D7BEF17007A886B /* WifiInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WifiInfoViewController.h; sourceTree = "<group>"; };
+		CC2C33D71D7BEF84007A886B /* QRViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QRViewController.m; sourceTree = "<group>"; };
+		CC2C33D91D7BEF8F007A886B /* QRViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QRViewController.h; sourceTree = "<group>"; };
 		CC5C0B7A1D6A9F9400CC4CEF /* GStreamer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GStreamer.framework; path = ../../../../../Library/Developer/GStreamer/iPhone.sdk/GStreamer.framework; sourceTree = "<group>"; };
 		CC8B24AA1D07A52700FBE180 /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcrypto.a; path = "petbot/libs/openssl-1.0.2f-iOS/lib/libcrypto.a"; sourceTree = "<group>"; };
 		CCD38AB91D0B5954005EF60A /* TODO */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TODO; sourceTree = "<group>"; };
@@ -136,7 +145,13 @@
 			isa = PBXGroup;
 			children = (
 				CC2C33C61D702603007A886B /* SetupViewController.h */,
+				CC2C33D11D7BEDFB007A886B /* UserInfoViewController.h */,
+				CC2C33D61D7BEF17007A886B /* WifiInfoViewController.h */,
+				CC2C33D91D7BEF8F007A886B /* QRViewController.h */,
 				CC2C33C81D702611007A886B /* SetupViewController.m */,
+				CC2C33D21D7BEE05007A886B /* UserInfoViewController.m */,
+				CC2C33D41D7BEF0D007A886B /* WifiInfoViewController.m */,
+				CC2C33D71D7BEF84007A886B /* QRViewController.m */,
 				CC5C0B7A1D6A9F9400CC4CEF /* GStreamer.framework */,
 				CC8B24AA1D07A52700FBE180 /* libcrypto.a */,
 				CC2448A61CC61B600036CEB3 /* libiconv.2.4.0.tbd */,
@@ -357,8 +372,11 @@
 				CC2C33C91D702611007A886B /* SetupViewController.m in Sources */,
 				CC2448C41CC6D9240036CEB3 /* EaglUIVIew.m in Sources */,
 				CC23F85D1CBEDA4B00EA0E62 /* AppDelegate.m in Sources */,
+				CC2C33D51D7BEF0D007A886B /* WifiInfoViewController.m in Sources */,
 				CC2448C71CC6D9240036CEB3 /* ViewController.m in Sources */,
 				CC2448C51CC6D9240036CEB3 /* gst_ios_init.m in Sources */,
+				CC2C33D31D7BEE05007A886B /* UserInfoViewController.m in Sources */,
+				CC2C33D81D7BEF84007A886B /* QRViewController.m in Sources */,
 				CC2448C61CC6D9240036CEB3 /* GStreamerBackend.m in Sources */,
 				CCE22D531CE12ED30096CA68 /* LoginViewController.m in Sources */,
 				CC23F88F1CC5FCE100EA0E62 /* nice.c in Sources */,
