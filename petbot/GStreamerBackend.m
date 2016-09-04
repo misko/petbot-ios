@@ -63,14 +63,18 @@ GST_DEBUG_CATEGORY_STATIC (debug_category);
 
 -(void) init_glib {
     /* Create our own GLib Main Context and make it the default one */
-    context = g_main_context_new ();
-    g_main_context_push_thread_default(context);
+    //context = g_main_context_new ();
+    //g_main_context_push_thread_default(context);
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         GST_DEBUG ("Entering main loop...");
         fprintf(stderr,"ENTER MAIN LOOP\n");
         main_loop = g_main_loop_new (NULL, FALSE);
         g_main_loop_run (main_loop);
+        //g_main_context_unref (context);
+        gst_element_set_state (pipeline, GST_STATE_NULL);
+        gst_object_unref (pipeline);
+        [self->vc toLogin];
         fprintf(stderr,"EXIT MAIN LOOP\n");
         GST_DEBUG ("Exited main loop");
     });
@@ -194,6 +198,7 @@ static void state_changed_cb (GstBus *bus, GstMessage *msg, GStreamerBackend *se
     
     GstCaps *nicesrc_caps = gst_caps_from_string("application/x-rtp, media=(string)video, clock-rate=(int)90000, encoding-name=(string)H264, payload=96");
     
+    g_object_set( G_OBJECT(autovideosink), "sync", FALSE, NULL);
     /* Create the empty pipeline */
     pipeline = gst_pipeline_new ("send-pipeline");
     
@@ -248,7 +253,8 @@ static void state_changed_cb (GstBus *bus, GstMessage *msg, GStreamerBackend *se
     //GST_DEBUG ("Entering main loop...");
     //main_loop = g_main_loop_new (context, FALSE);
     [self check_initialization_complete];
-    g_main_loop_run (main_loop);
+    return;
+    g_main_loop_run (main_loop); //TODO WE ALREADY CALL RUN MAIN somewhere else.. do we need this?
     //GST_DEBUG ("Exited main loop");
     g_main_loop_unref (main_loop);
     main_loop = NULL;

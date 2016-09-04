@@ -157,11 +157,12 @@
     bb_streamer_id=0;
     
     fprintf(stderr,"MAKING new connection.... \n");
+    
+    gst_backend = [[GStreamerBackend alloc] init:self videoView:video_view serverInfo:[loginArray objectForKey:@"pubsubserver"] vc:self];
     /* Start the bus monitoring task */
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         [self connect];
     });
-    gst_backend = [[GStreamerBackend alloc] init:self videoView:video_view serverInfo:[loginArray objectForKey:@"pubsubserver"] vc:self];
 }
 
 - (void)didReceiveMemoryWarning
