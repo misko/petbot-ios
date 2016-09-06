@@ -29,7 +29,7 @@
 
 
 
-// Take a peak at the data returned.
+// Take a peek at the data returned.
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
     if(!imageData) {
         imageData = [NSMutableData data];
