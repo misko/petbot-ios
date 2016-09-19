@@ -51,7 +51,7 @@ NSDictionary * loginArray;
     NSData* jsonData = [NSJSONSerialization dataWithJSONObject:newDatasetInfo options:0 error:&error];
     
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
-    [request setURL:[NSURL URLWithString:@"https://159.203.252.147:5000/AUTH"]];
+    [request setURL:[NSURL URLWithString:@"https://petbot.ca:5000/AUTH"]];
     [request setHTTPMethod:@"POST"];
     [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
     [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
