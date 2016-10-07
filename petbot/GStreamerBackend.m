@@ -5,7 +5,7 @@
 #include <agent.h>
 
 #include "tcp_utils.h"
-#include "nice.h"
+#include "nice_utils.h"
 #include <openssl/rsa.h>
 #include <openssl/crypto.h>
 #include <openssl/x509.h>
@@ -177,7 +177,6 @@ static void state_changed_cb (GstBus *bus, GstMessage *msg, GStreamerBackend *se
 
     GST_DEBUG ("Creating pipeline");
 
-    
     
     /* Build pipeline */
     GstElement *nicesrc, *rtph264depay, *avdec_h264, *videoconvert, *autovideosink;
