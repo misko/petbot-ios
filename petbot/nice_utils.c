@@ -339,7 +339,7 @@ NiceAgent * init_ice(int controlling, int to_parent, int from_parent) {
 
   // Create the nice agent
   agent = nice_agent_new(NULL,
-      NICE_COMPATIBILITY_RFC5245);
+      NICE_COMPATIBILITY_GOOGLE);
   if (agent == NULL) {
     g_error("Failed to create agent");
     PBPRINTF("FAILED TO CREATE NICE AGENT!\n");
@@ -476,6 +476,13 @@ cb_component_state_changed(NiceAgent *agent, guint _stream_id,
 
     //g_main_loop_quit (gloop);
     agent=NULL;
+  } else if (state==NICE_COMPONENT_STATE_CONNECTING) {
+      
+      fprintf(stderr,"NICE CONNECTING\n");
+  } else if (state==NICE_COMPONENT_STATE_DISCONNECTED) {
+    fprintf(stderr,"NICE DISCONNECTED\n");
+  } else if (state==NICE_COMPONENT_STATE_GATHERING) {
+      fprintf(stderr,"NICE GATHER\n");
   } else {
       PBPRINTF("WEIRD STATE CHANGE??? WTF\n");
   }
