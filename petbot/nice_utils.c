@@ -339,7 +339,7 @@ NiceAgent * init_ice(int controlling, int to_parent, int from_parent) {
 
   // Create the nice agent
   agent = nice_agent_new(NULL,
-      NICE_COMPATIBILITY_GOOGLE);
+      NICE_COMPATIBILITY_RFC5245);
   if (agent == NULL) {
     g_error("Failed to create agent");
     PBPRINTF("FAILED TO CREATE NICE AGENT!\n");
