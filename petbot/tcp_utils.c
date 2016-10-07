@@ -19,6 +19,8 @@
 #include <string.h>
 #include <signal.h>
 
+#include <errno.h>
+
 #include "pb.h"
 
 #ifdef PBSSL
@@ -53,8 +55,11 @@ const char * PBMSG_TYPES_STRING[] = {
         "STRING",
         "PTR",
         "BIN",
-	"FILE",
-        "KEEP_ALIVE"
+        "FILE",
+        "KEEP_ALIVE",
+        "GPIO",
+        "UPDATE",
+	"SYSTEM"
 };
 
 #ifdef PBSSL
@@ -93,8 +98,8 @@ pbsock* connect_to_server(const char * hostname, int portno) {
     /* socket: create the socket */
     int sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd < 0)  {
-	PBPRINTF("TCP_UTILS: Failed to socket\n");
-	return NULL;
+		PBPRINTF("TCP_UTILS: Failed to open socket: %s\n", strerror(errno));
+		return NULL;
     } 
 
     /* gethostbyname: get the server's DNS entry */
@@ -116,8 +121,8 @@ pbsock* connect_to_server(const char * hostname, int portno) {
 
     /* connect: create a connection with the server */
     if (connect(sockfd, (const struct sockaddr*)&serveraddr, sizeof(serveraddr)) < 0)  {
-	PBPRINTF("TCP_UTILS: Failed to socket\n");
-	return NULL;
+		PBPRINTF("TCP_UTILS: Failed to initiate connection on socket: %s\n", strerror(errno));
+		return NULL;
     }
 #ifdef PBSSL
     pbsock * pbs =  new_pbsock(sockfd,ctx,0);
@@ -578,7 +583,7 @@ int write_file(const char *fn , char * buffer, size_t len) {
 
 pbmsg * new_pbmsg_from_ptr_and_int(void * x , int z) {
 	pbmsg * m = new_pbmsg();
-	assert(sizeof(void*)==4); // fail on non interoperable systems
+	//assert(sizeof(void*)==4); // fail on non interoperable systems
 	m->pbmsg_len = 2*sizeof(void *);
 	m->pbmsg_type = PBMSG_PTR;
 	m->pbmsg = (char *)malloc(2*sizeof(void *)); //TODO : this is messy

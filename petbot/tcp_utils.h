@@ -57,10 +57,13 @@ typedef enum {
         PBMSG_PTR = (1<<20),
         PBMSG_BIN = (1<<21),
         PBMSG_FILE = (1<<22),
-	PBMSG_KEEP_ALIVE = (1<<23)
+	PBMSG_KEEP_ALIVE = (1<<23),
+	PBMSG_GPIO = (1<<24),
+	PBMSG_UPDATE = (1<<25),
+	PBMSG_SYSTEM = (1<<26)
 } pbmsg_type;
 
-#define PBMSG_MAX_TYPE 23
+#define PBMSG_MAX_TYPE 26
 
 typedef struct pbmsg {
 	uint32_t pbmsg_type;
@@ -83,6 +86,10 @@ typedef struct pbsock {
 	int client_sock;
 	pbsock_state state;
 } pbsock;
+
+#if defined __cplusplus
+extern "C" {
+#endif
 
 void free_pbsock(pbsock *pbs);
 
@@ -129,4 +136,8 @@ int write_file(const char *fn , char * buffer, size_t len);
 
 char * pbmsg_type_to_string(pbmsg *m) ;
 int pbmsg_has_type(pbmsg *m, int ty);
+#endif
+
+#if defined __cplusplus
+};
 #endif
