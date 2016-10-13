@@ -55,9 +55,14 @@
 // Close the connection
 - (void)connectionDidFinishLoading:(NSURLConnection*)connection {
     NSLog(@"Connection Closed.");
+    //NSString *responseString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    //NSLog(responseString);
     NSError *error;
     NSDictionary *dictionary = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
-   if ( [dictionary objectForKey:@"status"]==0 ) {
+    
+    int status =[[dictionary objectForKey:@"status"] intValue];
+    
+    if ( status == 0) {
         // WARN USER!
        NSLog(@"CHECK FAIL");
         [_continueButton setEnabled:FALSE];
@@ -66,6 +71,8 @@
         NSLog(@"CHECK PASS");
         [_continueButton setEnabled:TRUE];
     }
+    [data setLength:0];
+    
 }
 
 - (void)checkUsername {

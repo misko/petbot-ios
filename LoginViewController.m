@@ -8,6 +8,7 @@
 
 #import "LoginViewController.h"
 #import "ViewController.h"
+#import "pb-ios.h"
 
 
 @interface LoginViewController () {
@@ -51,7 +52,8 @@ NSDictionary * loginArray;
     NSData* jsonData = [NSJSONSerialization dataWithJSONObject:newDatasetInfo options:0 error:&error];
     
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
-    [request setURL:[NSURL URLWithString:@"https://petbot.ca:5000/AUTH"]];
+    //NSString * url = [NSString stringWithFormat:@"%s", HTTPS_ADDRESS_QRCODE_JSON];
+    [request setURL:[NSURL URLWithString:[NSString stringWithFormat:@"%s", HTTPS_ADDRESS_AUTH]]];
     [request setHTTPMethod:@"POST"];
     [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
     [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];

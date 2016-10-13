@@ -74,10 +74,14 @@
     NSString * wifiname = [loginArray objectForKey:@"wifiname"];
     NSString * wifikey = [loginArray objectForKey:@"wifikey"];
     
-    NSString * lengths = [NSString stringWithFormat:@"%ld:%ld:%ld:%ld:%lu", [username length], [email length], [password length], [wifiname length], [wifikey length]];
-    NSString * string = [NSString stringWithFormat:@"%@:%@:%@:%@:%@", username, email, password, wifiname, wifikey];
+    NSString * wait_time = @"20";
     
-    NSString * qr_string = [NSString stringWithFormat:@"SETUP:%@:%@", lengths, string];
+    //NSString * lengths = [NSString stringWithFormat:@"%ld:%ld:%ld:%ld:%lu", [username length], [email length], [password length], [wifiname length], [wifikey length]];
+    //NSString * string = [NSString stringWithFormat:@"%@:%@:%@:%@:%@", username, email, password, wifiname, wifikey];
+    //NSString * qr_string = [NSString stringWithFormat:@"SETUP:%@:%@", lengths, string];
+    NSString * qr_string = [NSString stringWithFormat:@"SETUP:%ld:%@:%ld:%@:%ld:%@:%ld:%@:%ld:%@:%ld:%@", [username length], username, [email length], email, [password length], password, [wifiname length], wifiname, [wifikey length], wifikey, [wait_time length], wait_time ];
+    
+    
     //build an info object and convert to json
     NSDictionary *newDatasetInfo = [NSDictionary dictionaryWithObjectsAndKeys:qr_string, @"text", nil];
     
