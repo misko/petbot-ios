@@ -38,6 +38,7 @@
 		CCA48C641DA7565300275348 /* nice_utils.c in Sources */ = {isa = PBXBuildFile; fileRef = CCA48C621DA7565300275348 /* nice_utils.c */; };
 		CCD38ABA1D0B5954005EF60A /* TODO in Resources */ = {isa = PBXBuildFile; fileRef = CCD38AB91D0B5954005EF60A /* TODO */; };
 		CCE22D531CE12ED30096CA68 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CCE22D521CE12ED30096CA68 /* LoginViewController.m */; };
+		CCED8B871DB09A9100E96B91 /* PBViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CCED8B861DB09A9100E96B91 /* PBViewController.m */; };
 		DCFE6642827B9F210B103294 /* libPods-petbot.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 347E91F8EE74CAF13F18A24A /* libPods-petbot.a */; };
 /* End PBXBuildFile section */
 
@@ -117,6 +118,8 @@
 		CCE22D511CE12ED30096CA68 /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LoginViewController.h; path = ../LoginViewController.h; sourceTree = "<group>"; };
 		CCE22D521CE12ED30096CA68 /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LoginViewController.m; path = ../LoginViewController.m; sourceTree = "<group>"; };
 		CCED8B821DB072C200E96B91 /* pb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pb.h; sourceTree = "<group>"; };
+		CCED8B861DB09A9100E96B91 /* PBViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBViewController.m; sourceTree = "<group>"; };
+		CCED8B881DB09AA100E96B91 /* PBViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PBViewController.h; sourceTree = "<group>"; };
 		D8C49DC429ABF475FB4E923E /* Pods-petbotUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-petbotUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-petbotUITests/Pods-petbotUITests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -175,6 +178,8 @@
 				CC2C33C61D702603007A886B /* SetupViewController.h */,
 				CC2C33D11D7BEDFB007A886B /* UserInfoViewController.h */,
 				CC2C33D61D7BEF17007A886B /* WifiInfoViewController.h */,
+				CCED8B861DB09A9100E96B91 /* PBViewController.m */,
+				CCED8B881DB09AA100E96B91 /* PBViewController.h */,
 				CC2C33D91D7BEF8F007A886B /* QRViewController.h */,
 				CC2C33C81D702611007A886B /* SetupViewController.m */,
 				CC2C33D21D7BEE05007A886B /* UserInfoViewController.m */,
@@ -560,6 +565,7 @@
 				CC2448C41CC6D9240036CEB3 /* EaglUIVIew.m in Sources */,
 				CC23F85D1CBEDA4B00EA0E62 /* AppDelegate.m in Sources */,
 				CC2C33D51D7BEF0D007A886B /* WifiInfoViewController.m in Sources */,
+				CCED8B871DB09A9100E96B91 /* PBViewController.m in Sources */,
 				CC2448C71CC6D9240036CEB3 /* ViewController.m in Sources */,
 				CC2448C51CC6D9240036CEB3 /* gst_ios_init.m in Sources */,
 				CC2C33D31D7BEE05007A886B /* UserInfoViewController.m in Sources */,

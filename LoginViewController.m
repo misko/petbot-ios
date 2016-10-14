@@ -24,19 +24,9 @@ NSDictionary * loginArray;
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    NSDictionary *options = @{
-                              kCRToastTextKey : @"Hello World!",
-                              kCRToastTextAlignmentKey : @(NSTextAlignmentCenter),
-                              kCRToastBackgroundColorKey : [UIColor redColor],
-                              kCRToastAnimationInTypeKey : @(CRToastAnimationTypeGravity),
-                              kCRToastAnimationOutTypeKey : @(CRToastAnimationTypeGravity),
-                              kCRToastAnimationInDirectionKey : @(CRToastAnimationDirectionLeft),
-                              kCRToastAnimationOutDirectionKey : @(CRToastAnimationDirectionRight)
-                              };
-    [CRToastManager showNotificationWithOptions:options
-                                completionBlock:^{
-                                    NSLog(@"Completed");
-                                }];
+    //[self toastStatus:true message:@"Hello there"];
+    
+
     // Do any additional setup after loading the view.
 
 }
