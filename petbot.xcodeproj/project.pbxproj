@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7FFE431F7F28074F20969ECE /* libPods-petbotUITests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 18710344F87D9B38F573CC0D /* libPods-petbotUITests.a */; };
+		A7ED669B8896567F4294BE5E /* libPods-petbotTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 53D72D7152664D64A235A083 /* libPods-petbotTests.a */; };
 		CC23F85A1CBEDA4B00EA0E62 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = CC23F8591CBEDA4B00EA0E62 /* main.m */; };
 		CC23F85D1CBEDA4B00EA0E62 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = CC23F85C1CBEDA4B00EA0E62 /* AppDelegate.m */; };
 		CC23F8631CBEDA4B00EA0E62 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CC23F8611CBEDA4B00EA0E62 /* Main.storyboard */; };
@@ -14,7 +16,6 @@
 		CC23F8681CBEDA4B00EA0E62 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CC23F8661CBEDA4B00EA0E62 /* LaunchScreen.storyboard */; };
 		CC23F8731CBEDA4B00EA0E62 /* petbotTests.m in Sources */ = {isa = PBXBuildFile; fileRef = CC23F8721CBEDA4B00EA0E62 /* petbotTests.m */; };
 		CC23F87E1CBEDA4B00EA0E62 /* petbotUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = CC23F87D1CBEDA4B00EA0E62 /* petbotUITests.m */; };
-		CC23F88F1CC5FCE100EA0E62 /* nice.c in Sources */ = {isa = PBXBuildFile; fileRef = CC23F88B1CC5FCE100EA0E62 /* nice.c */; };
 		CC23F8901CC5FCE100EA0E62 /* tcp_utils.c in Sources */ = {isa = PBXBuildFile; fileRef = CC23F88D1CC5FCE100EA0E62 /* tcp_utils.c */; };
 		CC23F8941CC6165800EA0E62 /* libssl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CC23F8931CC6165800EA0E62 /* libssl.a */; };
 		CC23F8961CC6166000EA0E62 /* libstdc++.6.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = CC23F8951CC6166000EA0E62 /* libstdc++.6.tbd */; };
@@ -34,8 +35,10 @@
 		CC2C33D81D7BEF84007A886B /* QRViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CC2C33D71D7BEF84007A886B /* QRViewController.m */; };
 		CC5C0B7B1D6A9F9400CC4CEF /* GStreamer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC5C0B7A1D6A9F9400CC4CEF /* GStreamer.framework */; };
 		CC8B24AB1D07A52700FBE180 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CC8B24AA1D07A52700FBE180 /* libcrypto.a */; };
+		CCA48C641DA7565300275348 /* nice_utils.c in Sources */ = {isa = PBXBuildFile; fileRef = CCA48C621DA7565300275348 /* nice_utils.c */; };
 		CCD38ABA1D0B5954005EF60A /* TODO in Resources */ = {isa = PBXBuildFile; fileRef = CCD38AB91D0B5954005EF60A /* TODO */; };
 		CCE22D531CE12ED30096CA68 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CCE22D521CE12ED30096CA68 /* LoginViewController.m */; };
+		DCFE6642827B9F210B103294 /* libPods-petbot.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 347E91F8EE74CAF13F18A24A /* libPods-petbot.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,6 +59,14 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		09FC2FA6D73D355D1EE07FC1 /* Pods-petbot.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-petbot.debug.xcconfig"; path = "Pods/Target Support Files/Pods-petbot/Pods-petbot.debug.xcconfig"; sourceTree = "<group>"; };
+		18710344F87D9B38F573CC0D /* libPods-petbotUITests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-petbotUITests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		27A575EAB466C2D11DD250D8 /* Pods-petbotTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-petbotTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-petbotTests/Pods-petbotTests.debug.xcconfig"; sourceTree = "<group>"; };
+		347E91F8EE74CAF13F18A24A /* libPods-petbot.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-petbot.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		53D72D7152664D64A235A083 /* libPods-petbotTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-petbotTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		55845B80B42262C9D92FC586 /* Pods-petbot.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-petbot.release.xcconfig"; path = "Pods/Target Support Files/Pods-petbot/Pods-petbot.release.xcconfig"; sourceTree = "<group>"; };
+		7F5E4F206B8437F049ADF652 /* Pods-petbotUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-petbotUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-petbotUITests/Pods-petbotUITests.debug.xcconfig"; sourceTree = "<group>"; };
+		955BF0A3EE7E9A2299F1B6F2 /* Pods-petbotTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-petbotTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-petbotTests/Pods-petbotTests.release.xcconfig"; sourceTree = "<group>"; };
 		CC23F8551CBEDA4A00EA0E62 /* petbot.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = petbot.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CC23F8591CBEDA4B00EA0E62 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		CC23F85B1CBEDA4B00EA0E62 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -70,8 +81,6 @@
 		CC23F8791CBEDA4B00EA0E62 /* petbotUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = petbotUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		CC23F87D1CBEDA4B00EA0E62 /* petbotUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = petbotUITests.m; sourceTree = "<group>"; };
 		CC23F87F1CBEDA4B00EA0E62 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		CC23F88B1CC5FCE100EA0E62 /* nice.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = nice.c; sourceTree = "<group>"; };
-		CC23F88C1CC5FCE100EA0E62 /* nice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nice.h; sourceTree = "<group>"; };
 		CC23F88D1CC5FCE100EA0E62 /* tcp_utils.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tcp_utils.c; sourceTree = "<group>"; };
 		CC23F88E1CC5FCE100EA0E62 /* tcp_utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tcp_utils.h; sourceTree = "<group>"; };
 		CC23F8931CC6165800EA0E62 /* libssl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libssl.a; path = "petbot/libs/openssl-1.0.2f-iOS/lib/libssl.a"; sourceTree = "<group>"; };
@@ -94,7 +103,6 @@
 		CC2448C31CC6D9240036CEB3 /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		CC2C33C61D702603007A886B /* SetupViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetupViewController.h; sourceTree = "<group>"; };
 		CC2C33C81D702611007A886B /* SetupViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SetupViewController.m; sourceTree = "<group>"; };
-		CC2C33CA1D702709007A886B /* pb-ios.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "pb-ios.h"; sourceTree = "<group>"; };
 		CC2C33D11D7BEDFB007A886B /* UserInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserInfoViewController.h; sourceTree = "<group>"; };
 		CC2C33D21D7BEE05007A886B /* UserInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserInfoViewController.m; sourceTree = "<group>"; };
 		CC2C33D41D7BEF0D007A886B /* WifiInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WifiInfoViewController.m; sourceTree = "<group>"; };
@@ -103,9 +111,13 @@
 		CC2C33D91D7BEF8F007A886B /* QRViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QRViewController.h; sourceTree = "<group>"; };
 		CC5C0B7A1D6A9F9400CC4CEF /* GStreamer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GStreamer.framework; path = ../../../../../Library/Developer/GStreamer/iPhone.sdk/GStreamer.framework; sourceTree = "<group>"; };
 		CC8B24AA1D07A52700FBE180 /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcrypto.a; path = "petbot/libs/openssl-1.0.2f-iOS/lib/libcrypto.a"; sourceTree = "<group>"; };
+		CCA48C621DA7565300275348 /* nice_utils.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = nice_utils.c; sourceTree = "<group>"; };
+		CCA48C631DA7565300275348 /* nice_utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nice_utils.h; sourceTree = "<group>"; };
 		CCD38AB91D0B5954005EF60A /* TODO */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TODO; sourceTree = "<group>"; };
 		CCE22D511CE12ED30096CA68 /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LoginViewController.h; path = ../LoginViewController.h; sourceTree = "<group>"; };
 		CCE22D521CE12ED30096CA68 /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LoginViewController.m; path = ../LoginViewController.m; sourceTree = "<group>"; };
+		CCED8B821DB072C200E96B91 /* pb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pb.h; sourceTree = "<group>"; };
+		D8C49DC429ABF475FB4E923E /* Pods-petbotUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-petbotUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-petbotUITests/Pods-petbotUITests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -121,6 +133,7 @@
 				CC23F89E1CC6179100EA0E62 /* Foundation.framework in Frameworks */,
 				CC23F8961CC6166000EA0E62 /* libstdc++.6.tbd in Frameworks */,
 				CC23F8941CC6165800EA0E62 /* libssl.a in Frameworks */,
+				DCFE6642827B9F210B103294 /* libPods-petbot.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -128,6 +141,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A7ED669B8896567F4294BE5E /* libPods-petbotTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -135,12 +149,26 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7FFE431F7F28074F20969ECE /* libPods-petbotUITests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1EAEB7B80549636BADEC5ABF /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				09FC2FA6D73D355D1EE07FC1 /* Pods-petbot.debug.xcconfig */,
+				55845B80B42262C9D92FC586 /* Pods-petbot.release.xcconfig */,
+				27A575EAB466C2D11DD250D8 /* Pods-petbotTests.debug.xcconfig */,
+				955BF0A3EE7E9A2299F1B6F2 /* Pods-petbotTests.release.xcconfig */,
+				7F5E4F206B8437F049ADF652 /* Pods-petbotUITests.debug.xcconfig */,
+				D8C49DC429ABF475FB4E923E /* Pods-petbotUITests.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 		CC23F84C1CBEDA4A00EA0E62 = {
 			isa = PBXGroup;
 			children = (
@@ -165,6 +193,8 @@
 				CC23F8711CBEDA4B00EA0E62 /* petbotTests */,
 				CC23F87C1CBEDA4B00EA0E62 /* petbotUITests */,
 				CC23F8561CBEDA4A00EA0E62 /* Products */,
+				1EAEB7B80549636BADEC5ABF /* Pods */,
+				CFFC9D71996F3A2CAE937DC9 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -181,13 +211,14 @@
 		CC23F8571CBEDA4B00EA0E62 /* petbot */ = {
 			isa = PBXGroup;
 			children = (
+				CCA48C621DA7565300275348 /* nice_utils.c */,
+				CCA48C631DA7565300275348 /* nice_utils.h */,
 				CCE22D511CE12ED30096CA68 /* LoginViewController.h */,
 				CCE22D521CE12ED30096CA68 /* LoginViewController.m */,
 				CC2448B91CC6D7CE0036CEB3 /* notes */,
-				CC23F88B1CC5FCE100EA0E62 /* nice.c */,
-				CC23F88C1CC5FCE100EA0E62 /* nice.h */,
 				CC23F88D1CC5FCE100EA0E62 /* tcp_utils.c */,
 				CC23F88E1CC5FCE100EA0E62 /* tcp_utils.h */,
+				CCED8B821DB072C200E96B91 /* pb.h */,
 				CC2448BB1CC6D9240036CEB3 /* EaglUIVIew.h */,
 				CC2448BC1CC6D9240036CEB3 /* EaglUIVIew.m */,
 				CC2448BF1CC6D9240036CEB3 /* GStreamerBackend.h */,
@@ -201,7 +232,6 @@
 				CC23F8661CBEDA4B00EA0E62 /* LaunchScreen.storyboard */,
 				CC23F8581CBEDA4B00EA0E62 /* Supporting Files */,
 				CCD38AB91D0B5954005EF60A /* TODO */,
-				CC2C33CA1D702709007A886B /* pb-ios.h */,
 			);
 			path = petbot;
 			sourceTree = "<group>";
@@ -237,6 +267,16 @@
 			path = petbotUITests;
 			sourceTree = "<group>";
 		};
+		CFFC9D71996F3A2CAE937DC9 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				347E91F8EE74CAF13F18A24A /* libPods-petbot.a */,
+				53D72D7152664D64A235A083 /* libPods-petbotTests.a */,
+				18710344F87D9B38F573CC0D /* libPods-petbotUITests.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -244,9 +284,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = CC23F8821CBEDA4B00EA0E62 /* Build configuration list for PBXNativeTarget "petbot" */;
 			buildPhases = (
+				33AF204EB044B03BCBE3FEC2 /* [CP] Check Pods Manifest.lock */,
 				CC23F8511CBEDA4A00EA0E62 /* Sources */,
 				CC23F8521CBEDA4A00EA0E62 /* Frameworks */,
 				CC23F8531CBEDA4A00EA0E62 /* Resources */,
+				F17A6A78A0316BA68E5D1C4D /* [CP] Embed Pods Frameworks */,
+				F399D6A9846E26397C2D13B6 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -261,9 +304,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = CC23F8851CBEDA4B00EA0E62 /* Build configuration list for PBXNativeTarget "petbotTests" */;
 			buildPhases = (
+				83D3B527859DB31F57B43B1C /* [CP] Check Pods Manifest.lock */,
 				CC23F86A1CBEDA4B00EA0E62 /* Sources */,
 				CC23F86B1CBEDA4B00EA0E62 /* Frameworks */,
 				CC23F86C1CBEDA4B00EA0E62 /* Resources */,
+				20031A8225CB546FD2B0827D /* [CP] Embed Pods Frameworks */,
+				48D4D452B41794F864EF225B /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -279,9 +325,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = CC23F8881CBEDA4B00EA0E62 /* Build configuration list for PBXNativeTarget "petbotUITests" */;
 			buildPhases = (
+				3AFBAB3B1EEAE21A09316BFD /* [CP] Check Pods Manifest.lock */,
 				CC23F8751CBEDA4B00EA0E62 /* Sources */,
 				CC23F8761CBEDA4B00EA0E62 /* Frameworks */,
 				CC23F8771CBEDA4B00EA0E62 /* Resources */,
+				41FB56B210E2019144C9B784 /* [CP] Embed Pods Frameworks */,
+				607F76756827DF60D3BF79E8 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -364,6 +413,144 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		20031A8225CB546FD2B0827D /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-petbotTests/Pods-petbotTests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		33AF204EB044B03BCBE3FEC2 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		3AFBAB3B1EEAE21A09316BFD /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		41FB56B210E2019144C9B784 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-petbotUITests/Pods-petbotUITests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		48D4D452B41794F864EF225B /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-petbotTests/Pods-petbotTests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		607F76756827DF60D3BF79E8 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-petbotUITests/Pods-petbotUITests-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		83D3B527859DB31F57B43B1C /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		F17A6A78A0316BA68E5D1C4D /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-petbot/Pods-petbot-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		F399D6A9846E26397C2D13B6 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-petbot/Pods-petbot-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		CC23F8511CBEDA4A00EA0E62 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -379,9 +566,9 @@
 				CC2C33D81D7BEF84007A886B /* QRViewController.m in Sources */,
 				CC2448C61CC6D9240036CEB3 /* GStreamerBackend.m in Sources */,
 				CCE22D531CE12ED30096CA68 /* LoginViewController.m in Sources */,
-				CC23F88F1CC5FCE100EA0E62 /* nice.c in Sources */,
 				CC23F8901CC5FCE100EA0E62 /* tcp_utils.c in Sources */,
 				CC23F85A1CBEDA4B00EA0E62 /* main.m in Sources */,
+				CCA48C641DA7565300275348 /* nice_utils.c in Sources */,
 				CC2C33C71D702603007A886B /* SetupViewController.h in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -523,6 +710,7 @@
 		};
 		CC23F8831CBEDA4B00EA0E62 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 09FC2FA6D73D355D1EE07FC1 /* Pods-petbot.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -535,7 +723,10 @@
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = petbot/PrefixHeader.pch;
-				HEADER_SEARCH_PATHS = "\"~/Library/Developer/GStreamer/iPhone.sdk/GStreamer.framework/Headers\"";
+				HEADER_SEARCH_PATHS = (
+					"\"~/Library/Developer/GStreamer/iPhone.sdk/GStreamer.framework/Headers\"",
+					"$(inherited)",
+				);
 				INFOPLIST_FILE = petbot/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -543,10 +734,12 @@
 					"$(SRCROOT)/petbot/libs/openssl-1.0.2f-iOS/lib",
 					"$(PROJECT_DIR)/petbot/libs/openssl-1.0.2f-iOS/lib",
 					"$(PROJECT_DIR)/petbot/ZBarSDK",
+					"$(inherited)",
 				);
 				OTHER_CFLAGS = (
 					"-DPBSSL",
 					"-DPBTHREADS",
+					"$(inherited)",
 				);
 				OTHER_LDFLAGS = (
 					"-lresolv",
@@ -575,6 +768,7 @@
 					AssetsLibrary,
 					"-weak_framework",
 					VideoToolBox,
+					"$(inherited)",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = csmisko.petbot;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -584,6 +778,7 @@
 		};
 		CC23F8841CBEDA4B00EA0E62 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 55845B80B42262C9D92FC586 /* Pods-petbot.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -596,7 +791,10 @@
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = petbot/PrefixHeader.pch;
-				HEADER_SEARCH_PATHS = "\"~/Library/Developer/GStreamer/iPhone.sdk/GStreamer.framework/Headers\"";
+				HEADER_SEARCH_PATHS = (
+					"\"~/Library/Developer/GStreamer/iPhone.sdk/GStreamer.framework/Headers\"",
+					"$(inherited)",
+				);
 				INFOPLIST_FILE = petbot/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -604,10 +802,12 @@
 					"$(SRCROOT)/petbot/libs/openssl-1.0.2f-iOS/lib",
 					"$(PROJECT_DIR)/petbot/libs/openssl-1.0.2f-iOS/lib",
 					"$(PROJECT_DIR)/petbot/ZBarSDK",
+					"$(inherited)",
 				);
 				OTHER_CFLAGS = (
 					"-DPBSSL",
 					"-DPBTHREADS",
+					"$(inherited)",
 				);
 				OTHER_LDFLAGS = (
 					"-lresolv",
@@ -636,6 +836,7 @@
 					AssetsLibrary,
 					"-weak_framework",
 					VideoToolBox,
+					"$(inherited)",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = csmisko.petbot;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -645,6 +846,7 @@
 		};
 		CC23F8861CBEDA4B00EA0E62 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 27A575EAB466C2D11DD250D8 /* Pods-petbotTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				INFOPLIST_FILE = petbotTests/Info.plist;
@@ -657,6 +859,7 @@
 		};
 		CC23F8871CBEDA4B00EA0E62 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 955BF0A3EE7E9A2299F1B6F2 /* Pods-petbotTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				INFOPLIST_FILE = petbotTests/Info.plist;
@@ -669,6 +872,7 @@
 		};
 		CC23F8891CBEDA4B00EA0E62 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7F5E4F206B8437F049ADF652 /* Pods-petbotUITests.debug.xcconfig */;
 			buildSettings = {
 				INFOPLIST_FILE = petbotUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -680,6 +884,7 @@
 		};
 		CC23F88A1CBEDA4B00EA0E62 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D8C49DC429ABF475FB4E923E /* Pods-petbotUITests.release.xcconfig */;
 			buildSettings = {
 				INFOPLIST_FILE = petbotUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
