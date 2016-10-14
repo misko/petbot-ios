@@ -9,11 +9,13 @@
 #import "QRViewController.h"
 #import "WifiInfoViewController.h"
 #import "ViewController.h"
-#import "petbot/pb-ios.h"
+#import "pb.h"
+#import "tcp_utils.h"
 
 @interface QRViewController () {
     NSMutableData * imageData;
     NSDictionary * loginArray;
+    NSString * qr_string;
 }
 
 @end
@@ -51,7 +53,7 @@
     }
     
     [imageData appendData:data];
-    NSLog(@"Set data %@",[data description]);
+    //NSLog(@"Set data %@",[data description]);
     //How to get this information back up into the getGroups method
 }
 
@@ -79,8 +81,8 @@
     //NSString * lengths = [NSString stringWithFormat:@"%ld:%ld:%ld:%ld:%lu", [username length], [email length], [password length], [wifiname length], [wifikey length]];
     //NSString * string = [NSString stringWithFormat:@"%@:%@:%@:%@:%@", username, email, password, wifiname, wifikey];
     //NSString * qr_string = [NSString stringWithFormat:@"SETUP:%@:%@", lengths, string];
-    NSString * qr_string = [NSString stringWithFormat:@"SETUP:%ld:%@:%ld:%@:%ld:%@:%ld:%@:%ld:%@:%ld:%@", [username length], username, [email length], email, [password length], password, [wifiname length], wifiname, [wifikey length], wifikey, [wait_time length], wait_time ];
-    
+    qr_string = [NSString stringWithFormat:@"SETUP:%ld:%@:%ld:%@:%ld:%@:%ld:%@:%ld:%@:%ld:%@", [username length], username, [email length], email, [password length], password, [wifiname length], wifiname, [wifikey length], wifikey, [wait_time length], wait_time ];
+    [self listenOnHash];
     
     //build an info object and convert to json
     NSDictionary *newDatasetInfo = [NSDictionary dictionaryWithObjectsAndKeys:qr_string, @"text", nil];
@@ -98,11 +100,57 @@
     [request setHTTPBody:jsonData];
     
     // print json:
-    NSLog(@"JSON summary: %@", [[NSString alloc] initWithData:jsonData
-                                                     encoding:NSUTF8StringEncoding]);
+   //NSLog(@"JSON summary: %@", [[NSString alloc] initWithData:jsonData
+     //                                                encoding:NSUTF8StringEncoding]);
     
     NSURLConnection * connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
     [connection start];
+}
+
+- (void)listenOnHash {
+    int hash_int = pbmsg_hash([qr_string UTF8String]);
+    NSString *hash = [NSString stringWithFormat:@"%d",hash_int];
+    
+    NSDictionary *newDatasetInfo = [NSDictionary dictionaryWithObjectsAndKeys:hash, @"key",@"50",@"timeout", nil];
+    
+    NSLog(@"Listening on hash %@",hash);
+    
+    //convert object to data
+    NSError * error;
+    NSData* jsonData = [NSJSONSerialization dataWithJSONObject:newDatasetInfo options:kNilOptions error:&error];
+    
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
+    [request setURL:[NSURL URLWithString:[NSString stringWithFormat:@"%s", HTTPS_ADDRESS_PB_LISTEN]]];
+    [request setHTTPMethod:@"POST"];
+    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
+    [request setHTTPBody:jsonData];
+    
+    [NSURLConnection sendAsynchronousRequest:request
+                                       queue:[NSOperationQueue mainQueue]
+                           completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
+                               // optionally update the UI to say 'done'
+                               if (!error) {
+                                   NSError *error;
+                                   NSDictionary *dictionary = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
+                                   
+                                   int status =[[dictionary objectForKey:@"status"] intValue];
+                                   
+                                   if ( status == 0) {
+                                       // WARN USER!
+                                       NSLog(@"CHECK RETURN FORM LISTEN - FAIL");
+                                   } else {
+                                       // enable the button
+                                       NSLog(@"CHECK RETURN FORM LISTEN  - PASS");
+                                   }
+                                   // update the UI here (and only here to the extent it depends on the json)
+                               } else {
+                                   // update the UI to indicate error
+                               }
+                               
+                               
+                           }];
+
 }
 
 - (void)viewDidLoad {

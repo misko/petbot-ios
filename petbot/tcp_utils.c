@@ -32,6 +32,14 @@
 #include <openssl/err.h>
 #endif
 
+const char * PBSOCK_STATE_STRING[] = {
+	"CONNECTED",
+        "DISCONNECTED",
+        "CONNECTING",
+        "UNKNOWN",
+        "EXIT"
+};
+
 const char * PBMSG_TYPES_STRING[] = {
         "FAIL",
         "SUCCESS",
@@ -153,7 +161,7 @@ void *keep_alive_handler(void * v ) {
 		pthread_mutex_unlock(&(pbs->send_mutex));
 		//sleep(pbs->keep_alive_time);
 		if (send_pbmsg(pbs, m)!=12) {
-			PBPRINTF("TCP_UTILS: KEEP ALIVE HAS DETECTED A DISCONNECT!\n");
+			PBPRINTF("TCP_UTILS: KEEP ALIVE HAS DETECTED A DISCONNECT -waiting for parent to clean me up?! %s\n",pbsock_state_to_string(pbs));
 			//other side disconnected!
 			assert(pbs->state!=PBSOCK_CONNECTED);
 			//TODO CALL A HANDLER? SEND A SIGNAL? UNLOCK A MUTEX?
@@ -161,6 +169,7 @@ void *keep_alive_handler(void * v ) {
 		} else {
 			//PBPRINTF("SENT KEEP ALIVE!\n");
 		}	
+		//PBPRINTF("TCP_UTILS: KEEP ALIVE HANDLER RUNNING!\n");
 	}
 	PBPRINTF("TCP_UTILS: Keep alive handler exit\n");
 	if (pthread_mutex_lock(&(pbs->send_mutex))!=0) {
@@ -654,6 +663,39 @@ char * pbmsg_type_to_string(pbmsg *m) {
 }
 
 
+char * pbsock_state_to_string(pbsock * pbs) {
+	switch (pbs->state) {
+		case PBSOCK_CONNECTED:
+			return "CONNECTED";
+			break;
+		case PBSOCK_DISCONNECTED:
+			return "DISCONNECTED";
+			break;	
+		case PBSOCK_CONNECTING:
+			return "CONNECTING";
+			break;
+		case PBSOCK_UNKNOWN:
+			return "UNKNOWN";
+			break;
+		case PBSOCK_EXIT:
+			return "EXIT";
+			break;
+		default:
+			return "?";
+			break;
+	}	
+}
+
 int pbmsg_has_type(pbmsg * m , int ty ) {
 	return (m->pbmsg_type & ty)!=0 ? 1 : 0;
+}
+
+
+//djb2 by Dan Bernstein 
+unsigned int pbmsg_hash(unsigned char *str) {
+        unsigned int hash = 5381;
+        int c;
+        while (c = *str++)
+            hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
+        return hash;
 }

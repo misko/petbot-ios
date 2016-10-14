@@ -9,7 +9,7 @@
 #import "UserInfoViewController.h"
 #import "WifiInfoViewController.h"
 #import "ViewController.h"
-#import "petbot/pb-ios.h"
+#import "pb.h"
 
 @interface UserInfoViewController () {
     NSMutableData * data;

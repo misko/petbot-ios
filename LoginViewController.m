@@ -5,10 +5,11 @@
 //  Created by Misko Dzamba on 2016-05-09.
 //  Copyright © 2016 PetBot. All rights reserved.
 //
+#import <CRToast/CRToast.h>
 
 #import "LoginViewController.h"
 #import "ViewController.h"
-#import "pb-ios.h"
+#import "pb.h"
 
 
 @interface LoginViewController () {
@@ -20,9 +21,22 @@ NSDictionary * loginArray;
 @implementation LoginViewController
 
 
-
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    NSDictionary *options = @{
+                              kCRToastTextKey : @"Hello World!",
+                              kCRToastTextAlignmentKey : @(NSTextAlignmentCenter),
+                              kCRToastBackgroundColorKey : [UIColor redColor],
+                              kCRToastAnimationInTypeKey : @(CRToastAnimationTypeGravity),
+                              kCRToastAnimationOutTypeKey : @(CRToastAnimationTypeGravity),
+                              kCRToastAnimationInDirectionKey : @(CRToastAnimationDirectionLeft),
+                              kCRToastAnimationOutDirectionKey : @(CRToastAnimationDirectionRight)
+                              };
+    [CRToastManager showNotificationWithOptions:options
+                                completionBlock:^{
+                                    NSLog(@"Completed");
+                                }];
     // Do any additional setup after loading the view.
 
 }

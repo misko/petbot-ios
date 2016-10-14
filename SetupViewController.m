@@ -8,7 +8,7 @@
 
 #import "SetupViewController.h"
 #import "ViewController.h"
-#import "petbot/pb-ios.h"
+#import "pb.h"
 
 @interface SetupViewController () {
     NSMutableData * imageData;

@@ -10,7 +10,7 @@
 #import "QRViewController.h"
 
 #import "ViewController.h"
-#import "petbot/pb-ios.h"
+#import "pb.h"
 
 @interface WifiInfoViewController () {
     NSMutableData * imageData;

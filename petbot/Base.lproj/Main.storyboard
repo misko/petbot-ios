@@ -83,7 +83,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="WAp-he-tHd" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="64" y="254"/>
+            <point key="canvasLocation" x="-311" y="22"/>
         </scene>
         <!--User Info View Controller-->
         <scene sceneID="Mwn-EC-yaC">
@@ -197,7 +197,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="GwM-f0-TpS" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-305" y="997"/>
+            <point key="canvasLocation" x="-311" y="755"/>
         </scene>
         <!--Wifi Info View Controller-->
         <scene sceneID="PYG-EB-Whz">
@@ -268,7 +268,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ryQ-ZA-dKA" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-117" y="1755"/>
+            <point key="canvasLocation" x="-285" y="1503"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="ten-0I-1Vf">
@@ -285,11 +285,18 @@
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="M9w-Rq-U3i">
                                 <rect key="frame" x="0.0" y="20" width="600" height="550"/>
                             </imageView>
-                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vI4-e9-1G0">
-                                <rect key="frame" x="560" y="570" width="34" height="30"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vI4-e9-1G0">
+                                <rect key="frame" x="566" y="570" width="34" height="30"/>
                                 <state key="normal" title="Back"/>
                                 <connections>
                                     <segue destination="Zhs-Xk-epr" kind="presentation" identifier="QRToWifiInfo" id="nWl-Kw-7d0"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XWq-Ze-Zjm">
+                                <rect key="frame" x="378" y="570" width="46" height="30"/>
+                                <state key="normal" title="Button"/>
+                                <connections>
+                                    <segue destination="2bY-pU-43a" kind="unwind" unwindAction="unwindToLogin:" id="juR-ov-7oD"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -297,10 +304,12 @@
                         <constraints>
                             <constraint firstItem="D3t-On-HZA" firstAttribute="top" secondItem="vI4-e9-1G0" secondAttribute="bottom" id="4GV-gD-IQs"/>
                             <constraint firstItem="M9w-Rq-U3i" firstAttribute="top" secondItem="CDT-L0-KLK" secondAttribute="bottom" id="Hoz-c2-d7M"/>
+                            <constraint firstItem="XWq-Ze-Zjm" firstAttribute="top" secondItem="M9w-Rq-U3i" secondAttribute="bottom" id="UgD-3q-DU8"/>
                             <constraint firstItem="vI4-e9-1G0" firstAttribute="top" secondItem="M9w-Rq-U3i" secondAttribute="bottom" id="X61-Bv-3xJ"/>
                             <constraint firstAttribute="trailing" secondItem="vI4-e9-1G0" secondAttribute="trailing" id="ZBB-IR-frd"/>
                             <constraint firstItem="M9w-Rq-U3i" firstAttribute="leading" secondItem="ewf-64-x0Z" secondAttribute="leading" id="era-9S-hXe"/>
                             <constraint firstItem="M9w-Rq-U3i" firstAttribute="width" secondItem="ewf-64-x0Z" secondAttribute="width" id="fJx-2f-N3G"/>
+                            <constraint firstAttribute="trailing" secondItem="XWq-Ze-Zjm" secondAttribute="trailing" constant="176" id="lzT-v5-68d"/>
                         </constraints>
                     </view>
                     <connections>
@@ -308,8 +317,9 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hFT-7K-9OE" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="2bY-pU-43a" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="634" y="1803"/>
+            <point key="canvasLocation" x="606" y="887"/>
         </scene>
         <!--Setup View Controller-->
         <scene sceneID="ycu-uf-RNy">
@@ -414,7 +424,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Y8k-zb-Z2f" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="506" y="1116"/>
+            <point key="canvasLocation" x="992" y="1694"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
@@ -554,7 +564,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
                 <exit id="gSf-5C-v15" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="782" y="244"/>
+            <point key="canvasLocation" x="558" y="22"/>
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>

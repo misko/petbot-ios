@@ -111,6 +111,7 @@ pbsock* new_pbsock(int client_sock);
 pbsock* connect_to_server_with_key(const char * hostname, int portno, const char * key);
 pbsock* connect_to_server(const char * hostname, int portno);
 #endif
+char * pbsock_state_to_string(pbsock * pbs) ;
 
 extern char * bb_new_user;
 
@@ -137,6 +138,8 @@ int write_file(const char *fn , char * buffer, size_t len);
 char * pbmsg_type_to_string(pbmsg *m) ;
 int pbmsg_has_type(pbmsg *m, int ty);
 #endif
+
+unsigned int pbmsg_hash(unsigned char *str);
 
 #if defined __cplusplus
 };

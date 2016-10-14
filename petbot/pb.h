@@ -5,15 +5,23 @@
 #ifdef OSX
 #endif
 
+
+
 #define HTTPS_ADDRESS "https://petbot.ca:5000/"
 #define HTTPS_ADDRESS_AUTH HTTPS_ADDRESS "AUTH"
 #define HTTPS_ADDRESS_QRCODE_JSON HTTPS_ADDRESS "PB_QRCODE_JSON"
 #define HTTPS_ADDRESS_SETUP_CHECK HTTPS_ADDRESS "SETUP/CHECK"
 #define HTTPS_ADDRESS_PB_REGISTER HTTPS_ADDRESS "PB_REGISTER"
+#define HTTPS_ADDRESS_PB_LISTEN HTTPS_ADDRESS "SETUP/LISTEN"
+#define HTTPS_ADDRESS_PB_PING HTTPS_ADDRESS "SETUP/PING"
+
+
 
 //#define PBPRINTF(fmt, args...)    fprintf(stderr, fmt, ## args)
 #define PBPRINTF(fmt, args...) fprintf(stderr, "DEBUG: %s:%d:%s(): " fmt, \
     __FILE__, __LINE__, __func__, ##args)
+
+#ifndef TARGET_OS_IPHONE
 
 extern char * pb_path;
 extern char * pb_config_path;
@@ -37,3 +45,5 @@ char * executable_path();
 char * pb_readFile(char * fn);
 char * pb_writeFile(char *fn, void *d , size_t sz);
 char * pb_rewrite(char * config, char * output_fn, char ** keys, char ** values, int n) ;
+
+#endif
