@@ -22,13 +22,15 @@
 		CC23F89C1CC6178C00EA0E62 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC23F89B1CC6178C00EA0E62 /* UIKit.framework */; };
 		CC23F89E1CC6179100EA0E62 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC23F89D1CC6179100EA0E62 /* Foundation.framework */; };
 		CC23F8A01CC617A000EA0E62 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC23F89F1CC617A000EA0E62 /* CoreGraphics.framework */; };
+		CC2411481DB3F08400D1CBFB /* splash2.png in Resources */ = {isa = PBXBuildFile; fileRef = CC2411471DB3F08400D1CBFB /* splash2.png */; };
+		CC24114A1DB3F2AF00D1CBFB /* petbot167.png in Resources */ = {isa = PBXBuildFile; fileRef = CC2411491DB3F2AF00D1CBFB /* petbot167.png */; };
+		CC24114E1DB4075400D1CBFB /* petbot_180.png in Resources */ = {isa = PBXBuildFile; fileRef = CC24114D1DB4075400D1CBFB /* petbot_180.png */; };
 		CC2448A71CC61B600036CEB3 /* libiconv.2.4.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = CC2448A61CC61B600036CEB3 /* libiconv.2.4.0.tbd */; };
 		CC2448BA1CC6D7CF0036CEB3 /* notes in Resources */ = {isa = PBXBuildFile; fileRef = CC2448B91CC6D7CE0036CEB3 /* notes */; };
 		CC2448C41CC6D9240036CEB3 /* EaglUIVIew.m in Sources */ = {isa = PBXBuildFile; fileRef = CC2448BC1CC6D9240036CEB3 /* EaglUIVIew.m */; };
 		CC2448C51CC6D9240036CEB3 /* gst_ios_init.m in Sources */ = {isa = PBXBuildFile; fileRef = CC2448BE1CC6D9240036CEB3 /* gst_ios_init.m */; };
 		CC2448C61CC6D9240036CEB3 /* GStreamerBackend.m in Sources */ = {isa = PBXBuildFile; fileRef = CC2448C01CC6D9240036CEB3 /* GStreamerBackend.m */; };
 		CC2448C71CC6D9240036CEB3 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CC2448C31CC6D9240036CEB3 /* ViewController.m */; };
-		CC2C33C71D702603007A886B /* SetupViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = CC2C33C61D702603007A886B /* SetupViewController.h */; };
 		CC2C33C91D702611007A886B /* SetupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CC2C33C81D702611007A886B /* SetupViewController.m */; };
 		CC2C33D31D7BEE05007A886B /* UserInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CC2C33D21D7BEE05007A886B /* UserInfoViewController.m */; };
 		CC2C33D51D7BEF0D007A886B /* WifiInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CC2C33D41D7BEF0D007A886B /* WifiInfoViewController.m */; };
@@ -99,6 +101,10 @@
 		CC23F89B1CC6178C00EA0E62 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		CC23F89D1CC6179100EA0E62 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		CC23F89F1CC617A000EA0E62 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		CC2411471DB3F08400D1CBFB /* splash2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = splash2.png; sourceTree = "<group>"; };
+		CC2411491DB3F2AF00D1CBFB /* petbot167.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = petbot167.png; sourceTree = SOURCE_ROOT; };
+		CC24114C1DB406C500D1CBFB /* SetupViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SetupViewController.h; sourceTree = "<group>"; };
+		CC24114D1DB4075400D1CBFB /* petbot_180.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = petbot_180.png; sourceTree = SOURCE_ROOT; };
 		CC2448A61CC61B600036CEB3 /* libiconv.2.4.0.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libiconv.2.4.0.tbd; path = usr/lib/libiconv.2.4.0.tbd; sourceTree = SDKROOT; };
 		CC2448B51CC621A90036CEB3 /* PrefixHeader.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
 		CC2448B91CC6D7CE0036CEB3 /* notes */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = notes; sourceTree = "<group>"; };
@@ -111,7 +117,6 @@
 		CC2448C11CC6D9240036CEB3 /* GStreamerBackendDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GStreamerBackendDelegate.h; sourceTree = "<group>"; };
 		CC2448C21CC6D9240036CEB3 /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		CC2448C31CC6D9240036CEB3 /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
-		CC2C33C61D702603007A886B /* SetupViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetupViewController.h; sourceTree = "<group>"; };
 		CC2C33C81D702611007A886B /* SetupViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SetupViewController.m; sourceTree = "<group>"; };
 		CC2C33D11D7BEDFB007A886B /* UserInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserInfoViewController.h; sourceTree = "<group>"; };
 		CC2C33D21D7BEE05007A886B /* UserInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserInfoViewController.m; sourceTree = "<group>"; };
@@ -202,13 +207,14 @@
 			isa = PBXGroup;
 			children = (
 				CC56F8811DB3001E009013DD /* PBNotifierLabel.m */,
+				CC2411471DB3F08400D1CBFB /* splash2.png */,
 				CC56F8831DB30037009013DD /* PBNotifierLabel.h */,
+				CC24114C1DB406C500D1CBFB /* SetupViewController.h */,
 				CC3259861DB2D68A00EBCDDF /* 8925898_l.jpg */,
 				CC3259761DB2C3D500EBCDDF /* UIColor+PBColor.h */,
 				CC3259771DB2C3D500EBCDDF /* UIColor+PBColor.m */,
 				CC3259801DB2CAAC00EBCDDF /* PBLabel.m */,
 				CC3259821DB2CACB00EBCDDF /* PBLabel.h */,
-				CC2C33C61D702603007A886B /* SetupViewController.h */,
 				CC2C33D11D7BEDFB007A886B /* UserInfoViewController.h */,
 				CC2C33D61D7BEF17007A886B /* WifiInfoViewController.h */,
 				CCED8B861DB09A9100E96B91 /* PBViewController.m */,
@@ -259,6 +265,7 @@
 		CC23F8571CBEDA4B00EA0E62 /* petbot */ = {
 			isa = PBXGroup;
 			children = (
+				CC24114D1DB4075400D1CBFB /* petbot_180.png */,
 				CCA48C621DA7565300275348 /* nice_utils.c */,
 				CCA48C631DA7565300275348 /* nice_utils.h */,
 				CCE22D511CE12ED30096CA68 /* LoginViewController.h */,
@@ -277,6 +284,7 @@
 				CC23F85C1CBEDA4B00EA0E62 /* AppDelegate.m */,
 				CC23F8611CBEDA4B00EA0E62 /* Main.storyboard */,
 				CC23F8641CBEDA4B00EA0E62 /* Assets.xcassets */,
+				CC2411491DB3F2AF00D1CBFB /* petbot167.png */,
 				CC23F8661CBEDA4B00EA0E62 /* LaunchScreen.storyboard */,
 				CC23F8581CBEDA4B00EA0E62 /* Supporting Files */,
 				CCD38AB91D0B5954005EF60A /* TODO */,
@@ -396,11 +404,12 @@
 		CC23F84D1CBEDA4A00EA0E62 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0730;
+				LastUpgradeCheck = 0800;
 				ORGANIZATIONNAME = PetBot;
 				TargetAttributes = {
 					CC23F8541CBEDA4A00EA0E62 = {
 						CreatedOnToolsVersion = 7.3;
+						DevelopmentTeam = WFC7QRPM2Y;
 					};
 					CC23F86D1CBEDA4B00EA0E62 = {
 						CreatedOnToolsVersion = 7.3;
@@ -441,7 +450,10 @@
 				CCD38ABA1D0B5954005EF60A /* TODO in Resources */,
 				CC3259871DB2D68A00EBCDDF /* 8925898_l.jpg in Resources */,
 				CC23F8651CBEDA4B00EA0E62 /* Assets.xcassets in Resources */,
+				CC24114E1DB4075400D1CBFB /* petbot_180.png in Resources */,
+				CC24114A1DB3F2AF00D1CBFB /* petbot167.png in Resources */,
 				CC2448BA1CC6D7CF0036CEB3 /* notes in Resources */,
+				CC2411481DB3F08400D1CBFB /* splash2.png in Resources */,
 				CC23F8631CBEDA4B00EA0E62 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -627,7 +639,6 @@
 				CC23F85A1CBEDA4B00EA0E62 /* main.m in Sources */,
 				CCA48C641DA7565300275348 /* nice_utils.c in Sources */,
 				CC3259841DB2D10200EBCDDF /* PBHollowButton.m in Sources */,
-				CC2C33C71D702603007A886B /* SetupViewController.h in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -696,8 +707,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -741,8 +754,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -772,7 +787,8 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CLANG_CXX_LIBRARY = "libstdc++";
+				CLANG_CXX_LIBRARY = "compiler-default";
+				DEVELOPMENT_TEAM = WFC7QRPM2Y;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"~/Library/Developer/GStreamer/iPhone.sdk",
@@ -786,7 +802,7 @@
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = petbot/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(SRCROOT)/petbot/libs/openssl-1.0.2f-iOS/lib",
@@ -828,7 +844,7 @@
 					VideoToolBox,
 					"$(inherited)",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = csmisko.petbot;
+				PRODUCT_BUNDLE_IDENTIFIER = csmisko.PetBot;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				USER_HEADER_SEARCH_PATHS = "$(SRCROOT)/petbot/libs/openssl-1.0.2f-iOS/include";
 			};
@@ -840,7 +856,8 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CLANG_CXX_LIBRARY = "libstdc++";
+				CLANG_CXX_LIBRARY = "compiler-default";
+				DEVELOPMENT_TEAM = WFC7QRPM2Y;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"~/Library/Developer/GStreamer/iPhone.sdk",
@@ -854,7 +871,7 @@
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = petbot/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(SRCROOT)/petbot/libs/openssl-1.0.2f-iOS/lib",
@@ -896,7 +913,7 @@
 					VideoToolBox,
 					"$(inherited)",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = csmisko.petbot;
+				PRODUCT_BUNDLE_IDENTIFIER = csmisko.PetBot;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				USER_HEADER_SEARCH_PATHS = "$(SRCROOT)/petbot/libs/openssl-1.0.2f-iOS/include";
 			};

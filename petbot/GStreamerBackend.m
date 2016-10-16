@@ -38,9 +38,9 @@ GST_DEBUG_CATEGORY_STATIC (debug_category);
  * Interface methods
  */
 
--(id) init:(id) uiDelegate videoView:(UIView *)video_view serverInfo:(NSDictionary *)loginInfo vc:(ViewController *)vc
+-(id) init:(id) uiDelegate videoView:(UIView *)video_view serverInfo:(NSDictionary *)loginInfo vc:(ViewController *)vcx
 {
-    self->vc = vc;
+    self->vc = vcx;
    // pubsubserver_server = "127.0.0.1"; // TODO UNCOMMENT FOR LIVE!
     if (self = [super init])
     {
@@ -253,12 +253,11 @@ static void state_changed_cb (GstBus *bus, GstMessage *msg, GStreamerBackend *se
     //main_loop = g_main_loop_new (context, FALSE);
     [self check_initialization_complete];
     return;
-    g_main_loop_run (main_loop); //TODO WE ALREADY CALL RUN MAIN somewhere else.. do we need this?
+   /* g_main_loop_run (main_loop); //TODO WE ALREADY CALL RUN MAIN somewhere else.. do we need this?
     //GST_DEBUG ("Exited main loop");
     g_main_loop_unref (main_loop);
     main_loop = NULL;
     fprintf(stderr,"Exitted main loop!");
-    /* Free resources */
     //g_main_context_pop_thread_default(context);
     fprintf(stderr,"X11\n");
     g_main_context_unref (context);
@@ -268,7 +267,7 @@ static void state_changed_cb (GstBus *bus, GstMessage *msg, GStreamerBackend *se
     gst_object_unref (pipeline);
     fprintf(stderr,"X1\n");
     [self->vc toLogin];
-    return;
+    return;*/
 }
 
 @end

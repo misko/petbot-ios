@@ -110,7 +110,7 @@ NSDictionary * loginArray;
 - (IBAction)backToTheStart:(UIStoryboardSegue *)segue {
     
     // grab a reference
-    ViewController *viewController2 = segue.sourceViewController;
+    //ViewController *viewController2 = segue.sourceViewController;
     
     // access public properties from ViewController2 here
 }

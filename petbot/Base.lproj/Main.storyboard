@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="0Un-OQ-HIV">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11201" systemVersion="15G31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="0Un-OQ-HIV">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11161"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
         <!--Login View Controller-->
@@ -16,14 +17,11 @@
                         <viewControllerLayoutGuide type="bottom" id="B0o-SH-Jbb"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="vha-1s-7CE">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="749" image="8925898_l.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="7ef-gP-mAf">
-                                <rect key="frame" x="0.0" y="0.0" width="600" height="248"/>
-                            </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="749" image="8925898_l.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="7ef-gP-mAf"/>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="xZS-dE-aW0" customClass="PBTextField">
-                                <rect key="frame" x="200" y="285" width="200" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="200" id="Hax-52-VR4"/>
                                 </constraints>
@@ -31,26 +29,23 @@
                                 <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no"/>
                             </textField>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="e6f-dT-b7B" customClass="PBTextField">
-                                <rect key="frame" x="200" y="352" width="200" height="30"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" secureTextEntry="YES"/>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VQn-YD-4tl" customClass="PBButton">
-                                <rect key="frame" x="200" y="390" width="200" height="30"/>
                                 <state key="normal" title="Login"/>
                                 <connections>
                                     <action selector="loginPressed:" destination="0Un-OQ-HIV" eventType="touchUpInside" id="aud-t6-yxb"/>
                                 </connections>
                             </button>
                             <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hYz-Vx-lrb" customClass="PBHollowButton">
-                                <rect key="frame" x="185" y="520" width="230" height="30"/>
-                                <color key="backgroundColor" name="keyboardFocusIndicatorColor" catalog="System" colorSpace="catalog"/>
+                                <color key="backgroundColor" red="0.18772074580192566" green="0.51381963491439819" blue="0.9836958646774292" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="230" id="iMy-2E-kft"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="15"/>
                                 <state key="normal" title="Setup device">
-                                    <color key="titleColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
@@ -62,32 +57,28 @@
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Username" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iDN-TJ-3Ii" customClass="PBLabel">
-                                <rect key="frame" x="200" y="256" width="79" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Password" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0oK-Pa-TAr" customClass="PBLabel">
-                                <rect key="frame" x="200" y="323" width="74" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="New user" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fVm-5r-MJ5" customClass="PBLabel">
-                                <rect key="frame" x="185" y="491" width="73" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="iDN-TJ-3Ii" firstAttribute="leading" secondItem="xZS-dE-aW0" secondAttribute="leading" id="0T5-Hj-62y"/>
-                            <constraint firstItem="iDN-TJ-3Ii" firstAttribute="top" secondItem="7ef-gP-mAf" secondAttribute="bottom" constant="8" id="1u8-H4-7z5"/>
+                            <constraint firstItem="iDN-TJ-3Ii" firstAttribute="top" secondItem="7ef-gP-mAf" secondAttribute="bottom" constant="-30" id="1u8-H4-7z5"/>
                             <constraint firstItem="0oK-Pa-TAr" firstAttribute="leading" secondItem="iDN-TJ-3Ii" secondAttribute="leading" id="2Rd-vX-df6"/>
                             <constraint firstItem="fVm-5r-MJ5" firstAttribute="bottom" secondItem="hYz-Vx-lrb" secondAttribute="top" constant="-8" id="336-bE-g7S"/>
                             <constraint firstItem="7ef-gP-mAf" firstAttribute="top" secondItem="Uva-vt-aHv" secondAttribute="bottom" constant="-20" id="68g-um-kC5"/>
-                            <constraint firstItem="xZS-dE-aW0" firstAttribute="centerY" secondItem="vha-1s-7CE" secondAttribute="centerY" id="6VY-O6-q5E"/>
                             <constraint firstItem="7ef-gP-mAf" firstAttribute="width" secondItem="vha-1s-7CE" secondAttribute="width" id="8jz-PV-Ss7"/>
                             <constraint firstItem="VQn-YD-4tl" firstAttribute="height" secondItem="e6f-dT-b7B" secondAttribute="height" id="CJm-l9-peJ"/>
                             <constraint firstItem="e6f-dT-b7B" firstAttribute="leading" secondItem="xZS-dE-aW0" secondAttribute="leading" id="CR8-oL-XgR"/>
@@ -100,6 +91,7 @@
                             <constraint firstItem="7ef-gP-mAf" firstAttribute="leading" secondItem="vha-1s-7CE" secondAttribute="leadingMargin" constant="-20" id="SlS-w3-TYg"/>
                             <constraint firstItem="e6f-dT-b7B" firstAttribute="width" secondItem="xZS-dE-aW0" secondAttribute="width" id="XKx-D0-GQU"/>
                             <constraint firstItem="VQn-YD-4tl" firstAttribute="leading" secondItem="e6f-dT-b7B" secondAttribute="trailing" constant="-200" id="bRL-LM-yIq"/>
+                            <constraint firstItem="iDN-TJ-3Ii" firstAttribute="top" secondItem="Uva-vt-aHv" secondAttribute="bottom" constant="250" id="mgc-P4-4se"/>
                             <constraint firstItem="e6f-dT-b7B" firstAttribute="height" secondItem="xZS-dE-aW0" secondAttribute="height" id="v1k-b9-CDk"/>
                             <constraint firstItem="VQn-YD-4tl" firstAttribute="width" secondItem="e6f-dT-b7B" secondAttribute="width" id="v5D-df-QuH"/>
                             <constraint firstItem="hYz-Vx-lrb" firstAttribute="top" secondItem="VQn-YD-4tl" secondAttribute="bottom" constant="100" id="xol-Cd-wf0"/>
@@ -125,20 +117,17 @@
                         <viewControllerLayoutGuide type="bottom" id="Z3C-KA-FfF"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="gGC-Pn-qNi">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Fap-No-4bu">
-                                <rect key="frame" x="155" y="100" width="290" height="400"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Username" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AHW-UD-XaL" customClass="PBLabel">
-                                        <rect key="frame" x="0.0" y="0.0" width="79" height="21"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="7sV-LY-xav" customClass="PBTextField">
-                                        <rect key="frame" x="0.0" y="29" width="290" height="30"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no"/>
                                         <connections>
@@ -146,40 +135,33 @@
                                         </connections>
                                     </textField>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Password" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qKd-ks-RrU" customClass="PBLabel">
-                                        <rect key="frame" x="0.0" y="67" width="74" height="21"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="UCO-TM-81V" customClass="PBTextField">
-                                        <rect key="frame" x="0.0" y="96" width="290" height="30"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" secureTextEntry="YES"/>
                                     </textField>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Re-enter Password" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sL3-X2-Sar" customClass="PBLabel">
-                                        <rect key="frame" x="0.0" y="134" width="146" height="21"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Z3d-ti-kQB" customClass="PBTextField">
-                                        <rect key="frame" x="0.0" y="163" width="290" height="30"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" secureTextEntry="YES"/>
                                     </textField>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Email" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UNE-zo-FeM" customClass="PBLabel">
-                                        <rect key="frame" x="0.0" y="201" width="41" height="21"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ycH-nb-qLr" customClass="PBTextField">
-                                        <rect key="frame" x="0.0" y="230" width="290" height="30"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no"/>
                                     </textField>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FiS-BQ-Lfx" customClass="PBButton">
-                                        <rect key="frame" x="75" y="278" width="140" height="30"/>
                                         <state key="normal" title="Next"/>
                                         <connections>
                                             <action selector="continueClicked:" destination="glU-kg-uK6" eventType="touchUpInside" id="AgK-DT-WME"/>
@@ -187,7 +169,7 @@
                                         </connections>
                                     </button>
                                 </subviews>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstItem="UCO-TM-81V" firstAttribute="top" secondItem="qKd-ks-RrU" secondAttribute="bottom" constant="8" id="02F-XT-pEc"/>
                                     <constraint firstItem="Z3d-ti-kQB" firstAttribute="top" secondItem="sL3-X2-Sar" secondAttribute="bottom" constant="8" id="23b-6f-LoE"/>
@@ -216,33 +198,29 @@
                                 </constraints>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DvN-pl-rQT" customClass="PBButton">
-                                <rect key="frame" x="14" y="562" width="129" height="30"/>
                                 <state key="normal" title="Back"/>
                                 <connections>
                                     <segue destination="Szl-vb-8JB" kind="unwind" unwindAction="unwindToLogin:" id="ni6-PU-DpT"/>
                                 </connections>
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hV4-Kw-hql" userLabel="notifier" customClass="PBNotifierView">
-                                <rect key="frame" x="0.0" y="20" width="600" height="40"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Create New Account" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xGP-RL-D2V" customClass="PBNotifierLabel">
-                                        <rect key="frame" x="221" y="9" width="158" height="21"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="33D-I6-LGr" customClass="PBNotifierCircle">
-                                        <rect key="frame" x="20" y="8" width="25" height="25"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="25" id="pH1-1M-78Z"/>
                                             <constraint firstAttribute="width" constant="25" id="ueG-pW-5Kh"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                 </subviews>
-                                <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstItem="33D-I6-LGr" firstAttribute="leading" secondItem="hV4-Kw-hql" secondAttribute="leading" constant="20" id="2ja-7h-zU9"/>
                                     <constraint firstItem="xGP-RL-D2V" firstAttribute="centerX" secondItem="hV4-Kw-hql" secondAttribute="centerX" id="3T6-6j-9Dg"/>
@@ -252,7 +230,7 @@
                                 </constraints>
                             </view>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="Fap-No-4bu" firstAttribute="centerY" secondItem="gGC-Pn-qNi" secondAttribute="centerY" id="CzP-0y-UGP"/>
                             <constraint firstItem="hV4-Kw-hql" firstAttribute="top" secondItem="yix-KN-tBL" secondAttribute="bottom" id="IWd-e2-0oX"/>
@@ -288,64 +266,54 @@
                         <viewControllerLayoutGuide type="bottom" id="bvm-RD-Kc1"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="hZc-Gn-J7E">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="m6F-F6-O30">
-                                <rect key="frame" x="155" y="80" width="290" height="440"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="WIFI network name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2Ed-a3-XIc" customClass="PBLabel">
-                                        <rect key="frame" x="0.0" y="0.0" width="290" height="21"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="csP-No-05g" customClass="PBTextField">
-                                        <rect key="frame" x="0.0" y="29" width="290" height="30"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no"/>
                                     </textField>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="uYU-ca-ZmC" customClass="PBTextField">
-                                        <rect key="frame" x="0.0" y="96" width="290" height="30"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" secureTextEntry="YES"/>
                                     </textField>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4wg-ir-msu" customClass="PBButton">
-                                        <rect key="frame" x="0.0" y="142" width="290" height="30"/>
                                         <state key="normal" title="Continue"/>
                                         <connections>
                                             <segue destination="rgi-hK-Vgb" kind="presentation" identifier="WifiInfoToQR" id="5ra-4J-BgB"/>
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="WIFI network password" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qg5-rP-Bi4" customClass="PBLabel">
-                                        <rect key="frame" x="0.0" y="67" width="290" height="21"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="C22-pn-vnh" userLabel="troubleshoot">
-                                        <rect key="frame" x="0.0" y="196" width="290" height="200"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="how to connect to your petbot" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aaf-11-5SP" customClass="PBLabel">
-                                                <rect key="frame" x="29" y="8" width="232" height="21"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="6" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ddg-gA-FU7">
-                                                <rect key="frame" x="40" y="37" width="211" height="82"/>
                                                 <string key="text">Enter wifi credentials above
 Generate QR code Show QR code to PetBot PetBot will say "Thanks!"</string>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="J5L-oT-fKu" customClass="PBHollowButton">
-                                                <rect key="frame" x="10" y="135" width="270" height="30"/>
                                                 <state key="normal" title="troubleshoot"/>
                                             </button>
                                         </subviews>
-                                        <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
+                                        <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="200" id="01f-he-f1n"/>
                                             <constraint firstItem="Ddg-gA-FU7" firstAttribute="centerX" secondItem="C22-pn-vnh" secondAttribute="centerX" id="0A8-TI-Z1f"/>
@@ -364,7 +332,7 @@ Generate QR code Show QR code to PetBot PetBot will say "Thanks!"</string>
                                         </userDefinedRuntimeAttributes>
                                     </view>
                                 </subviews>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstItem="uYU-ca-ZmC" firstAttribute="top" secondItem="qg5-rP-Bi4" secondAttribute="bottom" constant="8" id="0nv-O2-OnK"/>
                                     <constraint firstItem="uYU-ca-ZmC" firstAttribute="leading" secondItem="2Ed-a3-XIc" secondAttribute="leading" id="54O-Dh-rsc"/>
@@ -388,33 +356,29 @@ Generate QR code Show QR code to PetBot PetBot will say "Thanks!"</string>
                                 </constraints>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DWq-WF-49g" customClass="PBButton">
-                                <rect key="frame" x="20" y="562" width="140" height="30"/>
                                 <state key="normal" title="Back"/>
                                 <connections>
                                     <segue destination="8Ub-LE-G05" kind="unwind" unwindAction="unwindToLogin:" id="6hT-S5-9Hd"/>
                                 </connections>
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NGf-AZ-Jw7" userLabel="notifier" customClass="PBNotifierView">
-                                <rect key="frame" x="0.0" y="20" width="600" height="40"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tJg-Fc-wrq" customClass="PBNotifierCircle">
-                                        <rect key="frame" x="20" y="8" width="25" height="25"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="25" id="95j-fp-Cyj"/>
                                             <constraint firstAttribute="height" constant="25" id="qkL-Sc-PLo"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Create New Account" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8pa-mP-5ap" customClass="PBNotifierLabel">
-                                        <rect key="frame" x="221" y="9" width="158" height="21"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                 </subviews>
-                                <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstItem="8pa-mP-5ap" firstAttribute="centerY" secondItem="NGf-AZ-Jw7" secondAttribute="centerY" id="TTu-lg-P29"/>
                                     <constraint firstItem="8pa-mP-5ap" firstAttribute="centerX" secondItem="NGf-AZ-Jw7" secondAttribute="centerX" id="ghv-gB-fJ7"/>
@@ -424,7 +388,7 @@ Generate QR code Show QR code to PetBot PetBot will say "Thanks!"</string>
                                 </constraints>
                             </view>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="m6F-F6-O30" firstAttribute="centerX" secondItem="hZc-Gn-J7E" secondAttribute="centerX" id="Vv6-yl-et5"/>
                             <constraint firstItem="NGf-AZ-Jw7" firstAttribute="top" secondItem="zWy-qR-ndQ" secondAttribute="bottom" id="YiH-Ed-0YF"/>
@@ -457,17 +421,15 @@ Generate QR code Show QR code to PetBot PetBot will say "Thanks!"</string>
                         <viewControllerLayoutGuide type="bottom" id="D3t-On-HZA"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="ewf-64-x0Z">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="M9w-Rq-U3i">
-                                <rect key="frame" x="0.0" y="30" width="600" height="600"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="M9w-Rq-U3i" secondAttribute="height" multiplier="1:1" id="SER-FG-FNy"/>
                                 </constraints>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vI4-e9-1G0" customClass="PBButton">
-                                <rect key="frame" x="20" y="562" width="140" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="140" id="crj-Hc-a5l"/>
                                 </constraints>
@@ -477,26 +439,23 @@ Generate QR code Show QR code to PetBot PetBot will say "Thanks!"</string>
                                 </connections>
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nfd-DV-7ib" userLabel="notifier" customClass="PBNotifierView">
-                                <rect key="frame" x="0.0" y="20" width="600" height="40"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Show PetBot QR Code" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fZc-ua-grF" customClass="PBNotifierLabel">
-                                        <rect key="frame" x="214" y="9" width="172" height="21"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="3" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FYZ-xb-yny" customClass="PBNotifierCircle">
-                                        <rect key="frame" x="20" y="8" width="25" height="25"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="25" id="MYb-rM-fED"/>
                                             <constraint firstAttribute="height" constant="25" id="okr-yz-QRD"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                 </subviews>
-                                <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstItem="FYZ-xb-yny" firstAttribute="centerY" secondItem="nfd-DV-7ib" secondAttribute="centerY" id="E6j-a2-GL7"/>
                                     <constraint firstItem="fZc-ua-grF" firstAttribute="centerY" secondItem="nfd-DV-7ib" secondAttribute="centerY" id="J3N-FB-wSv"/>
@@ -506,7 +465,6 @@ Generate QR code Show QR code to PetBot PetBot will say "Thanks!"</string>
                                 </constraints>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XWq-Ze-Zjm" customClass="PBButton">
-                                <rect key="frame" x="440" y="562" width="140" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="140" id="XXC-34-jWf"/>
                                 </constraints>
@@ -516,7 +474,7 @@ Generate QR code Show QR code to PetBot PetBot will say "Thanks!"</string>
                                 </connections>
                             </button>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstAttribute="trailingMargin" secondItem="XWq-Ze-Zjm" secondAttribute="trailing" id="0xB-6B-Yfn"/>
                             <constraint firstItem="D3t-On-HZA" firstAttribute="top" secondItem="vI4-e9-1G0" secondAttribute="bottom" constant="8" id="4GV-gD-IQs"/>
@@ -539,111 +497,6 @@ Generate QR code Show QR code to PetBot PetBot will say "Thanks!"</string>
             </objects>
             <point key="canvasLocation" x="606" y="887"/>
         </scene>
-        <!--Setup View Controller-->
-        <scene sceneID="ycu-uf-RNy">
-            <objects>
-                <viewController id="wOW-Bb-BNe" customClass="SetupViewController" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="IRQ-gK-tAy"/>
-                        <viewControllerLayoutGuide type="bottom" id="k1n-HD-dNV"/>
-                    </layoutGuides>
-                    <view key="view" opaque="NO" contentMode="scaleToFill" id="ubl-K4-4NP">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="yxK-mD-Wsz">
-                                <rect key="frame" x="189" y="474" width="223" height="30"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no"/>
-                            </textField>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="81U-ux-7w2">
-                                <rect key="frame" x="189" y="512" width="223" height="30"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" secureTextEntry="YES"/>
-                            </textField>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HKA-aq-b5u">
-                                <rect key="frame" x="140" y="550" width="272" height="30"/>
-                                <color key="backgroundColor" name="selectedMenuItemColor" catalog="System" colorSpace="catalog"/>
-                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="15"/>
-                                <state key="normal" title="Next">
-                                    <color key="titleColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                </state>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                        <integer key="value" value="4"/>
-                                    </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
-                                <connections>
-                                    <action selector="pressSetupQR:" destination="wOW-Bb-BNe" eventType="touchUpInside" id="gyB-rW-QJf"/>
-                                </connections>
-                            </button>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" verticalCompressionResistancePriority="749" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="rsJ-7o-icY">
-                                <rect key="frame" x="189" y="436" width="223" height="29"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="29" id="XBy-kt-JV4"/>
-                                    <constraint firstAttribute="width" constant="223" id="qkt-Ug-sY6"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no"/>
-                            </textField>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Email" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vG7-60-deY">
-                                <rect key="frame" x="140" y="440" width="41" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="SSID" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Wvb-zr-9Yi">
-                                <rect key="frame" x="140" y="478" width="37" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Key" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yMH-lq-YLG">
-                                <rect key="frame" x="140" y="516" width="29" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="1" verticalCompressionResistancePriority="1" translatesAutoresizingMaskIntoConstraints="NO" id="THU-9u-Baw">
-                                <rect key="frame" x="20" y="20" width="560" height="400"/>
-                            </imageView>
-                        </subviews>
-                        <color key="backgroundColor" name="selectedKnobColor" catalog="System" colorSpace="catalog"/>
-                        <constraints>
-                            <constraint firstItem="THU-9u-Baw" firstAttribute="trailing" secondItem="ubl-K4-4NP" secondAttribute="trailingMargin" id="3H9-jn-bYu"/>
-                            <constraint firstItem="THU-9u-Baw" firstAttribute="leading" secondItem="ubl-K4-4NP" secondAttribute="leadingMargin" id="43e-6O-Pht"/>
-                            <constraint firstItem="k1n-HD-dNV" firstAttribute="top" secondItem="HKA-aq-b5u" secondAttribute="bottom" constant="20" id="51G-mb-NlH"/>
-                            <constraint firstItem="yMH-lq-YLG" firstAttribute="centerY" secondItem="81U-ux-7w2" secondAttribute="centerY" id="7D7-bz-GOJ"/>
-                            <constraint firstItem="vG7-60-deY" firstAttribute="bottom" secondItem="Wvb-zr-9Yi" secondAttribute="bottom" constant="-38" id="7oK-s6-N3S"/>
-                            <constraint firstItem="rsJ-7o-icY" firstAttribute="leading" secondItem="yxK-mD-Wsz" secondAttribute="leading" id="9g0-4w-CLw"/>
-                            <constraint firstItem="Wvb-zr-9Yi" firstAttribute="bottom" secondItem="yMH-lq-YLG" secondAttribute="bottom" constant="-38" id="Acm-H6-VU5"/>
-                            <constraint firstItem="yMH-lq-YLG" firstAttribute="bottom" secondItem="HKA-aq-b5u" secondAttribute="bottom" constant="-43" id="DBd-Jq-7ek"/>
-                            <constraint firstItem="rsJ-7o-icY" firstAttribute="trailing" secondItem="81U-ux-7w2" secondAttribute="trailing" id="Dje-yT-4zI"/>
-                            <constraint firstItem="yMH-lq-YLG" firstAttribute="leading" secondItem="vG7-60-deY" secondAttribute="leading" id="Q7H-UG-B5h"/>
-                            <constraint firstItem="yMH-lq-YLG" firstAttribute="leading" secondItem="Wvb-zr-9Yi" secondAttribute="leading" id="RIT-qm-foe"/>
-                            <constraint firstItem="HKA-aq-b5u" firstAttribute="leading" secondItem="Wvb-zr-9Yi" secondAttribute="leading" id="TVg-3J-Wsv"/>
-                            <constraint firstItem="THU-9u-Baw" firstAttribute="top" secondItem="IRQ-gK-tAy" secondAttribute="bottom" id="Twr-s0-mNx"/>
-                            <constraint firstItem="rsJ-7o-icY" firstAttribute="centerY" secondItem="vG7-60-deY" secondAttribute="centerY" id="UK3-V4-Rt4"/>
-                            <constraint firstItem="Wvb-zr-9Yi" firstAttribute="centerY" secondItem="yxK-mD-Wsz" secondAttribute="centerY" id="dcM-Gw-7T3"/>
-                            <constraint firstItem="rsJ-7o-icY" firstAttribute="trailing" secondItem="yxK-mD-Wsz" secondAttribute="trailing" id="eKj-kb-6u3"/>
-                            <constraint firstItem="rsJ-7o-icY" firstAttribute="top" secondItem="THU-9u-Baw" secondAttribute="bottom" constant="16" id="gLj-b1-hIp"/>
-                            <constraint firstItem="rsJ-7o-icY" firstAttribute="leading" secondItem="vG7-60-deY" secondAttribute="trailing" constant="8" symbolic="YES" id="kPL-jS-NrZ"/>
-                            <constraint firstItem="rsJ-7o-icY" firstAttribute="centerX" secondItem="THU-9u-Baw" secondAttribute="centerX" id="oBH-Re-T6q"/>
-                            <constraint firstItem="rsJ-7o-icY" firstAttribute="leading" secondItem="81U-ux-7w2" secondAttribute="leading" id="oPf-Lb-qhr"/>
-                            <constraint firstItem="HKA-aq-b5u" firstAttribute="trailing" secondItem="81U-ux-7w2" secondAttribute="trailing" id="tNJ-y1-NKr"/>
-                        </constraints>
-                    </view>
-                    <connections>
-                        <outlet property="emailTextField" destination="rsJ-7o-icY" id="FvE-bh-LVL"/>
-                        <outlet property="keyTextField" destination="81U-ux-7w2" id="SxM-0M-CUM"/>
-                        <outlet property="qrImageView" destination="THU-9u-Baw" id="R1j-i4-0Ce"/>
-                        <outlet property="ssidTextField" destination="yxK-mD-Wsz" id="hIb-Mb-kle"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Y8k-zb-Z2f" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="992" y="1694"/>
-        </scene>
         <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
@@ -653,18 +506,16 @@ Generate QR code Show QR code to PetBot PetBot will say "Thanks!"</string>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rz3-DE-1dW" userLabel="VideoContainer">
-                                <rect key="frame" x="0.0" y="-20" width="600" height="600"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Th9-8M-pM3" userLabel="Video" customClass="EaglUIView">
-                                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </view>
                                 </subviews>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstItem="Th9-8M-pM3" firstAttribute="width" secondItem="rz3-DE-1dW" secondAttribute="width" id="2kF-1v-HN3"/>
                                     <constraint firstItem="Th9-8M-pM3" firstAttribute="height" secondItem="rz3-DE-1dW" secondAttribute="height" id="DBw-gC-ayx"/>
@@ -673,23 +524,21 @@ Generate QR code Show QR code to PetBot PetBot will say "Thanks!"</string>
                                 </constraints>
                             </view>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DGb-Sr-ZUM" userLabel="Message">
-                                <rect key="frame" x="0.0" y="580" width="42" height="20"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="20" id="VJg-F4-6Re"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" verticalCompressionResistancePriority="751" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Tpb-wo-PKF" userLabel="bye" customClass="PBButton">
-                                <rect key="frame" x="8" y="28" width="90" height="30"/>
-                                <color key="backgroundColor" name="keyboardFocusIndicatorColor" catalog="System" colorSpace="catalog"/>
+                                <color key="backgroundColor" red="0.18772074580192566" green="0.51381963491439819" blue="0.9836958646774292" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="90" id="poH-oq-fek"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="15"/>
                                 <state key="normal" title="BYE :(">
-                                    <color key="titleColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
@@ -701,11 +550,10 @@ Generate QR code Show QR code to PetBot PetBot will say "Thanks!"</string>
                                 </connections>
                             </button>
                             <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" verticalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GYk-XX-yR3" userLabel="Selfie" customClass="PBButton">
-                                <rect key="frame" x="502" y="28" width="90" height="30"/>
-                                <color key="backgroundColor" red="0.18823529411764706" green="0.51372549019607838" blue="0.98431372549019602" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="backgroundColor" red="0.18823529411764706" green="0.51372549019607838" blue="0.98431372549019602" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="15"/>
                                 <state key="normal" title="Selfie">
-                                    <color key="titleColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
@@ -717,11 +565,10 @@ Generate QR code Show QR code to PetBot PetBot will say "Thanks!"</string>
                                 </connections>
                             </button>
                             <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="T27-Ti-Fh4" userLabel="Cookie" customClass="PBButton">
-                                <rect key="frame" x="502" y="542" width="90" height="30"/>
-                                <color key="backgroundColor" name="keyboardFocusIndicatorColor" catalog="System" colorSpace="catalog"/>
+                                <color key="backgroundColor" red="0.18772074580192566" green="0.51381963491439819" blue="0.9836958646774292" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="15"/>
                                 <state key="normal" title="Cookie">
-                                    <color key="titleColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
@@ -733,11 +580,10 @@ Generate QR code Show QR code to PetBot PetBot will say "Thanks!"</string>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4ZB-iI-915" customClass="PBButton">
-                                <rect key="frame" x="8" y="542" width="90" height="30"/>
-                                <color key="backgroundColor" name="keyboardFocusIndicatorColor" catalog="System" colorSpace="catalog"/>
+                                <color key="backgroundColor" red="0.18772074580192566" green="0.51381963491439819" blue="0.9836958646774292" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="15"/>
                                 <state key="normal" title="Sound">
-                                    <color key="titleColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
@@ -749,7 +595,7 @@ Generate QR code Show QR code to PetBot PetBot will say "Thanks!"</string>
                                 </connections>
                             </button>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="rz3-DE-1dW" firstAttribute="width" secondItem="8bC-Xf-vdC" secondAttribute="width" id="0AC-x9-wpO"/>
                             <constraint firstItem="rz3-DE-1dW" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="4Sg-My-JNw"/>

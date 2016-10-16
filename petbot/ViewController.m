@@ -157,7 +157,7 @@
     media_height = 480;
     petbot_state = @"connecting";
     //TODO check for errors here?
-    self->loginInfo=loginInfo;
+    //self->loginInfo=loginInfo;
     pubsubserver_port = [[self->loginInfo objectForKey:@"port"] intValue];
     pubsubserver_secret = [[self->loginInfo objectForKey:@"secret"] UTF8String];
     pubsubserver_server = [[self->loginInfo objectForKey:@"server"] UTF8String];
