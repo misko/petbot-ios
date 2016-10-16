@@ -26,6 +26,14 @@
 
 @implementation ViewController
 
+- (IBAction)playSound:(id)sender {
+    NSLog(@"PLAY SOUND HERE");
+}
+
+- (IBAction)byePressed:(id)sender {
+    [gst_backend quit];
+}
+
 - (IBAction)selfiePressed:(id)sender {
     pbmsg * m = new_pbmsg_from_str_wtype("selfie", PBMSG_VIDEO | PBMSG_REQUEST | PBMSG_STRING);
     send_pbmsg(pbs, m);
