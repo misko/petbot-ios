@@ -17,7 +17,7 @@
 
 @implementation PBViewController
 
--(void)toastStatus:(bool)status message:(NSString*)msg {
+-(void)toastStatus:(bool)status Message:(NSString*)msg {
     NSDictionary *options = @{
                               kCRToastTextKey : msg,
                               kCRToastTextAlignmentKey : @(NSTextAlignmentCenter),
@@ -29,7 +29,28 @@
                               kCRToastNotificationTypeKey : @(CRToastTypeNavigationBar),
                               kCRToastTimeIntervalKey : [NSNumber numberWithInt:3],
                               //kCRToastImageKey : [UIImage imageNamed:@"alert_icon.png"]
-                              kCRToastImageKey : status ? [UIImage imageNamed:@"white_checkmark.png"] : [UIImage imageNamed:@"alert_icon.png"]
+                              kCRToastImageKey : status ? [UIImage imageNamed:@"white_checkmark.png"] : [UIImage imageNamed:@"alert_icon.png"],
+                              kCRToastForceUserInteractionKey : @NO
+                              };
+    
+    [CRToastManager showNotificationWithOptions:options
+                                completionBlock:^{
+                                    NSLog(@"Completed");
+                                }];
+}
+
+-(void)toastPinColor:(UIColor*)c Message:(NSString*)msg {
+    NSDictionary *options = @{
+                              kCRToastTextKey : msg,
+                              kCRToastTextAlignmentKey : @(NSTextAlignmentCenter),
+                              kCRToastBackgroundColorKey : c,
+                              kCRToastAnimationInTypeKey : @(CRToastAnimationTypeGravity),
+                              kCRToastAnimationOutTypeKey : @(CRToastAnimationTypeGravity),
+                              kCRToastAnimationInDirectionKey : @(CRToastAnimationDirectionTop),
+                              kCRToastAnimationOutDirectionKey : @(CRToastAnimationDirectionTop),
+                              kCRToastNotificationTypeKey : @(CRToastTypeNavigationBar),
+                              //kCRToastTimeIntervalKey : [NSNumber numberWithInt:3],
+                              kCRToastForceUserInteractionKey : @YES
                               };
     
     [CRToastManager showNotificationWithOptions:options

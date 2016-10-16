@@ -9,6 +9,8 @@
 #import "WifiInfoViewController.h"
 #import "QRViewController.h"
 
+#import "UIColor+PBColor.h"
+
 #import "ViewController.h"
 #import "pb.h"
 
@@ -40,8 +42,18 @@
 }
 
 
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskPortrait + UIInterfaceOrientationMaskPortraitUpsideDown;
+}
+
+
+- (IBAction)unwindToWifi:(UIStoryboardSegue *)segue {
+    
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [_troubleshoot_view setBackgroundColor:[UIColor PBGrey]];
     // Do any additional setup after loading the view.
     
 }

@@ -10,5 +10,6 @@
 
 @interface PBViewController : UIViewController
 
--(void)toastStatus:(bool)sucess message:(NSString*)msg;
+-(void)toastStatus:(bool)status Message:(NSString*)msg;
+-(void)toastPinColor:(UIColor*)c Message:(NSString*)msg;
 @end

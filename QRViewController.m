@@ -44,6 +44,10 @@
     
 }
 
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskPortrait + UIInterfaceOrientationMaskPortraitUpsideDown;
+}
+
 
 
 // Take a peak at the data returned.

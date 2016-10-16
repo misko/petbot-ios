@@ -7,10 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "PBViewController.h"
 
-@interface WifiInfoViewController : UIViewController 
+@interface WifiInfoViewController : PBViewController
 @property (strong, nonatomic) IBOutlet UITextField *ssidTextField;
 @property (strong, nonatomic) IBOutlet UITextField *keyTextField;
+@property (strong, nonatomic) IBOutlet UIView *troubleshoot_view;
 
 
 -(void) setLoginArray:(NSDictionary *)dictionary;

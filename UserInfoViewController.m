@@ -9,6 +9,7 @@
 #import "UserInfoViewController.h"
 #import "WifiInfoViewController.h"
 #import "ViewController.h"
+#import "UIColor+PBColor.h"
 #import "pb.h"
 
 @interface UserInfoViewController () {
@@ -76,6 +77,7 @@
 }
 
 - (void)checkUsername {
+    NSLog(@"CHECK USERNAME");
     //build an info object and convert to json
     NSDictionary *newDatasetInfo = [NSDictionary dictionaryWithObjectsAndKeys:[_usernameTextField text], @"username", [_emailTextField text], @"email", nil];
     
@@ -101,15 +103,26 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
     [_continueButton setEnabled:FALSE];
+    [_notifier setBackgroundColor:[UIColor PBBlue]];
+    //[self toastPinColor:[UIColor PBBlue] Message:@"(1) STEP ONE"];
+    
     // Do any additional setup after loading the view.
     
 }
+
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskPortrait + UIInterfaceOrientationMaskPortraitUpsideDown;
+}
+
 - (IBAction)continueClicked:(id)sender {
+    NSLog(@"CLICKED CONTINUE!");
     //[self performSegueWithIdentifier:@"streamSegue" sender:self];
 }
 
 - (IBAction)usernameChanged:(id)sender {
+    NSLog(@"CHECK USERNAME");
     [self checkUsername];
 }
 @end

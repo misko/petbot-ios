@@ -41,6 +41,10 @@
 }
 
 
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskPortrait + UIInterfaceOrientationMaskPortraitUpsideDown;
+}
+
 
 // Close the connection
 - (void)connectionDidFinishLoading:(NSURLConnection*)connection {

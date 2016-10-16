@@ -33,6 +33,15 @@
 		CC2C33D31D7BEE05007A886B /* UserInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CC2C33D21D7BEE05007A886B /* UserInfoViewController.m */; };
 		CC2C33D51D7BEF0D007A886B /* WifiInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CC2C33D41D7BEF0D007A886B /* WifiInfoViewController.m */; };
 		CC2C33D81D7BEF84007A886B /* QRViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CC2C33D71D7BEF84007A886B /* QRViewController.m */; };
+		CC3259781DB2C3D500EBCDDF /* UIColor+PBColor.m in Sources */ = {isa = PBXBuildFile; fileRef = CC3259771DB2C3D500EBCDDF /* UIColor+PBColor.m */; };
+		CC32597B1DB2C6B300EBCDDF /* PBButton.m in Sources */ = {isa = PBXBuildFile; fileRef = CC32597A1DB2C6B300EBCDDF /* PBButton.m */; };
+		CC32597E1DB2C8A800EBCDDF /* PBTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = CC32597D1DB2C8A800EBCDDF /* PBTextField.m */; };
+		CC3259811DB2CAAC00EBCDDF /* PBLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = CC3259801DB2CAAC00EBCDDF /* PBLabel.m */; };
+		CC3259841DB2D10200EBCDDF /* PBHollowButton.m in Sources */ = {isa = PBXBuildFile; fileRef = CC3259831DB2D10200EBCDDF /* PBHollowButton.m */; };
+		CC3259871DB2D68A00EBCDDF /* 8925898_l.jpg in Resources */ = {isa = PBXBuildFile; fileRef = CC3259861DB2D68A00EBCDDF /* 8925898_l.jpg */; };
+		CC56F8821DB3001E009013DD /* PBNotifierLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = CC56F8811DB3001E009013DD /* PBNotifierLabel.m */; };
+		CC56F8851DB30159009013DD /* PBNotifierCircle.m in Sources */ = {isa = PBXBuildFile; fileRef = CC56F8841DB30159009013DD /* PBNotifierCircle.m */; };
+		CC56F8881DB30292009013DD /* PBNotifierView.m in Sources */ = {isa = PBXBuildFile; fileRef = CC56F8871DB30292009013DD /* PBNotifierView.m */; };
 		CC5C0B7B1D6A9F9400CC4CEF /* GStreamer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC5C0B7A1D6A9F9400CC4CEF /* GStreamer.framework */; };
 		CC8B24AB1D07A52700FBE180 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CC8B24AA1D07A52700FBE180 /* libcrypto.a */; };
 		CCA48C641DA7565300275348 /* nice_utils.c in Sources */ = {isa = PBXBuildFile; fileRef = CCA48C621DA7565300275348 /* nice_utils.c */; };
@@ -110,6 +119,23 @@
 		CC2C33D61D7BEF17007A886B /* WifiInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WifiInfoViewController.h; sourceTree = "<group>"; };
 		CC2C33D71D7BEF84007A886B /* QRViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QRViewController.m; sourceTree = "<group>"; };
 		CC2C33D91D7BEF8F007A886B /* QRViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QRViewController.h; sourceTree = "<group>"; };
+		CC3259761DB2C3D500EBCDDF /* UIColor+PBColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+PBColor.h"; sourceTree = "<group>"; };
+		CC3259771DB2C3D500EBCDDF /* UIColor+PBColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+PBColor.m"; sourceTree = "<group>"; };
+		CC32597A1DB2C6B300EBCDDF /* PBButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBButton.m; sourceTree = "<group>"; };
+		CC32597C1DB2C6DD00EBCDDF /* PBButton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PBButton.h; sourceTree = "<group>"; };
+		CC32597D1DB2C8A800EBCDDF /* PBTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBTextField.m; sourceTree = "<group>"; };
+		CC32597F1DB2C8BD00EBCDDF /* PBTextField.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PBTextField.h; sourceTree = "<group>"; };
+		CC3259801DB2CAAC00EBCDDF /* PBLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBLabel.m; sourceTree = "<group>"; };
+		CC3259821DB2CACB00EBCDDF /* PBLabel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PBLabel.h; sourceTree = "<group>"; };
+		CC3259831DB2D10200EBCDDF /* PBHollowButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBHollowButton.m; sourceTree = "<group>"; };
+		CC3259851DB2D12600EBCDDF /* PBHollowButton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PBHollowButton.h; sourceTree = "<group>"; };
+		CC3259861DB2D68A00EBCDDF /* 8925898_l.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = 8925898_l.jpg; path = ../../../../../Downloads/8925898_l.jpg; sourceTree = "<group>"; };
+		CC56F8811DB3001E009013DD /* PBNotifierLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBNotifierLabel.m; sourceTree = "<group>"; };
+		CC56F8831DB30037009013DD /* PBNotifierLabel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PBNotifierLabel.h; sourceTree = "<group>"; };
+		CC56F8841DB30159009013DD /* PBNotifierCircle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBNotifierCircle.m; sourceTree = "<group>"; };
+		CC56F8861DB30170009013DD /* PBNotifierCircle.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PBNotifierCircle.h; sourceTree = "<group>"; };
+		CC56F8871DB30292009013DD /* PBNotifierView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PBNotifierView.m; path = petbot/PBNotifierView.m; sourceTree = "<group>"; };
+		CC56F8891DB302BB009013DD /* PBNotifierView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PBNotifierView.h; sourceTree = "<group>"; };
 		CC5C0B7A1D6A9F9400CC4CEF /* GStreamer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GStreamer.framework; path = ../../../../../Library/Developer/GStreamer/iPhone.sdk/GStreamer.framework; sourceTree = "<group>"; };
 		CC8B24AA1D07A52700FBE180 /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcrypto.a; path = "petbot/libs/openssl-1.0.2f-iOS/lib/libcrypto.a"; sourceTree = "<group>"; };
 		CCA48C621DA7565300275348 /* nice_utils.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = nice_utils.c; sourceTree = "<group>"; };
@@ -175,10 +201,27 @@
 		CC23F84C1CBEDA4A00EA0E62 = {
 			isa = PBXGroup;
 			children = (
+				CC56F8811DB3001E009013DD /* PBNotifierLabel.m */,
+				CC56F8831DB30037009013DD /* PBNotifierLabel.h */,
+				CC3259861DB2D68A00EBCDDF /* 8925898_l.jpg */,
+				CC3259761DB2C3D500EBCDDF /* UIColor+PBColor.h */,
+				CC3259771DB2C3D500EBCDDF /* UIColor+PBColor.m */,
+				CC3259801DB2CAAC00EBCDDF /* PBLabel.m */,
+				CC3259821DB2CACB00EBCDDF /* PBLabel.h */,
 				CC2C33C61D702603007A886B /* SetupViewController.h */,
 				CC2C33D11D7BEDFB007A886B /* UserInfoViewController.h */,
 				CC2C33D61D7BEF17007A886B /* WifiInfoViewController.h */,
 				CCED8B861DB09A9100E96B91 /* PBViewController.m */,
+				CC32597A1DB2C6B300EBCDDF /* PBButton.m */,
+				CC3259831DB2D10200EBCDDF /* PBHollowButton.m */,
+				CC3259851DB2D12600EBCDDF /* PBHollowButton.h */,
+				CC32597D1DB2C8A800EBCDDF /* PBTextField.m */,
+				CC56F8841DB30159009013DD /* PBNotifierCircle.m */,
+				CC56F8861DB30170009013DD /* PBNotifierCircle.h */,
+				CC32597F1DB2C8BD00EBCDDF /* PBTextField.h */,
+				CC32597C1DB2C6DD00EBCDDF /* PBButton.h */,
+				CC56F8871DB30292009013DD /* PBNotifierView.m */,
+				CC56F8891DB302BB009013DD /* PBNotifierView.h */,
 				CCED8B881DB09AA100E96B91 /* PBViewController.h */,
 				CC2C33D91D7BEF8F007A886B /* QRViewController.h */,
 				CC2C33C81D702611007A886B /* SetupViewController.m */,
@@ -396,6 +439,7 @@
 			files = (
 				CC23F8681CBEDA4B00EA0E62 /* LaunchScreen.storyboard in Resources */,
 				CCD38ABA1D0B5954005EF60A /* TODO in Resources */,
+				CC3259871DB2D68A00EBCDDF /* 8925898_l.jpg in Resources */,
 				CC23F8651CBEDA4B00EA0E62 /* Assets.xcassets in Resources */,
 				CC2448BA1CC6D7CF0036CEB3 /* notes in Resources */,
 				CC23F8631CBEDA4B00EA0E62 /* Main.storyboard in Resources */,
@@ -561,20 +605,28 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CC3259811DB2CAAC00EBCDDF /* PBLabel.m in Sources */,
 				CC2C33C91D702611007A886B /* SetupViewController.m in Sources */,
 				CC2448C41CC6D9240036CEB3 /* EaglUIVIew.m in Sources */,
+				CC56F8881DB30292009013DD /* PBNotifierView.m in Sources */,
+				CC32597B1DB2C6B300EBCDDF /* PBButton.m in Sources */,
 				CC23F85D1CBEDA4B00EA0E62 /* AppDelegate.m in Sources */,
+				CC56F8851DB30159009013DD /* PBNotifierCircle.m in Sources */,
 				CC2C33D51D7BEF0D007A886B /* WifiInfoViewController.m in Sources */,
 				CCED8B871DB09A9100E96B91 /* PBViewController.m in Sources */,
+				CC3259781DB2C3D500EBCDDF /* UIColor+PBColor.m in Sources */,
 				CC2448C71CC6D9240036CEB3 /* ViewController.m in Sources */,
 				CC2448C51CC6D9240036CEB3 /* gst_ios_init.m in Sources */,
+				CC56F8821DB3001E009013DD /* PBNotifierLabel.m in Sources */,
 				CC2C33D31D7BEE05007A886B /* UserInfoViewController.m in Sources */,
 				CC2C33D81D7BEF84007A886B /* QRViewController.m in Sources */,
+				CC32597E1DB2C8A800EBCDDF /* PBTextField.m in Sources */,
 				CC2448C61CC6D9240036CEB3 /* GStreamerBackend.m in Sources */,
 				CCE22D531CE12ED30096CA68 /* LoginViewController.m in Sources */,
 				CC23F8901CC5FCE100EA0E62 /* tcp_utils.c in Sources */,
 				CC23F85A1CBEDA4B00EA0E62 /* main.m in Sources */,
 				CCA48C641DA7565300275348 /* nice_utils.c in Sources */,
+				CC3259841DB2D10200EBCDDF /* PBHollowButton.m in Sources */,
 				CC2C33C71D702603007A886B /* SetupViewController.h in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
