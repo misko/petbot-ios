@@ -1,6 +1,7 @@
 
 
 #import <AVFoundation/AVFoundation.h>
+#import <AudioToolbox/AudioServices.h>
 
 #import "ViewController.h"
 #import "GStreamerBackend.h"
@@ -16,18 +17,19 @@
     int media_height;
     NSDictionary * loginArray;
     NSDictionary * loginInfo;
-    const char * pubsubserver_secret;
-    const char * pubsubserver_server;
-    const char * pubsubserver_username;
-    const char * pubsubserver_protocol;
+    NSString * pubsubserver_secret;
+    NSString * pubsubserver_server;
+    NSString * pubsubserver_username;
+    NSString * pubsubserver_protocol;
     int bb_streamer_id;
     int pubsubserver_port;
     pbsock * pbs;
     NSString * petbot_state; //connecting, ice_request, ice_negotiate, streaming, logoff
     int ice_thread_pipes_to_child[2];
     int ice_thread_pipes_from_child[2];
-    
+    IBOutlet UIActivityIndicatorView *activityIndicator;
     AVAudioPlayer *player;
+    UIVisualEffectView *blurEffectView;
 }
 @end
 
@@ -41,7 +43,7 @@
     NSData* jsonData = [NSJSONSerialization dataWithJSONObject:newDatasetInfo options:0 error:&error];
     
     //make the url request
-    NSURL * url = [NSURL URLWithString:[NSString stringWithFormat:@"%s%s", HTTPS_ADDRESS_PB_LS, pubsubserver_secret]];
+    NSURL * url = [NSURL URLWithString:[NSString stringWithFormat:@"%s%@", HTTPS_ADDRESS_PB_LS, pubsubserver_secret]];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     [request setHTTPMethod:@"POST"];
     [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
@@ -50,8 +52,6 @@
     
     //send the request
     NSURLResponse * response;
-    NSOperationQueue *queue = [[NSOperationQueue alloc] init];
-    
     NSData * data = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
     if (error) {
         NSLog(@"Error,%@", [error localizedDescription]);
@@ -65,16 +65,7 @@
             if ([status isEqual:@0]) {
                 NSLog(@"SERVER QUERY FAILED?");
             } else {
-                int start_idx = [d[@"start_idx"] intValue];
-                int end_idx = [d[@"end_idx"] intValue];
                 NSMutableArray * files =  d[@"files"];
-                NSDictionary * f1 = [files objectAtIndex:0];
-                NSLog(@"HERE ARE SOEM KEYS");
-                NSLog(@"HERE ARE SOEM KEYS %@",d[@"start_idx"]);
-                for (NSArray *key in d){
-                    //Do something
-                    NSLog(@"Array: %@", key);
-                }
                 return files;
             }
         }
@@ -91,7 +82,7 @@
             NSString * filename = [file objectAtIndex:1];
             NSString * filekey = [file objectAtIndex:0];
             NSLog(@"FILENAME %@",filename);
-            NSString * url = [NSString stringWithFormat:@"%s%s/%@",HTTPS_ADDRESS_PB_DL,pubsubserver_secret,filekey];
+            NSString * url = [NSString stringWithFormat:@"%s%@/%@",HTTPS_ADDRESS_PB_DL,pubsubserver_secret,filekey];
             NSLog(@"PLAY URL %@",url);
             [self playSoundFromURL:url];
             //NSLog(@"FILE %@ has %@\n",[file objectAtIndex:0] , [file objectAtIndex:1]);
@@ -125,7 +116,7 @@
             if ([files count]>0) {
                 NSMutableArray * file = [files objectAtIndex:0];
                 NSString * filekey = [file objectAtIndex:0];
-                NSString * url = [NSString stringWithFormat:@"%s%s/%@",HTTPS_ADDRESS_PB_DL,pubsubserver_secret,filekey];
+                NSString * url = [NSString stringWithFormat:@"%s%@/%@",HTTPS_ADDRESS_PB_DL,pubsubserver_secret,filekey];
                 //tell the petbot to play this!
                 NSString * pb_sound_str = [NSString stringWithFormat:@"PLAYURL %@",url];
                 pbmsg * m = new_pbmsg_from_str_wtype([pb_sound_str UTF8String], PBMSG_SOUND | PBMSG_REQUEST | PBMSG_STRING);
@@ -151,6 +142,7 @@
     pbmsg * m = new_pbmsg_from_str_wtype("cookie", PBMSG_COOKIE | PBMSG_REQUEST | PBMSG_STRING);
     send_pbmsg(pbs, m);
     free_pbmsg(m);
+    AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
 }
 
 -(void)toLogin {
@@ -172,6 +164,8 @@
         return;
     }
     if ((m->pbmsg_type ^  (PBMSG_SUCCESS | PBMSG_RESPONSE | PBMSG_ICE | PBMSG_CLIENT | PBMSG_STRING))==0) {
+        
+        [self gstreamerSetUIMessage:@"Negotiating with your PetBot..."];
         fprintf(stderr,"GOT A ICE RESPONSE BACK!\n");
         [self ice_negotiate:m];
     } else if ((m->pbmsg_type & PBMSG_DISCONNECTED) !=0) {
@@ -198,7 +192,8 @@
     OpenSSL_add_ssl_algorithms();
     SSL_load_error_strings();
     ctx = SSL_CTX_new (SSLv23_client_method());
-    pbs = connect_to_server_with_key(pubsubserver_server,pubsubserver_port,ctx,pubsubserver_secret);
+    NSLog(@"Connecting to server ... %@ %s %@",pubsubserver_server,[[loginInfo objectForKey:@"server"] UTF8String],[loginInfo objectForKey:@"server"]);
+    pbs = connect_to_server_with_key([pubsubserver_server UTF8String],pubsubserver_port,ctx,[pubsubserver_secret UTF8String]);
 #else
     pbs = connect_to_server_with_key(pbhost,port,key);
 #endif
@@ -243,6 +238,54 @@
     fprintf(stderr,"LAUNCHED APP FUNCTION\n");
 }
 
+-(void)waitSFSPCA {
+    //make the url request
+    NSURL * url = [NSURL URLWithString:[NSString stringWithFormat:@"%s", HTTPS_ADDRESS_PB_WAIT]];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+    
+    //send the request
+    NSURLResponse * response;
+    NSError * error;
+    NSData * data = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
+    if (error) {
+        NSLog(@"Error,%@", [error localizedDescription]);
+    } else {
+        //parse the return json
+
+        NSLog(@"WAIT SFSPCA %@", [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
+        NSDictionary * d = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
+        if (error) {
+            NSLog(@"Error,%@", [error localizedDescription]);
+        } else {
+            NSNumber *status = d[@"status"];
+            if ([status isEqual:@0]) {
+                NSLog(@"SERVER QUERY FAILED?");
+            } else {
+                NSDictionary * pet =  d[@"pet"];
+                
+                
+                
+                NSLog(@"STORY IS %@",pet[@"story"]);
+                NSData *data = [NSData dataWithContentsOfURL : [NSURL URLWithString:pet[@"img"]]];
+                
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [pet_story setText:@"WTF"];
+                    // Your code to run on the main queue/thread
+                    [pet_story setText:pet[@"story"]];
+                    [pet_name setText:[NSString stringWithFormat:@"Location: San Francisco, Name: %@", pet[@"name"]]];
+                    [pet_img setImage:[UIImage imageWithData: data]];
+                    pet_img.layer.cornerRadius=4.0f;
+                    pet_img.layer.masksToBounds = YES;
+                });
+                for (NSArray *aDay in pet){
+                    //Do something
+                    NSLog(@"P Array: %@", aDay);
+                }
+            }
+        }
+    }
+}
+
 
 /*
  * Methods from UIViewController
@@ -257,6 +300,23 @@
 {
     [super viewDidLoad];
     
+    [pet_name setText:@""];
+    [pet_story setText:@""];
+    if (!UIAccessibilityIsReduceTransparencyEnabled()) {
+        main_view.backgroundColor = [UIColor clearColor];
+        
+        UIBlurEffect *blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
+        //UIBlurEffect *blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight];
+        blurEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
+        blurEffectView.frame = main_view.bounds;
+        blurEffectView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        
+        [main_view addSubview:blurEffectView];
+    } else {
+        main_view.backgroundColor = [UIColor blackColor];
+    }
+    
+    
     self->loginInfo=[loginArray objectForKey:@"pubsubserver"];
     
     /* Make these constant for now, later tutorials will change them */
@@ -266,21 +326,32 @@
     //TODO check for errors here?
     //self->loginInfo=loginInfo;
     pubsubserver_port = [[self->loginInfo objectForKey:@"port"] intValue];
-    pubsubserver_secret = [[self->loginInfo objectForKey:@"secret"] UTF8String];
-    pubsubserver_server = [[self->loginInfo objectForKey:@"server"] UTF8String];
-    pubsubserver_username = [[self->loginInfo objectForKey:@"username"] UTF8String];
-    bb_streamer_id=0;
+    pubsubserver_secret = [self->loginInfo objectForKey:@"secret"];
+    pubsubserver_server = [self->loginInfo objectForKey:@"server"];
+    NSLog(@"server in load is %@ %@",pubsubserver_server,[self->loginInfo objectForKey:@"server"]);
+    pubsubserver_username = [self->loginInfo objectForKey:@"username"];    bb_streamer_id=0;
     
     
     //[self soundList];
+    [self gstreamerSetUIMessage:@"Trying to connect to PetBot..."];
+    //activityIndicator.transform = CGAffineTransformMakeScale(2, 2);
     
-    fprintf(stderr,"MAKING new connection.... \n");
+    fprintf(stderr,"MAKING new connection x1.... \n");
     
     gst_backend = [[GStreamerBackend alloc] init:self videoView:video_view serverInfo:[loginArray objectForKey:@"pubsubserver"] vc:self];
     /* Start the bus monitoring task */
+    fprintf(stderr,"MAKING new connection x2.... \n");
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        fprintf(stderr,"MAKING new connection x3.... \n");
         [self connect];
+        fprintf(stderr,"MAKING new connection x4.... \n");
     });
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        fprintf(stderr,"MAKING new connection x5.... \n");
+        [self waitSFSPCA];
+        fprintf(stderr,"MAKING new connection x6.... \n");
+    });
+    fprintf(stderr,"MAKING new connection x7.... \n");
 }
 
 - (void)didReceiveMemoryWarning
@@ -322,6 +393,21 @@
 {
     dispatch_async(dispatch_get_main_queue(), ^{
         message_label.text = message;
+    });
+}
+
+
+-(void) gstreamerHideLoadView {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [pet_view setHidden:true];
+        [blurEffectView setHidden:true];
+    });
+}
+
+-(void) gstreamerShowLoadView {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [pet_view setHidden:false];
+        [blurEffectView setHidden:false];
     });
 }
 

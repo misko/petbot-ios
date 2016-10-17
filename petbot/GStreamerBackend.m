@@ -248,6 +248,7 @@ static void state_changed_cb (GstBus *bus, GstMessage *msg, GStreamerBackend *se
     g_signal_connect (G_OBJECT (bus), "message::state-changed", (GCallback)state_changed_cb, (__bridge void *)self);
     gst_object_unref (bus);
     
+    [ui_delegate gstreamerHideLoadView];
     /* Create a GLib Main Loop and set it to run */
     //GST_DEBUG ("Entering main loop...");
     //main_loop = g_main_loop_new (context, FALSE);

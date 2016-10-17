@@ -26,7 +26,14 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-
+    NSString * username = [[NSUserDefaults standardUserDefaults] stringForKey:@"username"];
+    NSString * password = [[NSUserDefaults standardUserDefaults] stringForKey:@"password"];
+    if (username!=nil){
+        [_username_field setText:username];
+    }
+    if (password!=nil) {
+        [_password_field setText:password];
+    }
     
 
     //[[UIButton appearance] setBackgroundColor:[UIColor PBBlue]];
@@ -92,6 +99,9 @@
                 fprintf(stderr,"Not logged in!");
             } else {
                 fprintf(stderr,"Logged in!");
+                [[NSUserDefaults standardUserDefaults] setValue:_username_field.text forKey:@"username"];
+                [[NSUserDefaults standardUserDefaults] setValue:_password_field.text forKey:@"password"];
+                [[NSUserDefaults standardUserDefaults] synchronize];
                 
                 [self performSegueWithIdentifier:@"streamSegue" sender:self];
             }
@@ -101,6 +111,11 @@
             }
         }
     }];
+}
+
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+    [_username_field resignFirstResponder];
+    [_password_field resignFirstResponder];
 }
 
 - (UIInterfaceOrientationMask)supportedInterfaceOrientations {

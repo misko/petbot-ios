@@ -103,6 +103,7 @@ pbsock* connect_to_server(const char * hostname, int portno, SSL_CTX* ctx) {
 #else
 pbsock* connect_to_server(const char * hostname, int portno) {
 #endif
+    PBPRINTF("TCP_TUILS CONNECT: %s\n",hostname);
     /* socket: create the socket */
     int sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd < 0)  {
