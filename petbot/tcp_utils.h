@@ -139,7 +139,7 @@ char * pbmsg_type_to_string(pbmsg *m) ;
 int pbmsg_has_type(pbmsg *m, int ty);
 #endif
 
-unsigned int pbmsg_hash(unsigned char *str);
+unsigned int pbmsg_hash(const char *str);
 
 #if defined __cplusplus
 };

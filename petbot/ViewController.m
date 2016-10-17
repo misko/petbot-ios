@@ -1,9 +1,14 @@
+
+
+#import <AVFoundation/AVFoundation.h>
+
 #import "ViewController.h"
 #import "GStreamerBackend.h"
 
 
 #include "tcp_utils.h"
 #include "nice_utils.h"
+#include "pb.h"
 
 @interface ViewController () {
     GStreamerBackend *gst_backend;
@@ -21,13 +26,115 @@
     NSString * petbot_state; //connecting, ice_request, ice_negotiate, streaming, logoff
     int ice_thread_pipes_to_child[2];
     int ice_thread_pipes_from_child[2];
+    
+    AVAudioPlayer *player;
 }
 @end
 
 @implementation ViewController
 
+-(NSMutableArray*)pbserverLSWithType:(NSString *)ty {
+    NSDictionary *newDatasetInfo = [NSDictionary dictionaryWithObjectsAndKeys:@"mp3", @"file_type", @"1", @"start_idx", @"10", @"end_idx",nil];
+    
+    //make the json payload
+    NSError *error;
+    NSData* jsonData = [NSJSONSerialization dataWithJSONObject:newDatasetInfo options:0 error:&error];
+    
+    //make the url request
+    NSURL * url = [NSURL URLWithString:[NSString stringWithFormat:@"%s%s", HTTPS_ADDRESS_PB_LS, pubsubserver_secret]];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+    [request setHTTPMethod:@"POST"];
+    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
+    [request setHTTPBody:jsonData];
+    
+    //send the request
+    NSURLResponse * response;
+    NSOperationQueue *queue = [[NSOperationQueue alloc] init];
+    
+    NSData * data = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
+    if (error) {
+        NSLog(@"Error,%@", [error localizedDescription]);
+    } else {
+        //parse the return json
+        NSDictionary * d = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
+        if (error) {
+            NSLog(@"Error,%@", [error localizedDescription]);
+        } else {
+            NSNumber *status = d[@"status"];
+            if ([status isEqual:@0]) {
+                NSLog(@"SERVER QUERY FAILED?");
+            } else {
+                int start_idx = [d[@"start_idx"] intValue];
+                int end_idx = [d[@"end_idx"] intValue];
+                NSMutableArray * files =  d[@"files"];
+                NSDictionary * f1 = [files objectAtIndex:0];
+                NSLog(@"HERE ARE SOEM KEYS");
+                NSLog(@"HERE ARE SOEM KEYS %@",d[@"start_idx"]);
+                for (NSArray *key in d){
+                    //Do something
+                    NSLog(@"Array: %@", key);
+                }
+                return files;
+            }
+        }
+    }
+    return nil;
+}
+
+-(void)soundList {
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    dispatch_async(queue, ^{
+        // the slow stuff to be done in the background
+        NSMutableArray * files = [self pbserverLSWithType:@"mp3"];
+        for (NSMutableArray * file in files) {
+            NSString * filename = [file objectAtIndex:1];
+            NSString * filekey = [file objectAtIndex:0];
+            NSLog(@"FILENAME %@",filename);
+            NSString * url = [NSString stringWithFormat:@"%s%s/%@",HTTPS_ADDRESS_PB_DL,pubsubserver_secret,filekey];
+            NSLog(@"PLAY URL %@",url);
+            [self playSoundFromURL:url];
+            //NSLog(@"FILE %@ has %@\n",[file objectAtIndex:0] , [file objectAtIndex:1]);
+        }
+    });
+}
+
+-(void)playSoundFromURL:(NSString *)url_string {
+    
+    NSLog(@"PLAY SOUND wtf %@",url_string);
+    
+    //play sound locally
+    AVAudioSession *session = [AVAudioSession sharedInstance];
+    [session setCategory:AVAudioSessionCategoryPlayback error:nil];
+    
+    NSURL *mp3URL = [NSURL URLWithString:url_string];
+    
+    NSData *audioData = [NSData dataWithContentsOfURL:mp3URL];
+    NSError* error;
+    player = [[AVAudioPlayer alloc] initWithData:audioData error:&error];
+    //player.volume=1;
+    //[player setDelegate:self];
+    //[player prepareToPlay];
+    [player play];
+}
+
 - (IBAction)playSound:(id)sender {
-    NSLog(@"PLAY SOUND HERE");
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+        dispatch_async(queue, ^{
+            NSMutableArray * files = [self pbserverLSWithType:@"mp3"];
+            if ([files count]>0) {
+                NSMutableArray * file = [files objectAtIndex:0];
+                NSString * filekey = [file objectAtIndex:0];
+                NSString * url = [NSString stringWithFormat:@"%s%s/%@",HTTPS_ADDRESS_PB_DL,pubsubserver_secret,filekey];
+                //tell the petbot to play this!
+                NSString * pb_sound_str = [NSString stringWithFormat:@"PLAYURL %@",url];
+                pbmsg * m = new_pbmsg_from_str_wtype([pb_sound_str UTF8String], PBMSG_SOUND | PBMSG_REQUEST | PBMSG_STRING);
+                send_pbmsg(pbs, m);
+                free_pbmsg(m);
+                [self playSoundFromURL:url];
+            }
+        }
+    );
 }
 
 - (IBAction)byePressed:(id)sender {
@@ -163,6 +270,9 @@
     pubsubserver_server = [[self->loginInfo objectForKey:@"server"] UTF8String];
     pubsubserver_username = [[self->loginInfo objectForKey:@"username"] UTF8String];
     bb_streamer_id=0;
+    
+    
+    //[self soundList];
     
     fprintf(stderr,"MAKING new connection.... \n");
     

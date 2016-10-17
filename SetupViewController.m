@@ -21,9 +21,9 @@
 
 
 // Check the response code that was returned
-- (NSInteger)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
-    NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
-    return [httpResponse statusCode];
+- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
+    //NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;
+    //return [httpResponse statusCode];
     
 }
 

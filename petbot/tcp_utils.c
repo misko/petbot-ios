@@ -360,7 +360,7 @@ pbmsg * new_pbmsg() {
 
 pbmsg * new_pbmsg_from_str(const char * s) {
 	pbmsg * m = new_pbmsg();
-	m->pbmsg_len=strlen(s)+1;
+	m->pbmsg_len=(uint32_t)strlen(s)+1;
 	m->pbmsg=strdup(s);
 	m->pbmsg_type=PBMSG_STRING;
 	return m;
@@ -368,7 +368,7 @@ pbmsg * new_pbmsg_from_str(const char * s) {
 
 pbmsg * new_pbmsg_from_str_wtype(const char * s, int type) {
 	pbmsg * m = new_pbmsg();
-	m->pbmsg_len=strlen(s)+1;
+	m->pbmsg_len=(uint32_t)strlen(s)+1;
 	m->pbmsg=strdup(s);
 	m->pbmsg_type=type;
 	return m;
@@ -517,7 +517,7 @@ pbmsg * recv_all_fd_pbmsg(int fd, int read_all) {
 	read_size=0;
 	while (read_size<m->pbmsg_len) {
 		size_t ret = read(fd,m->pbmsg,m->pbmsg_len);
-		if (ret==0 || ret<0) {
+		if (ret==0) {
 			PBPRINTF("TCP_UTILS: Something failed in read of TCP socket\n");
 			free_pbmsg(m);
 			return NULL;
@@ -587,7 +587,7 @@ int write_file(const char *fn , char * buffer, size_t len) {
 	}
 	size_t ret = fwrite(buffer, len, 1, fptr);
 	fclose(fptr);
-	return ret;
+	return (int)ret;
 }
 
 pbmsg * new_pbmsg_from_ptr_and_int(void * x , int z) {
@@ -602,7 +602,8 @@ pbmsg * new_pbmsg_from_ptr_and_int(void * x , int z) {
 	};
 	void ** y = (void **)m->pbmsg;
 	*y=x;
-	*(y+1)=(void*)z;
+    int * inty = (int*)(y+1);
+	*inty=z;
 	return m;
 }
 
@@ -628,7 +629,7 @@ pbmsg * new_pbmsg_from_file(const char * fn) {
 		return NULL;
 	}
 	pbmsg * m = new_pbmsg();
-	m->pbmsg_len = len;
+	m->pbmsg_len = (uint32_t)len;
 	m->pbmsg_type = PBMSG_FILE;
 	m->pbmsg = data;
 	return m;
@@ -692,10 +693,10 @@ int pbmsg_has_type(pbmsg * m , int ty ) {
 
 
 //djb2 by Dan Bernstein 
-unsigned int pbmsg_hash(unsigned char *str) {
+unsigned int pbmsg_hash(const char *str) {
         unsigned int hash = 5381;
         int c;
-        while (c = *str++)
+        while ((c = *str++))
             hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
         return hash;
 }

@@ -7,6 +7,8 @@
 //
 #import <CRToast/CRToast.h>
 
+
+
 #import "UIColor+PBColor.h"
 #import "LoginViewController.h"
 #import "ViewController.h"
@@ -14,9 +16,8 @@
 
 
 @interface LoginViewController () {
-NSDictionary * loginArray;
+        NSDictionary * loginArray;
 }
-
 @end
 
 @implementation LoginViewController
@@ -25,6 +26,9 @@ NSDictionary * loginArray;
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+
+    
+
     //[[UIButton appearance] setBackgroundColor:[UIColor PBBlue]];
     //[self toastStatus:true message:@"Hello there"];
     
@@ -99,7 +103,7 @@ NSDictionary * loginArray;
     }];
 }
 
-- (NSUInteger)supportedInterfaceOrientations {
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
     return UIInterfaceOrientationMaskPortrait + UIInterfaceOrientationMaskPortraitUpsideDown;
 }
 

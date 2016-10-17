@@ -25,6 +25,7 @@
 		CC2411481DB3F08400D1CBFB /* splash2.png in Resources */ = {isa = PBXBuildFile; fileRef = CC2411471DB3F08400D1CBFB /* splash2.png */; };
 		CC24114A1DB3F2AF00D1CBFB /* petbot167.png in Resources */ = {isa = PBXBuildFile; fileRef = CC2411491DB3F2AF00D1CBFB /* petbot167.png */; };
 		CC24114E1DB4075400D1CBFB /* petbot_180.png in Resources */ = {isa = PBXBuildFile; fileRef = CC24114D1DB4075400D1CBFB /* petbot_180.png */; };
+		CC2411501DB46C3200D1CBFB /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC24114F1DB46C3200D1CBFB /* AVFoundation.framework */; };
 		CC2448A71CC61B600036CEB3 /* libiconv.2.4.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = CC2448A61CC61B600036CEB3 /* libiconv.2.4.0.tbd */; };
 		CC2448BA1CC6D7CF0036CEB3 /* notes in Resources */ = {isa = PBXBuildFile; fileRef = CC2448B91CC6D7CE0036CEB3 /* notes */; };
 		CC2448C41CC6D9240036CEB3 /* EaglUIVIew.m in Sources */ = {isa = PBXBuildFile; fileRef = CC2448BC1CC6D9240036CEB3 /* EaglUIVIew.m */; };
@@ -105,6 +106,7 @@
 		CC2411491DB3F2AF00D1CBFB /* petbot167.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = petbot167.png; sourceTree = SOURCE_ROOT; };
 		CC24114C1DB406C500D1CBFB /* SetupViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SetupViewController.h; sourceTree = "<group>"; };
 		CC24114D1DB4075400D1CBFB /* petbot_180.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = petbot_180.png; sourceTree = SOURCE_ROOT; };
+		CC24114F1DB46C3200D1CBFB /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		CC2448A61CC61B600036CEB3 /* libiconv.2.4.0.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libiconv.2.4.0.tbd; path = usr/lib/libiconv.2.4.0.tbd; sourceTree = SDKROOT; };
 		CC2448B51CC621A90036CEB3 /* PrefixHeader.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PrefixHeader.pch; sourceTree = "<group>"; };
 		CC2448B91CC6D7CE0036CEB3 /* notes */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = notes; sourceTree = "<group>"; };
@@ -159,6 +161,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CC2411501DB46C3200D1CBFB /* AVFoundation.framework in Frameworks */,
 				CC5C0B7B1D6A9F9400CC4CEF /* GStreamer.framework in Frameworks */,
 				CC2448A71CC61B600036CEB3 /* libiconv.2.4.0.tbd in Frameworks */,
 				CC23F89C1CC6178C00EA0E62 /* UIKit.framework in Frameworks */,
@@ -326,6 +329,7 @@
 		CFFC9D71996F3A2CAE937DC9 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				CC24114F1DB46C3200D1CBFB /* AVFoundation.framework */,
 				347E91F8EE74CAF13F18A24A /* libPods-petbot.a */,
 				53D72D7152664D64A235A083 /* libPods-petbotTests.a */,
 				18710344F87D9B38F573CC0D /* libPods-petbotUITests.a */,
@@ -795,6 +799,7 @@
 					"\"$(SYSTEM_APPS_DIR)/Xcode.app/Contents/Developer/Library/Frameworks\"",
 					"$(LOCAL_LIBRARY_DIR)/Frameworks",
 				);
+				GCC_DYNAMIC_NO_PIC = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = petbot/PrefixHeader.pch;
 				HEADER_SEARCH_PATHS = (
@@ -803,6 +808,7 @@
 				);
 				INFOPLIST_FILE = petbot/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_NO_PIE = YES;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(SRCROOT)/petbot/libs/openssl-1.0.2f-iOS/lib",
@@ -864,6 +870,7 @@
 					"\"$(SYSTEM_APPS_DIR)/Xcode.app/Contents/Developer/Library/Frameworks\"",
 					"$(LOCAL_LIBRARY_DIR)/Frameworks",
 				);
+				GCC_DYNAMIC_NO_PIC = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = petbot/PrefixHeader.pch;
 				HEADER_SEARCH_PATHS = (
@@ -872,6 +879,7 @@
 				);
 				INFOPLIST_FILE = petbot/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_NO_PIE = YES;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(SRCROOT)/petbot/libs/openssl-1.0.2f-iOS/lib",

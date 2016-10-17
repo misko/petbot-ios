@@ -512,7 +512,7 @@ static NiceCandidate *
 parse_candidate(char *scand, guint _stream_id)
 {
   NiceCandidate *cand = NULL;
-  NiceCandidateType ntype;
+  NiceCandidateType ntype=0;
   gchar **tokens = NULL;
   guint i;
 
