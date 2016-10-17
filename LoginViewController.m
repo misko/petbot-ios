@@ -17,6 +17,7 @@
 
 @interface LoginViewController () {
         NSDictionary * loginArray;
+    IBOutlet UILabel *status_label;
 }
 @end
 
@@ -35,7 +36,12 @@
         [_password_field setText:password];
     }
     
-
+    [status_label setText:@""];
+    [status_label setTextColor:[UIColor PBRed]];
+    
+    
+    [_username_field colorBlue];
+    [_password_field colorBlue];
     //[[UIButton appearance] setBackgroundColor:[UIColor PBBlue]];
     //[self toastStatus:true message:@"Hello there"];
     
@@ -85,9 +91,9 @@
     //[NSURLConnection sendAsynchronousRequest:request queue:queue completionHandler:^(NSURLResponse *response, NSData *data, NSError *error)
      [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error)
     {
-        if (error)
-        {
+        if (error) {
             NSLog(@"Error,%@", [error localizedDescription]);
+            [status_label setText:@"Failed to connect"];
         }
         else
         {
@@ -97,6 +103,9 @@
             NSNumber *status = loginArray[@"status"];
             if ([status isEqual:@0]) {
                 fprintf(stderr,"Not logged in!");
+                [status_label setText:@"Username/Password wrong"];
+                [_username_field colorRed];
+                [_password_field colorRed];
             } else {
                 fprintf(stderr,"Logged in!");
                 [[NSUserDefaults standardUserDefaults] setValue:_username_field.text forKey:@"username"];

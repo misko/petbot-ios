@@ -9,4 +9,6 @@
 #import <Foundation/Foundation.h>
 
 @interface PBTextField : UITextField
+-(void)colorRed;
+-(void)colorBlue;
 @end

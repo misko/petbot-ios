@@ -27,5 +27,12 @@
     //self.layer.borderColor = [UIColor PBBlue];
 }
 
+-(void)colorRed {
+    self.layer.borderColor=[[UIColor PBRed]CGColor];
+}
+-(void)colorBlue {
+    self.layer.borderColor=[[UIColor PBBlue]CGColor];
+}
+
 
 @end

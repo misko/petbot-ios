@@ -71,6 +71,11 @@
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="q7k-oJ-Ngx" userLabel="status">
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
@@ -87,19 +92,23 @@
                             <constraint firstItem="VQn-YD-4tl" firstAttribute="top" secondItem="e6f-dT-b7B" secondAttribute="bottom" constant="8" id="HJM-2m-qR4"/>
                             <constraint firstItem="hYz-Vx-lrb" firstAttribute="centerX" secondItem="vha-1s-7CE" secondAttribute="centerX" id="N4N-bo-l6d"/>
                             <constraint firstItem="xZS-dE-aW0" firstAttribute="centerX" secondItem="vha-1s-7CE" secondAttribute="centerX" id="OQY-C9-5pT"/>
+                            <constraint firstItem="q7k-oJ-Ngx" firstAttribute="centerX" secondItem="vha-1s-7CE" secondAttribute="centerX" id="Raq-4T-tFR"/>
                             <constraint firstItem="iDN-TJ-3Ii" firstAttribute="bottom" secondItem="xZS-dE-aW0" secondAttribute="top" constant="-8" id="RtT-pZ-57a"/>
                             <constraint firstItem="7ef-gP-mAf" firstAttribute="leading" secondItem="vha-1s-7CE" secondAttribute="leadingMargin" constant="-20" id="SlS-w3-TYg"/>
                             <constraint firstItem="e6f-dT-b7B" firstAttribute="width" secondItem="xZS-dE-aW0" secondAttribute="width" id="XKx-D0-GQU"/>
                             <constraint firstItem="VQn-YD-4tl" firstAttribute="leading" secondItem="e6f-dT-b7B" secondAttribute="trailing" constant="-200" id="bRL-LM-yIq"/>
                             <constraint firstItem="iDN-TJ-3Ii" firstAttribute="top" secondItem="Uva-vt-aHv" secondAttribute="bottom" constant="250" id="mgc-P4-4se"/>
+                            <constraint firstItem="q7k-oJ-Ngx" firstAttribute="bottom" secondItem="iDN-TJ-3Ii" secondAttribute="top" constant="-5" id="ndt-pi-MN3"/>
                             <constraint firstItem="e6f-dT-b7B" firstAttribute="height" secondItem="xZS-dE-aW0" secondAttribute="height" id="v1k-b9-CDk"/>
                             <constraint firstItem="VQn-YD-4tl" firstAttribute="width" secondItem="e6f-dT-b7B" secondAttribute="width" id="v5D-df-QuH"/>
                             <constraint firstItem="hYz-Vx-lrb" firstAttribute="top" secondItem="VQn-YD-4tl" secondAttribute="bottom" constant="100" id="xol-Cd-wf0"/>
                             <constraint firstItem="0oK-Pa-TAr" firstAttribute="top" secondItem="xZS-dE-aW0" secondAttribute="bottom" constant="8" id="xxd-Wx-Hzm"/>
+                            <constraint firstItem="q7k-oJ-Ngx" firstAttribute="width" secondItem="vha-1s-7CE" secondAttribute="width" constant="-30" id="zuZ-tP-bRP"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="password_field" destination="e6f-dT-b7B" id="nZH-Fm-lp1"/>
+                        <outlet property="status_label" destination="q7k-oJ-Ngx" id="CB7-ga-FZL"/>
                         <outlet property="username_field" destination="xZS-dE-aW0" id="PEz-v3-7W9"/>
                         <segue destination="BYZ-38-t0r" kind="show" identifier="streamSegue" id="cgL-7w-ucA"/>
                     </connections>
