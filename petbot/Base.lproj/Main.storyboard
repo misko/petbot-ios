@@ -76,6 +76,11 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="splash2.png" translatesAutoresizingMaskIntoConstraints="NO" id="Wkc-Of-QTI">
+                                <constraints>
+                                    <constraint firstAttribute="width" relation="lessThanOrEqual" constant="275" id="cD4-sz-LhJ"/>
+                                </constraints>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
@@ -94,14 +99,17 @@
                             <constraint firstItem="xZS-dE-aW0" firstAttribute="centerX" secondItem="vha-1s-7CE" secondAttribute="centerX" id="OQY-C9-5pT"/>
                             <constraint firstItem="q7k-oJ-Ngx" firstAttribute="centerX" secondItem="vha-1s-7CE" secondAttribute="centerX" id="Raq-4T-tFR"/>
                             <constraint firstItem="iDN-TJ-3Ii" firstAttribute="bottom" secondItem="xZS-dE-aW0" secondAttribute="top" constant="-8" id="RtT-pZ-57a"/>
+                            <constraint firstItem="B0o-SH-Jbb" firstAttribute="top" secondItem="Wkc-Of-QTI" secondAttribute="bottom" constant="-20" id="Sbj-xv-Var"/>
                             <constraint firstItem="7ef-gP-mAf" firstAttribute="leading" secondItem="vha-1s-7CE" secondAttribute="leadingMargin" constant="-20" id="SlS-w3-TYg"/>
                             <constraint firstItem="e6f-dT-b7B" firstAttribute="width" secondItem="xZS-dE-aW0" secondAttribute="width" id="XKx-D0-GQU"/>
                             <constraint firstItem="VQn-YD-4tl" firstAttribute="leading" secondItem="e6f-dT-b7B" secondAttribute="trailing" constant="-200" id="bRL-LM-yIq"/>
                             <constraint firstItem="iDN-TJ-3Ii" firstAttribute="top" secondItem="Uva-vt-aHv" secondAttribute="bottom" constant="250" id="mgc-P4-4se"/>
                             <constraint firstItem="q7k-oJ-Ngx" firstAttribute="bottom" secondItem="iDN-TJ-3Ii" secondAttribute="top" constant="-5" id="ndt-pi-MN3"/>
+                            <constraint firstItem="Wkc-Of-QTI" firstAttribute="centerX" secondItem="vha-1s-7CE" secondAttribute="centerX" id="rj6-FI-CbO"/>
                             <constraint firstItem="e6f-dT-b7B" firstAttribute="height" secondItem="xZS-dE-aW0" secondAttribute="height" id="v1k-b9-CDk"/>
                             <constraint firstItem="VQn-YD-4tl" firstAttribute="width" secondItem="e6f-dT-b7B" secondAttribute="width" id="v5D-df-QuH"/>
-                            <constraint firstItem="hYz-Vx-lrb" firstAttribute="top" secondItem="VQn-YD-4tl" secondAttribute="bottom" constant="100" id="xol-Cd-wf0"/>
+                            <constraint firstItem="Wkc-Of-QTI" firstAttribute="width" secondItem="vha-1s-7CE" secondAttribute="width" constant="-100" id="x8G-ls-SHA"/>
+                            <constraint firstItem="hYz-Vx-lrb" firstAttribute="top" secondItem="VQn-YD-4tl" secondAttribute="bottom" constant="60" id="xol-Cd-wf0"/>
                             <constraint firstItem="0oK-Pa-TAr" firstAttribute="top" secondItem="xZS-dE-aW0" secondAttribute="bottom" constant="8" id="xxd-Wx-Hzm"/>
                             <constraint firstItem="q7k-oJ-Ngx" firstAttribute="width" secondItem="vha-1s-7CE" secondAttribute="width" constant="-30" id="zuZ-tP-bRP"/>
                         </constraints>
@@ -531,6 +539,11 @@ Generate QR code Show QR code to PetBot PetBot will say "Thanks!"</string>
                                             <constraint firstItem="Th9-8M-pM3" firstAttribute="centerX" secondItem="rz3-DE-1dW" secondAttribute="centerX" id="ohW-V4-VMR"/>
                                         </constraints>
                                     </view>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="splash2.png" translatesAutoresizingMaskIntoConstraints="NO" id="rca-6b-m6h">
+                                        <constraints>
+                                            <constraint firstAttribute="width" relation="lessThanOrEqual" constant="100" id="AHQ-96-y3n"/>
+                                        </constraints>
+                                    </imageView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DGb-Sr-ZUM" userLabel="Message">
                                         <constraints>
                                             <constraint firstAttribute="height" constant="20" id="VJg-F4-6Re"/>
@@ -605,6 +618,7 @@ Generate QR code Show QR code to PetBot PetBot will say "Thanks!"</string>
                                 </subviews>
                                 <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <constraints>
+                                    <constraint firstItem="rca-6b-m6h" firstAttribute="centerX" secondItem="SZR-oQ-e7L" secondAttribute="centerX" id="0nE-R3-KqZ"/>
                                     <constraint firstItem="rz3-DE-1dW" firstAttribute="centerY" secondItem="SZR-oQ-e7L" secondAttribute="centerY" id="1P3-9M-D79"/>
                                     <constraint firstAttribute="bottom" secondItem="DGb-Sr-ZUM" secondAttribute="bottom" id="3r8-5E-a62"/>
                                     <constraint firstItem="Tpb-wo-PKF" firstAttribute="leading" secondItem="SZR-oQ-e7L" secondAttribute="leading" constant="20" id="82i-7M-41S"/>
@@ -613,6 +627,7 @@ Generate QR code Show QR code to PetBot PetBot will say "Thanks!"</string>
                                     <constraint firstItem="T27-Ti-Fh4" firstAttribute="width" secondItem="Tpb-wo-PKF" secondAttribute="width" id="KUk-3E-4bt"/>
                                     <constraint firstItem="4ZB-iI-915" firstAttribute="width" secondItem="Tpb-wo-PKF" secondAttribute="width" id="OQ9-ij-6CN"/>
                                     <constraint firstItem="GYk-XX-yR3" firstAttribute="width" secondItem="Tpb-wo-PKF" secondAttribute="width" id="P3h-cm-yrx"/>
+                                    <constraint firstItem="rca-6b-m6h" firstAttribute="top" secondItem="SZR-oQ-e7L" secondAttribute="top" constant="-50" id="RPV-sz-EUI"/>
                                     <constraint firstItem="DGb-Sr-ZUM" firstAttribute="leading" secondItem="SZR-oQ-e7L" secondAttribute="leading" id="St6-Bw-sS0"/>
                                     <constraint firstItem="rz3-DE-1dW" firstAttribute="height" secondItem="SZR-oQ-e7L" secondAttribute="height" id="Tlm-we-1Tn"/>
                                     <constraint firstItem="4ZB-iI-915" firstAttribute="leading" secondItem="SZR-oQ-e7L" secondAttribute="leading" constant="20" id="VPA-sh-64a"/>
@@ -725,5 +740,6 @@ Generate QR code Show QR code to PetBot PetBot will say "Thanks!"</string>
     </scenes>
     <resources>
         <image name="8925898_l.jpg" width="2513" height="1669"/>
+        <image name="splash2.png" width="560" height="170"/>
     </resources>
 </document>
