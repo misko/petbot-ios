@@ -9,6 +9,11 @@
 			<key>orderHint</key>
 			<integer>0</integer>
 		</dict>
+		<key>selfie.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>5</integer>
+		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
@@ -23,6 +28,11 @@
 			<true/>
 		</dict>
 		<key>CC23F8781CBEDA4B00EA0E62</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>CC6FFEB31DC324D8003969CA</key>
 		<dict>
 			<key>primary</key>
 			<true/>

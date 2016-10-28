@@ -14,6 +14,7 @@
 #import "ViewController.h"
 #import "pb.h"
 
+//http://stackoverflow.com/questions/37886600/ios-10-doesnt-print-nslogs - no NSLOG?
 
 @interface LoginViewController () {
         NSDictionary * loginArray;
@@ -26,7 +27,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
     NSString * username = [[NSUserDefaults standardUserDefaults] stringForKey:@"username"];
     NSString * password = [[NSUserDefaults standardUserDefaults] stringForKey:@"password"];
     if (username!=nil){

@@ -80,7 +80,7 @@
     NSString * wifiname = [loginArray objectForKey:@"wifiname"];
     NSString * wifikey = [loginArray objectForKey:@"wifikey"];
     
-    NSString * wait_time = @"20";
+    NSString * wait_time = @"40";
     
     //NSString * lengths = [NSString stringWithFormat:@"%ld:%ld:%ld:%ld:%lu", [username length], [email length], [password length], [wifiname length], [wifikey length]];
     //NSString * string = [NSString stringWithFormat:@"%@:%@:%@:%@:%@", username, email, password, wifiname, wifikey];

@@ -6,8 +6,10 @@
 //  Copyright © 2016 PetBot. All rights reserved.
 //
 #import <UIKit/UIKit.h>
+#import <UserNotifications/UserNotifications.h>
+#define SYSTEM_VERSION_GRATERTHAN_OR_EQUALTO(v)  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] != NSOrderedAscending)
+@interface AppDelegate : UIResponder <UIApplicationDelegate,UNUserNotificationCenterDelegate>
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
 
