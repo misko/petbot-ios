@@ -2,7 +2,8 @@
 
 // Put your device token here (without spaces):
 //$deviceToken = 'ad648e26c765d78bad945eaf7eed7b192ffe6ed47fbfcfe973a11e7ed96931f2';
-$deviceToken = 'e0689bafc4bbf24ab2d199dab7fa7501c05f6d306088dd589a0d0bce8a7585e7';
+#$deviceToken = 'e0689bafc4bbf24ab2d199dab7fa7501c05f6d306088dd589a0d0bce8a7585e7';
+$deviceToken = '6c543458af05eef72131dffc77c69fc43cc82bc5953447f151c3784737ec96f8';
 
 // Put your private key's passphrase here:
 //$passphrase = 'i823blueberries';
