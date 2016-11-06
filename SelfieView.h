@@ -6,8 +6,11 @@
 //  Copyright © 2016 PetBot. All rights reserved.
 //
 
-#ifndef SelfieView_h
-#define SelfieView_h
+#import <UIKit/UIKit.h>
+#import "SelfieView.h"
+
+@interface SelfieView : UIView
+-(void)setPlayerLayer:(CALayer *)playerLayerX ;
 
 
-#endif /* SelfieView_h */
+@end

@@ -129,6 +129,7 @@
 }
 
 - (IBAction)byePressed:(id)sender {
+    free_pbsock(pbs);
     [gst_backend quit];
 }
 
@@ -160,6 +161,7 @@
     pbmsg * m = recv_pbmsg(pbs);
     if (m==NULL) {
         fprintf(stderr,"CONNECTION CLOSED UNEXPECTEDLY");
+        free_pbsock(pbs);
         [gst_backend quit];
         return;
     }
@@ -171,6 +173,8 @@
     } else if ((m->pbmsg_type & PBMSG_DISCONNECTED) !=0) {
         if (m->pbmsg_from==bb_streamer_id) {
             fprintf(stderr,"The other side exited!\n");
+            
+            free_pbsock(pbs);
             [gst_backend quit];
             return;
             //g_main_loop_quit(main_loop);
@@ -236,6 +240,10 @@
         [gst_backend app_function];
     });
     fprintf(stderr,"LAUNCHED APP FUNCTION\n");
+}
+- (IBAction)abort_pressed:(id)sender {
+    free_pbsock(pbs);
+    [gst_backend quit];
 }
 
 -(void)waitSFSPCA {

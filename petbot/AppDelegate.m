@@ -10,6 +10,7 @@
 //http://ashishkakkad.com/2016/09/push-notifications-in-ios-10-objective-c/
 //http://api.shephertz.com/tutorial/Push-Notification-iOS/
 #import <UserNotifications/UserNotifications.h>
+#import "SelfieViewController.h"
 @interface AppDelegate ()
 
 @end
@@ -21,7 +22,24 @@
     // Override point for customization after application launch.
     // Let the device know we want to receive push notifications
     // Register for Push Notitications, if running on iOS 8
+    //NSLog(@"LAUNCHED WITH OPTIONS?");
+
     [self registerForRemoteNotifications:application];
+    if (launchOptions != nil) {
+        [self.window makeKeyAndVisible];
+        // Launched from push notification
+        /*UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Did receive a Remote Notification" message:@"HELLO" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        
+        [alertView show];*/
+        NSDictionary *notification = [launchOptions objectForKey:UIApplicationLaunchOptionsRemoteNotificationKey];
+        //[self showSelfie:@"SELFIE1"];
+        if (notification!=nil) {
+            NSString * selfieURL = [notification objectForKey:@"mediaUrl"];
+            NSString * selfieRMURL = [notification objectForKey:@"rmUrl"];
+            [self showSelfieWithURL:selfieURL RMURL:selfieRMURL];
+        }
+        NSLog(@"LAUNCHED WITH OPTIONS?");
+    }
     return YES;
 }
 
@@ -53,7 +71,11 @@
 
 -(void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
 {
-    application.applicationIconBadgeNumber = 0;
+    NSLog(@"didReceiveRemoteNotification");
+    //[UIApplication sharedApplication].applicationIconBadgeNumber
+    long badge = [[userInfo objectForKey:@"badge"] longValue];
+    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:badge];
+    //application.applicationIconBadgeNumber = 0;
     //self.textView.text = [userInfo description];
     // We can determine whether an application is launched as a result of the user tapping the action
     // button or whether the notification was delivered to the already-running application by examining
@@ -61,50 +83,84 @@
     
     if (application.applicationState == UIApplicationStateActive)
     {
+        NSLog(@"from INSIDE APP!");
         // Nothing to do if applicationState is Inactive, the iOS already displayed an alert view.
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Did receive a Remote Notification" message:[NSString stringWithFormat:@"Your App name received this notification while it was running:\n%@",[[userInfo objectForKey:@"aps"] objectForKey:@"alert"]]delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        /*UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Did receive a Remote Notification" message:[NSString stringWithFormat:@"Your App name received this notification while it was running:\n%@",[[userInfo objectForKey:@"aps"] objectForKey:@"alert"]]delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
         
-        [alertView show];
-    }    
+        [alertView show];*/
+    }    else {
+        NSLog(@"from OUTSIDE APP!");
+        /*UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Did receive a Remote Notification" message:[NSString stringWithFormat:@"Your App name received this notification while it was running:\n%@",[[userInfo objectForKey:@"aps"] objectForKey:@"alert"]]delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        
+        [alertView show];*/
+    }
+    NSString * selfieURL = [userInfo objectForKey:@"mediaUrl"];
+    NSString * selfieRMURL = [userInfo objectForKey:@"rmUrl"];
+    [self showSelfieWithURL:selfieURL RMURL:selfieRMURL];
 }
 
+-(void)showSelfieWithURL:(NSString *)selfieURL RMURL:(NSString*)rmURL {
+    
+    UIStoryboard * storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    SelfieViewController *VC = [storyboard instantiateViewControllerWithIdentifier:@"SelfieView"];
+    VC.selfieRMURL=rmURL;
+    VC.selfieURL=selfieURL;
+    VC.modalPresentationStyle = UIModalPresentationOverCurrentContext;
+    [self.window.rootViewController presentViewController: VC animated:YES completion:nil];
+}
 
 -(void)application:(UIApplication*)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData*)deviceToken
 {
+    NSLog(@"didRegisterForRemoteNotificationsWithDeviceToken");
     // Prepare the Device Token for Registration (remove spaces and < >)
     NSString *devToken = [[[[deviceToken description]
                             stringByReplacingOccurrencesOfString:@"<"withString:@""]
                            stringByReplacingOccurrencesOfString:@">" withString:@""]
                           stringByReplacingOccurrencesOfString: @" " withString: @""];
     NSLog(@"My token is: %@\n", devToken);
+    [[NSUserDefaults standardUserDefaults] setObject:devToken forKey:@"deviceToken"];
 }
 -(void)application:(UIApplication*)application didFailToRegisterForRemoteNotificationsWithError:(NSError*)error
 
 {
     NSLog(@"Failed to get token, error: %@\n", error);
-}  
+}
+
+
+- (void)userNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification withCompletionHandler:(void (^)(UNNotificationPresentationOptions))completionHandler
+{
+    NSLog(@"IN WILL PRESENT!");
+    completionHandler(UNNotificationPresentationOptionAlert | UNNotificationPresentationOptionBadge | UNNotificationPresentationOptionSound);
+}
 
 - (void)applicationWillResignActive:(UIApplication *)application {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
     // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
+    NSLog(@"applicationWillResignActive");
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application {
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+    NSLog(@"applicationDidEnterBackground");
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
+    NSLog(@"applicationWillEnterForeground");
 }
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+    NSLog(@"applicationDidBecomeActive");
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+    NSLog(@"applicationWillTerminate");
 }
+
+
 
 
 

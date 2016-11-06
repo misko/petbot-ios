@@ -48,6 +48,8 @@
 		CC5C0B7B1D6A9F9400CC4CEF /* GStreamer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC5C0B7A1D6A9F9400CC4CEF /* GStreamer.framework */; };
 		CC6FFEB81DC324D9003969CA /* NotificationService.m in Sources */ = {isa = PBXBuildFile; fileRef = CC6FFEB71DC324D9003969CA /* NotificationService.m */; };
 		CC6FFEBC1DC324D9003969CA /* selfie.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = CC6FFEB41DC324D8003969CA /* selfie.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		CC6FFEC21DC420E2003969CA /* SelfieViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CC6FFEC11DC420E2003969CA /* SelfieViewController.m */; };
+		CC6FFEC51DC44162003969CA /* SelfieView.m in Sources */ = {isa = PBXBuildFile; fileRef = CC6FFEC41DC44162003969CA /* SelfieView.m */; };
 		CC8B24AB1D07A52700FBE180 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CC8B24AA1D07A52700FBE180 /* libcrypto.a */; };
 		CCA48C641DA7565300275348 /* nice_utils.c in Sources */ = {isa = PBXBuildFile; fileRef = CCA48C621DA7565300275348 /* nice_utils.c */; };
 		CCD38ABA1D0B5954005EF60A /* TODO in Resources */ = {isa = PBXBuildFile; fileRef = CCD38AB91D0B5954005EF60A /* TODO */; };
@@ -172,6 +174,10 @@
 		CC6FFEB61DC324D9003969CA /* NotificationService.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NotificationService.h; sourceTree = "<group>"; };
 		CC6FFEB71DC324D9003969CA /* NotificationService.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NotificationService.m; sourceTree = "<group>"; };
 		CC6FFEB91DC324D9003969CA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		CC6FFEC11DC420E2003969CA /* SelfieViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SelfieViewController.m; sourceTree = "<group>"; };
+		CC6FFEC31DC42126003969CA /* SelfieViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SelfieViewController.h; sourceTree = "<group>"; };
+		CC6FFEC41DC44162003969CA /* SelfieView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SelfieView.m; sourceTree = "<group>"; };
+		CC6FFEC61DC44187003969CA /* SelfieView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SelfieView.h; sourceTree = "<group>"; };
 		CC8B24AA1D07A52700FBE180 /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcrypto.a; path = "petbot/libs/openssl-1.0.2f-iOS/lib/libcrypto.a"; sourceTree = "<group>"; };
 		CCA48C621DA7565300275348 /* nice_utils.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = nice_utils.c; sourceTree = "<group>"; };
 		CCA48C631DA7565300275348 /* nice_utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nice_utils.h; sourceTree = "<group>"; };
@@ -245,6 +251,10 @@
 			isa = PBXGroup;
 			children = (
 				CC56F8811DB3001E009013DD /* PBNotifierLabel.m */,
+				CC6FFEC11DC420E2003969CA /* SelfieViewController.m */,
+				CC6FFEC41DC44162003969CA /* SelfieView.m */,
+				CC6FFEC61DC44187003969CA /* SelfieView.h */,
+				CC6FFEC31DC42126003969CA /* SelfieViewController.h */,
 				CC2411471DB3F08400D1CBFB /* splash2.png */,
 				CC56F8831DB30037009013DD /* PBNotifierLabel.h */,
 				CC24114C1DB406C500D1CBFB /* SetupViewController.h */,
@@ -253,8 +263,6 @@
 				CC3259771DB2C3D500EBCDDF /* UIColor+PBColor.m */,
 				CC3259801DB2CAAC00EBCDDF /* PBLabel.m */,
 				CC3259821DB2CACB00EBCDDF /* PBLabel.h */,
-				CC2C33D11D7BEDFB007A886B /* UserInfoViewController.h */,
-				CC2C33D61D7BEF17007A886B /* WifiInfoViewController.h */,
 				CCED8B861DB09A9100E96B91 /* PBViewController.m */,
 				CC32597A1DB2C6B300EBCDDF /* PBButton.m */,
 				CC3259831DB2D10200EBCDDF /* PBHollowButton.m */,
@@ -269,7 +277,9 @@
 				CCED8B881DB09AA100E96B91 /* PBViewController.h */,
 				CC2C33D91D7BEF8F007A886B /* QRViewController.h */,
 				CC2C33C81D702611007A886B /* SetupViewController.m */,
+				CC2C33D11D7BEDFB007A886B /* UserInfoViewController.h */,
 				CC2C33D21D7BEE05007A886B /* UserInfoViewController.m */,
+				CC2C33D61D7BEF17007A886B /* WifiInfoViewController.h */,
 				CC2C33D41D7BEF0D007A886B /* WifiInfoViewController.m */,
 				CC2C33D71D7BEF84007A886B /* QRViewController.m */,
 				CC5C0B7A1D6A9F9400CC4CEF /* GStreamer.framework */,
@@ -708,7 +718,9 @@
 			files = (
 				CC3259811DB2CAAC00EBCDDF /* PBLabel.m in Sources */,
 				CC2C33C91D702611007A886B /* SetupViewController.m in Sources */,
+				CC6FFEC51DC44162003969CA /* SelfieView.m in Sources */,
 				CC2448C41CC6D9240036CEB3 /* EaglUIVIew.m in Sources */,
+				CC6FFEC21DC420E2003969CA /* SelfieViewController.m in Sources */,
 				CC56F8881DB30292009013DD /* PBNotifierView.m in Sources */,
 				CC32597B1DB2C6B300EBCDDF /* PBButton.m in Sources */,
 				CC23F85D1CBEDA4B00EA0E62 /* AppDelegate.m in Sources */,
@@ -1153,6 +1165,7 @@
 				CC6FFEBF1DC324D9003969CA /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

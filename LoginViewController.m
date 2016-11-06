@@ -12,13 +12,18 @@
 #import "UIColor+PBColor.h"
 #import "LoginViewController.h"
 #import "ViewController.h"
+#import "SelfieViewController.h"
 #import "pb.h"
+
+@import AVFoundation;
+@import AVKit;
 
 //http://stackoverflow.com/questions/37886600/ios-10-doesnt-print-nslogs - no NSLOG?
 
 @interface LoginViewController () {
         NSDictionary * loginArray;
     IBOutlet UILabel *status_label;
+    AVPlayerViewController *playerViewController;
 }
 @end
 
@@ -27,6 +32,13 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    
+    playerViewController = [[AVPlayerViewController alloc] init];
+
+
+    
+    
     NSString * username = [[NSUserDefaults standardUserDefaults] stringForKey:@"username"];
     NSString * password = [[NSUserDefaults standardUserDefaults] stringForKey:@"password"];
     if (username!=nil){
@@ -63,12 +75,40 @@
     }
 }
 
+-(void)DownloadVideo {
+    //download the file in a seperate thread.
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSLog(@"Downloading Started");
+        NSString *urlToDownload = @"https://petbot.ca:5000/static/selfie.mov";
+        NSURL  *url = [NSURL URLWithString:urlToDownload];
+        NSData *urlData = [NSData dataWithContentsOfURL:url];
+        if ( urlData )
+        {
+            NSArray       *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+            NSString  *documentsDirectory = [paths objectAtIndex:0];
+            
+            NSString  *filePath = [NSString stringWithFormat:@"%@/%@", documentsDirectory,@"selfie.mov"];
+            
+            //saving is done on main thread
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [urlData writeToFile:filePath atomically:YES];
+                NSLog(@"File Saved !");
+            });
+        }
+        
+    });
+}
+
 - (IBAction)loginPressed:(id)sender {
     //TODO should be ASYNC!!
     
     //build an info object and convert to json
     NSString *uniqueIdentifier = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
-    NSDictionary *newDatasetInfo = [NSDictionary dictionaryWithObjectsAndKeys:_username_field.text, @"username", _password_field.text, @"password",  uniqueIdentifier, @"deviceID",nil];
+    NSString *deviceToken = [[NSUserDefaults standardUserDefaults] objectForKey:@"deviceToken"];
+    if (deviceToken==nil) {
+        deviceToken=uniqueIdentifier;
+    }
+    NSDictionary *newDatasetInfo = [NSDictionary dictionaryWithObjectsAndKeys:_username_field.text, @"username", _password_field.text, @"password",  deviceToken, @"deviceID",nil];
     
     //convert object to data
     NSError *error;

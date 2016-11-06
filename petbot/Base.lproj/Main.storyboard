@@ -8,6 +8,103 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
+        <!--Selfie View Controller-->
+        <scene sceneID="W7l-jX-8en">
+            <objects>
+                <viewController storyboardIdentifier="SelfieView" id="hPq-nG-gBH" customClass="SelfieViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="gMd-0g-cM2"/>
+                        <viewControllerLayoutGuide type="bottom" id="Rcf-CR-HEn"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="cLu-lO-mQc">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yq0-SH-EmY" userLabel="subview">
+                                <subviews>
+                                    <view alpha="0.90000000000000002" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gjv-PK-3V2" userLabel="video_back_view">
+                                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                <integer key="value" value="8"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                    </view>
+                                    <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SDQ-sj-JXu" userLabel="saveButton" customClass="PBHollowButton">
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="130" id="h2I-Ae-6tP"/>
+                                        </constraints>
+                                        <state key="normal" title="Save/Share"/>
+                                        <connections>
+                                            <action selector="savePressed:" destination="hPq-nG-gBH" eventType="touchUpInside" id="AnV-Zu-Wg2"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DSB-iy-ZFv" userLabel="deleteButton" customClass="PBHollowButton">
+                                        <state key="normal" title="Delete"/>
+                                        <connections>
+                                            <action selector="deletePressed:" destination="hPq-nG-gBH" eventType="touchUpInside" id="TIi-zw-1fW"/>
+                                        </connections>
+                                    </button>
+                                    <view autoresizesSubviews="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XQT-Fb-fcN" userLabel="videoview" customClass="SelfieView">
+                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" secondItem="XQT-Fb-fcN" secondAttribute="height" multiplier="4:3" id="W3N-5q-wR0"/>
+                                        </constraints>
+                                    </view>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="PET SELFIE!" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YFg-Ch-q1E" customClass="PBLabel">
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="Pb8-EZ-2za">
+                                        <frame key="frameInset" minX="153" minY="285" width="37" height="37"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="color" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                    </activityIndicatorView>
+                                </subviews>
+                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstItem="DSB-iy-ZFv" firstAttribute="top" secondItem="SDQ-sj-JXu" secondAttribute="top" id="7Dx-8e-cwK"/>
+                                    <constraint firstItem="gjv-PK-3V2" firstAttribute="top" secondItem="YFg-Ch-q1E" secondAttribute="top" constant="-20" id="8ie-Vd-K4e"/>
+                                    <constraint firstItem="XQT-Fb-fcN" firstAttribute="centerX" secondItem="yq0-SH-EmY" secondAttribute="centerX" id="E0i-UK-jhq"/>
+                                    <constraint firstItem="SDQ-sj-JXu" firstAttribute="top" secondItem="XQT-Fb-fcN" secondAttribute="bottom" constant="20" id="F5j-YJ-hin"/>
+                                    <constraint firstItem="YFg-Ch-q1E" firstAttribute="centerX" secondItem="yq0-SH-EmY" secondAttribute="centerX" id="FKT-he-pRW"/>
+                                    <constraint firstItem="gjv-PK-3V2" firstAttribute="leading" secondItem="yq0-SH-EmY" secondAttribute="leading" id="Kwc-Sr-MbT"/>
+                                    <constraint firstItem="gjv-PK-3V2" firstAttribute="centerY" secondItem="yq0-SH-EmY" secondAttribute="centerY" id="RAo-ez-omZ"/>
+                                    <constraint firstItem="DSB-iy-ZFv" firstAttribute="width" secondItem="SDQ-sj-JXu" secondAttribute="width" id="TQM-6t-IsW"/>
+                                    <constraint firstItem="YFg-Ch-q1E" firstAttribute="bottom" secondItem="XQT-Fb-fcN" secondAttribute="top" constant="-20" id="UZf-XU-yCP"/>
+                                    <constraint firstItem="DSB-iy-ZFv" firstAttribute="trailing" secondItem="XQT-Fb-fcN" secondAttribute="trailing" id="bT9-zl-lze"/>
+                                    <constraint firstItem="gjv-PK-3V2" firstAttribute="centerX" secondItem="yq0-SH-EmY" secondAttribute="centerX" id="ejJ-3E-yqL"/>
+                                    <constraint firstItem="SDQ-sj-JXu" firstAttribute="leading" secondItem="XQT-Fb-fcN" secondAttribute="leading" id="hDZ-Yj-nPj"/>
+                                    <constraint firstItem="XQT-Fb-fcN" firstAttribute="width" secondItem="yq0-SH-EmY" secondAttribute="width" constant="-30" id="wTg-8d-rBZ"/>
+                                    <constraint firstItem="gjv-PK-3V2" firstAttribute="bottom" secondItem="SDQ-sj-JXu" secondAttribute="bottom" constant="20" id="wdx-nn-L5z"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="4"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </view>
+                        </subviews>
+                        <constraints>
+                            <constraint firstItem="yq0-SH-EmY" firstAttribute="top" secondItem="gMd-0g-cM2" secondAttribute="bottom" constant="20" id="5Dj-Va-dMa"/>
+                            <constraint firstItem="Rcf-CR-HEn" firstAttribute="top" secondItem="yq0-SH-EmY" secondAttribute="bottom" constant="20" id="BRK-m0-Ej2"/>
+                            <constraint firstItem="yq0-SH-EmY" firstAttribute="leading" secondItem="cLu-lO-mQc" secondAttribute="leadingMargin" id="Nuo-ep-XrH"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="yq0-SH-EmY" secondAttribute="trailing" id="gmV-GY-gA6"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="activityIndicator" destination="Pb8-EZ-2za" id="uwD-vL-VK6"/>
+                        <outlet property="deleteButton" destination="DSB-iy-ZFv" id="idi-nT-IJT"/>
+                        <outlet property="saveButton" destination="SDQ-sj-JXu" id="PyZ-FF-oQN"/>
+                        <outlet property="subview" destination="yq0-SH-EmY" id="1rB-FM-odM"/>
+                        <outlet property="videoview" destination="XQT-Fb-fcN" id="iOg-pc-rj7"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="W2y-6w-Ju8" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-170.40000000000001" y="-647.22638680659679"/>
+        </scene>
         <!--Login View Controller-->
         <scene sceneID="H7I-xg-swI">
             <objects>
@@ -645,7 +742,7 @@ Generate QR code Show QR code to PetBot PetBot will say "Thanks!"</string>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Xfp-Wn-3TA" userLabel="abort_button" customClass="PBHollowButton">
                                         <state key="normal" title="abort"/>
                                         <connections>
-                                            <segue destination="gSf-5C-v15" kind="unwind" unwindAction="unwindToLogin:" id="BBR-IS-I1m"/>
+                                            <action selector="abort_pressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="DcH-8h-RS9"/>
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rSM-ql-rWX" userLabel="pet_name">

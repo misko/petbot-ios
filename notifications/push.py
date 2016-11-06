@@ -27,6 +27,8 @@ if __name__ == '__main__':
   title = "the title"
   body = "body"
   url = "https://petbot.ca:5000/static/selfie.mov"
-  payload = {"aps": {"alert" : { "title" : title, "body" : body }, "sound" : "default", "mutable-content" :1 } , "mediaUrl": url, "mediaType" : "video"}
+  url = "https://petbot.ca:5000/static/store/16516603-80515778-54574848-0801a340/4OJJCTZ3M04J48UL783WZBF8WDI1C78G.mov"
+  rm_url = "https://petbot.ca:5000/FILES_RM/"
+  payload = {"aps": {"alert" : { "title" : title, "body" : body }, "badge":2, "sound" : "default", "mutable-content" :1 } , "mediaUrl": url, "mediaType" : "video", "rmUrl":rm_url}
   deviceID="6c543458af05eef72131dffc77c69fc43cc82bc5953447f151c3784737ec96f8"
   send_push_message(deviceID, json.dumps(payload))

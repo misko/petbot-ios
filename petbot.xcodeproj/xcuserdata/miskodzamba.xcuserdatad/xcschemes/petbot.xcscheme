@@ -65,7 +65,7 @@
       buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
-      launchStyle = "0"
+      launchStyle = "1"
       useCustomWorkingDirectory = "NO"
       ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
@@ -84,6 +84,7 @@
       <EnvironmentVariables>
          <EnvironmentVariable
             key = "OS_ACTIVITY_MODE"
+            value = ""
             isEnabled = "YES">
          </EnvironmentVariable>
       </EnvironmentVariables>

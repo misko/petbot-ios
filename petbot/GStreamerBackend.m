@@ -72,6 +72,12 @@ GST_DEBUG_CATEGORY_STATIC (debug_category);
         main_loop = g_main_loop_new (NULL, FALSE);
         g_main_loop_run (main_loop);
         //g_main_context_unref (context);
+        
+        
+        g_main_loop_unref (main_loop);
+        main_loop = NULL;
+        
+        
         gst_element_set_state (pipeline, GST_STATE_NULL);
         gst_object_unref (pipeline);
         [self->vc toLogin];
@@ -82,6 +88,8 @@ GST_DEBUG_CATEGORY_STATIC (debug_category);
 }
 
 -(void) quit {
+    
+    gst_element_set_state (pipeline, GST_STATE_NULL);
     g_main_loop_quit(main_loop);
 }
 
@@ -249,10 +257,12 @@ static void state_changed_cb (GstBus *bus, GstMessage *msg, GStreamerBackend *se
     gst_object_unref (bus);
     
     [ui_delegate gstreamerHideLoadView];
+    
     /* Create a GLib Main Loop and set it to run */
     //GST_DEBUG ("Entering main loop...");
     //main_loop = g_main_loop_new (context, FALSE);
     [self check_initialization_complete];
+    
     return;
    /* g_main_loop_run (main_loop); //TODO WE ALREADY CALL RUN MAIN somewhere else.. do we need this?
     //GST_DEBUG ("Exited main loop");
