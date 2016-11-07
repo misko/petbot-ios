@@ -53,13 +53,13 @@
 
 //sem_t negotiation_done;
 
-static gboolean negotiation_done;
-static GCond negotiate_cond;
-static GMutex negotiate_mutex;
+//static gboolean negotiation_done;
+//static GCond negotiate_cond;
+//static GMutex negotiate_mutex;
 //static GMainLoop *gloop;
-static GIOChannel* io_stdin, * gpipe;
-guint stream_id;
-NiceAgent *agent;
+//static GIOChannel* gpipe;
+//guint stream_id;
+//NiceAgent *agent;
 
 static const gchar *candidate_type_name[] = {"host", "srflx", "prflx", "relay"};
 
@@ -82,24 +82,24 @@ static void cb_nice_recv(NiceAgent *agent, guint stream_id, guint component_id,
     guint len, gchar *buf, gpointer data);
 static gboolean pipein_remote_info_cb (GIOChannel *source, GIOCondition cond,
     gpointer data);
-NiceAgent * init_ice(int controlling, int to_parent, int from_parent);
+NiceAgent * init_ice(pb_nice_io * pbnio);
 
 //gchar * stun_addr = "stun.stunprotocol.org";
 gchar * stun_addr = "159.203.252.147";
 //gchar * stun_addr = "petbot.ca";
 guint stun_port = 3478;
 
-guint pipe_to_parent, pipe_from_parent;
+//guint pipe_to_parent, pipe_from_parent;
 
 
-GThread *  start_nice_thread(int controlling, int * from_child, int * to_child);
+//GThread *  start_nice_thread(int controlling, int * from_child, int * to_child);
 	
 //int to_child[2];
 //int from_child[2];
 //GThread * ice_thread;
 //int help_params[4];
 
-void * start_ice_helper(void * x) {
+/*void * start_ice_helper(void * x) {
 	int * params = (int*)x;
 	int controlling = params[0];
 	int to_parent = params[1];
@@ -107,48 +107,49 @@ void * start_ice_helper(void * x) {
 	init_ice(controlling, to_parent, from_parent);
 	//free(params); //mem leak
     return NULL;
-}
+}*/
 
-char * start_nice_server_get_nice(int * to_child, int * from_child) {
+/*char * start_nice_server_get_nice(int * to_child, int * from_child) {
 	//(1) get our nice 
 	//(2) send it back
 	//(3) negotiate
-
-	PBPRINTF("Starting nice server\n");
-	start_nice_thread(1,from_child,to_child);
-
+	//PBPRINTF("Starting nice server\n");
+	//start_nice_thread(1,from_child,to_child);
+	//pass parameters in an array
+        init_ice(1, from_child[1], to_child[0]);
 	//get our string from the child thread
 	pbmsg * m = recv_fd_pbmsg(from_child[0]);
 	char * our_nice = strdup(m->pbmsg);
 	//mem leak free m
 	return our_nice;
-}
-int start_nice_server_with_nice(int *to_child, int * from_child, pbmsg * ice_request, char * our_nice) {
+}*/
+//int start_nice_server_with_nice(int *to_child, int * from_child, pbmsg * ice_request, char * our_nice) {
+int start_nice_server_with_nice(pb_nice_io * pbnio) {
 
 	//we started with the other nice lets negotiate
-	char * other_nice = ice_request->pbmsg;	
+	//char * other_nice = ice_request->pbmsg;	
 
-	PBPRINTF("Our nice string, %s\n",our_nice);
-	PBPRINTF("Other nice string %s\n",other_nice);
+	PBPRINTF("Our nice string, %s\n",pbnio->our_nice);
+	PBPRINTF("Other nice string %s\n",pbnio->other_nice);
 	
-	pbmsg * m = new_pbmsg_from_str(other_nice);
-	send_fd_pbmsg(to_child[1],m);
-	PBPRINTF("SENT OTHER NICE TO CHILD\n");
+	pbmsg * m = new_pbmsg_from_str(pbnio->other_nice);
+	send_fd_pbmsg(pbnio->pipe_to_child,m);
 
-	/* try removing this for now? */
-	g_mutex_lock(&negotiate_mutex);
-	while (!negotiation_done)
-		g_cond_wait(&negotiate_cond, &negotiate_mutex);
-	g_mutex_unlock(&negotiate_mutex);
+    	PBPRINTF("WAIT ON COND");
+	g_mutex_lock(&(pbnio->negotiate_mutex));
+	while (!(pbnio->negotiation_done))
+		g_cond_wait(&(pbnio->negotiate_cond), &(pbnio->negotiate_mutex));
+	g_mutex_unlock(&(pbnio->negotiate_mutex));
         PBPRINTF("Returning from start ICE, everything went ok?\n");
 	return 0;
 }
-
+/*
 int start_nice_server(pbsock *pbs, pbmsg * ice_request) {
 	assert(pbs!=NULL);
 	int to_child[2];
 	int from_child[2];
 	if (pipe(to_child)!=0 || pipe(from_child)!=0) {
+		perror("pipe");
 		PBPRINTF("Failed to make pipes for children\n");
 		exit(1);
 	}
@@ -161,16 +162,12 @@ int start_nice_server(pbsock *pbs, pbmsg * ice_request) {
 	send_pbmsg(pbs, ice_response);
 	PBPRINTF("Starting nice server - sent request\n");
 	return start_nice_server_with_nice(to_child,from_child,ice_request,our_nice);
-}
+}*/
 
 
-GThread *  start_nice_thread(int controlling, int * from_child, int * to_child) {
+/*GThread *  start_nice_thread(int controlling, int * from_child, int * to_child) {
 	//(1)
 	//make pipes	
-	if (pipe(to_child)!=0 || pipe(from_child)!=0) {
-		PBPRINTF("Failed to make pipes for children\n");
-		exit(1);
-	}
 	//pass parameters in an array
 	int * help_params = (int*)malloc(sizeof(int)*4);
 	if (help_params==NULL) {
@@ -181,7 +178,7 @@ GThread *  start_nice_thread(int controlling, int * from_child, int * to_child) 
 	help_params[1]=from_child[1];
 	help_params[2]=to_child[0];
 	return  g_thread_new("ice thread", &start_ice_helper, help_params);
-}
+}*/
 
 pbmsg * make_ice_request(int * from_child, int * to_child) { // must be called only once after start_ice_thread
 	//get our string from the child thread
@@ -199,22 +196,37 @@ pbmsg * make_ice_request(int * from_child, int * to_child) { // must be called o
 	PBPRINTF("Waiting for our nice...-sent our nice\n");
 }
 
-int recvd_ice_response(pbmsg * ice_response, int * from_child, int * to_child) {
+pb_nice_io * new_pbnio(void) {
+    pb_nice_io * pbnio = (pb_nice_io*)malloc(sizeof(pb_nice_io));
+    if (pbnio==NULL){
+        PBPRINTF("FAILED MALLOC!!!\n");
+        exit(1);
+    }
+    memset(pbnio,0,sizeof(pb_nice_io));
+    g_cond_init(&(pbnio->negotiate_cond));
+    g_mutex_init(&(pbnio->negotiate_mutex));
+    return pbnio;
+}
+
+//int recvd_ice_response(pbmsg * ice_response, int * from_child, int * to_child) {
+int recvd_ice_response(pbmsg * ice_response, pb_nice_io * pbnio) {
 	assert((ice_response->pbmsg_type ^ (PBMSG_ICE | PBMSG_CLIENT | PBMSG_RESPONSE | PBMSG_SUCCESS | PBMSG_STRING)) == 0) ;
         PBPRINTF("RECVD ice response sending it to the thread\n");
-	send_fd_pbmsg(to_child[1],ice_response);
+	//send_fd_pbmsg(to_child[1],ice_response);
+	send_fd_pbmsg(pbnio->pipe_to_child,ice_response);
 	//PBPRINTF("Waiting for negotiation to finish\n");
 	
 	/* dont wait for this try to continue */
+    	PBPRINTF("WAIT ON COND");
 	
-	g_mutex_lock(&negotiate_mutex);
-	while (!negotiation_done)
-		g_cond_wait(&negotiate_cond, &negotiate_mutex);
-	g_mutex_unlock(&negotiate_mutex);
+	g_mutex_lock(&(pbnio->negotiate_mutex));
+	while (!(pbnio->negotiation_done))
+		g_cond_wait(&(pbnio->negotiate_cond), &(pbnio->negotiate_mutex));
+	g_mutex_unlock(&(pbnio->negotiate_mutex));
         PBPRINTF("Returning from start ICE, everything went ok?\n");
 	return 0;
 }
-
+/*
 int start_nice_client(pbsock *pbs) {
 	//(1) get ice string
 	//(2) send ice string to server in ICE REQUEST
@@ -226,6 +238,7 @@ int start_nice_client(pbsock *pbs) {
 	int to_child[2];
 	int from_child[2];
 	if (pipe(to_child)!=0 || pipe(from_child)!=0) {
+		perror("pipe");
 		PBPRINTF("Failed to make pipes for children\n");
 		exit(1);
 	}
@@ -253,8 +266,8 @@ int start_nice_client(pbsock *pbs) {
 	int ret = recvd_ice_response(ice_response,from_child,to_child);
 	PBPRINTF("Starting nice client - recvd response\n");
 	return ret;
-}
-
+}*/
+/*
 void start_nice(pbsock * pbs) {
 	char * our_nice, * other_nice;
 	// (1) connect and figure out order
@@ -280,6 +293,7 @@ void start_nice(pbsock * pbs) {
 	int to_child[2];
 	int from_child[2];
 	if (pipe(to_child)!=0 || pipe(from_child)!=0) {
+		perror("pipe");
 		PBPRINTF("Failed to make pipes for children\n");
 		exit(1);
 	}
@@ -309,8 +323,14 @@ void start_nice(pbsock * pbs) {
 
 	//PBPRINTF("Waiting for negotiation to finish\n");
 
-	/* dont wait for negotiate to finish */
-	
+	PBPRINTF("WAIT ON NEGOTIATE MUTEX!!!!!!!\n");	
+	PBPRINTF("WAIT ON NEGOTIATE MUTEX!!!!!!!\n");	
+	PBPRINTF("WAIT ON NEGOTIATE MUTEX!!!!!!!\n");	
+	PBPRINTF("WAIT ON NEGOTIATE MUTEX!!!!!!!\n");	
+	PBPRINTF("WAIT ON NEGOTIATE MUTEX!!!!!!!\n");	
+	PBPRINTF("WAIT ON NEGOTIATE MUTEX!!!!!!!\n");	
+	PBPRINTF("WAIT ON NEGOTIATE MUTEX!!!!!!!\n");	
+	PBPRINTF("WAIT ON NEGOTIATE MUTEX!!!!!!!\n");	
 	g_mutex_lock(&negotiate_mutex);
 	while (!negotiation_done)
 		g_cond_wait(&negotiate_cond, &negotiate_mutex);
@@ -318,29 +338,33 @@ void start_nice(pbsock * pbs) {
         PBPRINTF("Returning from start ICE, everything went ok?\n");
 	//sem_wait(&negotiation_done);
 	//PBPRINTF("Waiting for negotiation to finish - Done - %p\n",agent);
-}
+}*/
 
-NiceAgent * init_ice(int controlling, int to_parent, int from_parent) {
+//NiceAgent * init_ice(int controlling, int to_parent, int from_parent) {
+NiceAgent * init_ice(pb_nice_io * pbnio) {
   PBPRINTF("Called init_ice\n");
-  pipe_to_parent = to_parent;
-  pipe_from_parent = from_parent;
-  if (controlling != 0 && controlling != 1) {
+  //pbnio->pipe_to_parent=to_parent;
+  //pbnio->pipe_from_parent=from_parent;
+  //pipe_to_parent = to_parent;
+  //pipe_from_parent = from_parent;
+  if (pbnio->controlling != 0 && pbnio->controlling != 1) {
     PBPRINTF( "controlling must be 1 or 0\n");
     exit(1);
   }
 
   PBPRINTF("Using stun server '[%s]:%u'\n", stun_addr, stun_port);
 
-  g_type_init();
+  //g_type_init();
 
   //gloop = g_main_loop_new(NULL, FALSE);
-  gpipe = g_io_channel_unix_new(from_parent);
-  io_stdin = g_io_channel_unix_new(fileno(stdin));
+  //GIOChannel * gpipe =  g_io_channel_unix_new(from_parent);
+  pbnio->gpipe =  g_io_channel_unix_new(pbnio->pipe_from_parent);
+  //io_stdin = g_io_channel_unix_new(fileno(stdin));
 
   // Create the nice agent
-  agent = nice_agent_new(NULL,
+  pbnio->agent = nice_agent_new(NULL,
       NICE_COMPATIBILITY_RFC5245);
-  if (agent == NULL) {
+  if (pbnio->agent == NULL) {
     g_error("Failed to create agent");
     PBPRINTF("FAILED TO CREATE NICE AGENT!\n");
   }
@@ -348,39 +372,39 @@ NiceAgent * init_ice(int controlling, int to_parent, int from_parent) {
 
   // Set the STUN settings and controlling mode
   if (stun_addr) {
-    g_object_set(agent, "stun-server", stun_addr, NULL);
-    g_object_set(agent, "stun-server-port", stun_port, NULL);
+    g_object_set(pbnio->agent, "stun-server", stun_addr, NULL);
+    g_object_set(pbnio->agent, "stun-server-port", stun_port, NULL);
   }
-  g_object_set(agent, "controlling-mode", controlling, NULL);
+  g_object_set(pbnio->agent, "controlling-mode", pbnio->controlling, NULL);
 
   // Connect to the signals
-  g_signal_connect(agent, "candidate-gathering-done",
-      G_CALLBACK(cb_candidate_gathering_done), NULL);
-  g_signal_connect(agent, "new-selected-pair",
+  g_signal_connect(pbnio->agent, "candidate-gathering-done",
+      G_CALLBACK(cb_candidate_gathering_done), pbnio);
+  g_signal_connect(pbnio->agent, "new-selected-pair",
       G_CALLBACK(cb_new_selected_pair), NULL);
-  g_signal_connect(agent, "component-state-changed",
-      G_CALLBACK(cb_component_state_changed), NULL);
+  g_signal_connect(pbnio->agent, "component-state-changed",
+      G_CALLBACK(cb_component_state_changed), pbnio);
 
   // Create a new stream with one component
-  stream_id = nice_agent_add_stream(agent, 1);
-  if (stream_id == 0)
+  pbnio->stream_id = nice_agent_add_stream(pbnio->agent, 1);
+  if (pbnio->stream_id == 0)
     g_error("Failed to add stream");
 
-  gboolean ret = nice_agent_set_relay_info(agent,stream_id,1,stun_addr, stun_port, "misko", "misko",NICE_RELAY_TYPE_TURN_UDP);
+  gboolean ret = nice_agent_set_relay_info(pbnio->agent,pbnio->stream_id,1,stun_addr, stun_port, "misko", "misko",NICE_RELAY_TYPE_TURN_UDP);
   if (ret==FALSE) {
     PBPRINTF("Failed to set the TURN RELAY!\n");
   }
 
   // Attach to the component to receive the data
   // Without this call, candidates cannot be gathered
-  ret = nice_agent_attach_recv(agent, stream_id, 1, NULL, cb_nice_recv, NULL);
+  ret = nice_agent_attach_recv(pbnio->agent, pbnio->stream_id, 1, NULL, cb_nice_recv, NULL);
   //ret = nice_agent_attach_recv(agent, stream_id, 1, NULL, NULL, NULL);
   if (ret==FALSE) {
      PBPRINTF("Failed to attach the component to the NICE agent\n");
   }
 
   // Start gathering local candidates
-  if (!nice_agent_gather_candidates(agent, stream_id)) {
+  if (!nice_agent_gather_candidates(pbnio->agent, pbnio->stream_id)) {
     g_error("Failed to start candidate gathering");
     PBPRINTF("Failed to start candidate gathering\n");
   }
@@ -393,7 +417,7 @@ NiceAgent * init_ice(int controlling, int to_parent, int from_parent) {
   // when the candidates are done gathering.
   //g_io_channel_unref (io_stdin);
 
-  return agent;
+  return pbnio->agent;
 }
 
 
@@ -403,29 +427,35 @@ cb_candidate_gathering_done(NiceAgent *agent, guint _stream_id,
 {
   PBPRINTF("SIGNAL candidate gathering done\n");
 
+  gchar * sdp = nice_agent_generate_local_sdp (agent);
+  PBPRINTF("SDP\n%s\n",sdp);
+
+  pb_nice_io * pbnio = data;
+  //GIOChannel* gpipe  = data;
   // Candidate gathering is done. Send our local candidates over pbmsg
   char * s = str_local_data(agent, _stream_id, 1);
   pbmsg * m = new_pbmsg_from_str(s);
-  send_fd_pbmsg(pipe_to_parent, m);
+  send_fd_pbmsg(pbnio->pipe_to_parent, m);
   free_pbmsg(m); 
 
   //wait to hear response from the other side over pbmsg?
-  g_io_add_watch(gpipe, G_IO_IN, pipein_remote_info_cb, agent);
+  g_io_add_watch(pbnio->gpipe, G_IO_IN, pipein_remote_info_cb, pbnio);
 }
 
 static gboolean
 pipein_remote_info_cb (GIOChannel *source, GIOCondition cond,
     gpointer data)
 {
-  NiceAgent *agent = data;
+  pb_nice_io * pbnio = data;
+  //NiceAgent *agent = pbnio->agent;
   //gchar *line = NULL;
   int rval;
 
   //there is data waiting lets read it and see if its the right data?
-  pbmsg * m = recv_fd_pbmsg(pipe_from_parent);
+  pbmsg * m = recv_fd_pbmsg(pbnio->pipe_from_parent);
 
   PBPRINTF( "Remote info is %s\n",m->pbmsg);
-  rval = parse_remote_data(agent, stream_id, 1, m->pbmsg);
+  rval = parse_remote_data(pbnio->agent, pbnio->stream_id, 1, m->pbmsg);
   gboolean ret = TRUE;
   if (rval == EXIT_SUCCESS) {
    ret = FALSE;
@@ -438,8 +468,9 @@ pipein_remote_info_cb (GIOChannel *source, GIOCondition cond,
 static void
 cb_component_state_changed(NiceAgent *agent, guint _stream_id,
     guint component_id, guint state,
-    gpointer data)
-{
+    gpointer data) {
+  
+  pb_nice_io * pbnio = data;
 
   PBPRINTF("SIGNAL: state changedXX %d %d %s[%d]\n",
       _stream_id, component_id, state_name[state], state);
@@ -460,24 +491,22 @@ cb_component_state_changed(NiceAgent *agent, guint _stream_id,
       printf(" [%s]:%d)\n", ipaddr, nice_address_get_port(&remote->addr));
     }
 
-    g_mutex_lock(&negotiate_mutex);
-    negotiation_done = TRUE;
-    g_cond_signal(&negotiate_cond);
-    g_mutex_unlock(&negotiate_mutex);
+    g_mutex_lock(&(pbnio->negotiate_mutex));
+    pbnio->negotiation_done = TRUE;
+    g_cond_signal(&(pbnio->negotiate_cond));
+    g_mutex_unlock(&(pbnio->negotiate_mutex));
 
     //sem_post(&negotiation_done);
   } else if (state == NICE_COMPONENT_STATE_FAILED) {
     //sem_post(&negotiation_done);
     PBPRINTF("Something failed a ICE negotiation crapped out!\n");
-    g_mutex_lock(&negotiate_mutex);
-    negotiation_done = TRUE;
-    g_cond_signal(&negotiate_cond);
-    g_mutex_unlock(&negotiate_mutex);
-
+    g_mutex_lock(&(pbnio->negotiate_mutex));
+    pbnio->negotiation_done = TRUE;
+    g_cond_signal(&(pbnio->negotiate_cond));
+    g_mutex_unlock(&(pbnio->negotiate_mutex));
     //g_main_loop_quit (gloop);
     agent=NULL;
   } else if (state==NICE_COMPONENT_STATE_CONNECTING) {
-      
       fprintf(stderr,"NICE CONNECTING\n");
   } else if (state==NICE_COMPONENT_STATE_DISCONNECTED) {
     fprintf(stderr,"NICE DISCONNECTED\n");
@@ -493,7 +522,7 @@ cb_new_selected_pair(NiceAgent *agent, guint _stream_id,
     guint component_id, gchar *lfoundation,
     gchar *rfoundation, gpointer data)
 {
-  PBPRINTF("SIGNAL: selected pair %s %s", lfoundation, rfoundation);
+  PBPRINTF("SIGNAL: selected pair %s %s\n", lfoundation, rfoundation);
 }
 
 
@@ -512,7 +541,7 @@ static NiceCandidate *
 parse_candidate(char *scand, guint _stream_id)
 {
   NiceCandidate *cand = NULL;
-  NiceCandidateType ntype=0;
+  NiceCandidateType ntype;
   gchar **tokens = NULL;
   guint i;
 
@@ -557,11 +586,19 @@ parse_candidate(char *scand, guint _stream_id)
 char * 
 str_local_data (NiceAgent *agent, guint _stream_id, guint component_id)
 {
+  fprintf(stderr,"LOCAL DATA\n");
   //int result = EXIT_FAILURE;
   gchar *local_ufrag = NULL;
   gchar *local_password = NULL;
   gchar ipaddr[INET6_ADDRSTRLEN];
   GSList *cands = NULL, *item;
+
+  char * buffer = (char*)malloc(2048*sizeof(char));
+  if (buffer==NULL) {
+    PBPRINTF("failed to ammlloc buffer\n");
+    exit(1);
+  }
+  buffer[0]='\0';
 
   if (!nice_agent_get_local_credentials(agent, _stream_id,
       &local_ufrag, &local_password))
@@ -571,12 +608,6 @@ str_local_data (NiceAgent *agent, guint _stream_id, guint component_id)
   if (cands == NULL)
     goto end;
 
-  char * buffer = (char*)malloc(2048*sizeof(char));
-  if (buffer==NULL) {
-    PBPRINTF("failed to ammlloc buffer\n");
-    exit(1);
-  }
-  buffer[0]='\0';
 
   int ret = sprintf(buffer, "%s %s", local_ufrag, local_password);
 
@@ -611,6 +642,7 @@ static int
 parse_remote_data(NiceAgent *agent, guint _stream_id,
     guint component_id, char *line)
 {
+  fprintf(stderr,"PARSE REMOTE DATA\n");
   GSList *remote_candidates = NULL;
   gchar **line_argv = NULL;
   const gchar *ufrag = NULL;

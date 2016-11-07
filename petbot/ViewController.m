@@ -30,6 +30,7 @@
     IBOutlet UIActivityIndicatorView *activityIndicator;
     AVAudioPlayer *player;
     UIVisualEffectView *blurEffectView;
+    pb_nice_io * pbnio;
 }
 @end
 
@@ -272,10 +273,20 @@
     //start_nice_thread(0,ice_thread_pipes_from_child,ice_thread_pipes_to_child);
     
     //int * params = (int*)x;
-    int controlling = 0;
-    int to_parent = ice_thread_pipes_from_child[1];
-    int from_parent = ice_thread_pipes_to_child[0];
-    init_ice(controlling, to_parent, from_parent);
+    //get our string from the child thread
+    pbnio =  new_pbnio();
+    //init_ice(1, from_child[1], to_child[0]);
+    pbnio->pipe_to_child=ice_thread_pipes_to_child[1];
+    pbnio->pipe_to_parent=ice_thread_pipes_from_child[1];
+    pbnio->pipe_from_parent=ice_thread_pipes_to_child[0];
+    pbnio->pipe_from_child=ice_thread_pipes_from_child[0];
+    pbnio->controlling=0;
+    init_ice(pbnio);
+    //pbnio->other_nice = m->pbmsg;
+    
+    //int to_parent = ice_thread_pipes_from_child[1];
+    //int from_parent = ice_thread_pipes_to_child[0];
+    //init_ice(controlling, to_parent, from_parent);
     //start_nice_client(pbs);
     
     petbot_state = @"pbstate: ice_request";
@@ -295,9 +306,10 @@
 -(void) ice_negotiate:(pbmsg *)m {
     bb_streamer_id = m->pbmsg_from;
     fprintf(stderr,"BBSTREAMER ID %d\n",bb_streamer_id);
-    recvd_ice_response(m,ice_thread_pipes_from_child,ice_thread_pipes_to_child);
+    //recvd_ice_response(m,ice_thread_pipes_from_child,ice_thread_pipes_to_child);
+    recvd_ice_response(m,pbnio);
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        [gst_backend app_function];
+        [gst_backend app_functionPBNIO:pbnio];
     });
     fprintf(stderr,"LAUNCHED APP FUNCTION\n");
 }

@@ -18,7 +18,7 @@ GST_DEBUG_CATEGORY_STATIC (debug_category);
 
 @interface GStreamerBackend()
 -(void)setUIMessage:(gchar*) message;
--(void)app_function;
+-(void)app_functionPBNIO;
 -(void)check_initialization_complete;
 @end
 
@@ -176,7 +176,7 @@ static void state_changed_cb (GstBus *bus, GstMessage *msg, GStreamerBackend *se
 }
 
 /* Main method for the bus monitoring code */
--(void) app_function
+-(void) app_functionPBNIO:(pb_nice_io *)pbnio
 {
 
 
@@ -199,8 +199,8 @@ static void state_changed_cb (GstBus *bus, GstMessage *msg, GStreamerBackend *se
     autovideosink = gst_element_factory_make ("autovideosink", "autovideosink");
     fprintf(stderr,"autovideosink %p\n",autovideosink);
     
-    g_object_set (nicesrc, "agent", agent, NULL);
-    g_object_set (nicesrc, "stream", stream_id, NULL);
+    g_object_set (nicesrc, "agent", pbnio->agent, NULL);
+    g_object_set (nicesrc, "stream", pbnio->stream_id, NULL);
     g_object_set (nicesrc, "component", 1, NULL);
     
     GstCaps *nicesrc_caps = gst_caps_from_string("application/x-rtp, media=(string)video, clock-rate=(int)90000, encoding-name=(string)H264, payload=96");

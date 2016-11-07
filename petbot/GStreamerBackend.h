@@ -2,6 +2,7 @@
 #import <UIKit/UIKit.h>
 #import "GStreamerBackendDelegate.h"
 #import "ViewController.h"
+#import "pb.h"
 
 @interface GStreamerBackend : NSObject
 
@@ -10,6 +11,6 @@
  * Pass also the UIView object that will hold the video window. */
 -(id) init:(id) uiDelegate videoView:(UIView*) video_view serverInfo:(NSDictionary *)loginInfo vc:(ViewController *)vc;
 
--(void) app_function;
+-(void) app_functionPBNIO:(pb_nice_io*)pbnio;
 -(void) quit;
 @end
