@@ -13,6 +13,6 @@
 
 @property (strong, nonatomic) UIWindow *window;
 
-
+-(void)showSelfieWithURL:(NSString *)selfieURL RMURL:(NSString*)rmURL from:(UIViewController *)from_vc;
 @end
 

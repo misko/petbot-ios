@@ -70,32 +70,42 @@ NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
 -(void)downloadVideoWithURL:(NSURL *)url rmURL:(NSURL*)rmURL {
     //download the file in a seperate thread.
     remote_url = url;
+    NSLog(@"DOWNLOAD %@",url);
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSLog(@"Downloading Started");
         NSData *urlData = [NSData dataWithContentsOfURL:url];
-        if ( urlData )
-        {
+        if ( urlData ) {
             NSArray       *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
             NSString  *documentsDirectory = [paths objectAtIndex:0];
             
             NSString *local_path = [documentsDirectory stringByAppendingPathComponent:@"selfie.mov"];
             
+            local_url = [NSURL fileURLWithPath:local_path isDirectory:NO];
+            NSError *error;
+            NSFileManager *fileManager = [NSFileManager defaultManager];
+            BOOL success = [fileManager removeItemAtPath:local_path error:&error];
+            
             //saving is done on main thread
             dispatch_async(dispatch_get_main_queue(), ^{
-                [urlData writeToFile:local_url atomically:YES];
+                [urlData writeToURL:local_url atomically:YES];
                 NSLog(@"File Saved !");
                 
                 [saveButton setEnabled:TRUE];
                 [deleteButton setEnabled:TRUE];
                 [activityIndicator setHidden:TRUE];
                 
-                local_url = [NSURL fileURLWithPath:local_path isDirectory:NO];
                 [self startPlayerWithURL:local_url];
             });
+        } else {
             dispatch_async(dispatch_get_main_queue(), ^{
-                [self getURL:rmURL];
+            [self dismissViewControllerAnimated:YES completion:nil];
             });
         }
+        
+        //test with the broken selfie first
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self getURL:rmURL];
+        });
         
     });
 }

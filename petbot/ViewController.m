@@ -6,7 +6,7 @@
 #import "ViewController.h"
 #import "GStreamerBackend.h"
 
-
+#import "AppDelegate.h"
 #include "tcp_utils.h"
 #include "nice_utils.h"
 #include "pb.h"
@@ -129,14 +129,62 @@
 }
 
 - (IBAction)byePressed:(id)sender {
+    NSLog(@"BYE PRESSED");
     free_pbsock(pbs);
     [gst_backend quit];
 }
 
+
+
 - (IBAction)selfiePressed:(id)sender {
-    pbmsg * m = new_pbmsg_from_str_wtype("selfie", PBMSG_VIDEO | PBMSG_REQUEST | PBMSG_STRING);
-    send_pbmsg(pbs, m);
-    free_pbmsg(m);
+    //first lets check if there is selfies waiting
+    [selfie_button setEnabled:FALSE];
+    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
+    dispatch_async(queue, ^{
+        NSURL * url = [NSURL URLWithString:[NSString stringWithFormat:@"%s%@", HTTPS_ADDRESS_PB_SELFIE_LAST, pubsubserver_secret]];
+        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+        
+        //send the request
+        NSURLResponse * response;
+        NSError * error;
+        NSData * data = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
+        if (error) {
+            NSLog(@"Error,%@", [error localizedDescription]);
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [selfie_button setEnabled:TRUE];
+            });
+        } else {
+            NSDictionary * d = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
+            if (error) {
+                NSLog(@"Error,%@", [error localizedDescription]);
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [selfie_button setEnabled:TRUE];
+                });
+            } else {
+                NSNumber *status = d[@"status"];
+                if ([status isEqual:@0]) {
+                    //lets get a new selfie!
+                    //dont enable button until selfie is done????
+                    pbmsg * m = new_pbmsg_from_str_wtype("selfie", PBMSG_VIDEO | PBMSG_REQUEST | PBMSG_STRING);
+                    send_pbmsg(pbs, m);
+                    free_pbmsg(m);
+                } else {
+                    long selfies = [[d objectForKey:@"count"] longValue];
+                    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:(selfies-1)];
+                    NSString * selfieurl =  d[@"selfie_url"];
+                    NSString * rmurl = d[@"rm_url"];
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+                        [appDelegate showSelfieWithURL:selfieurl RMURL:rmurl from:self];
+                        [selfie_button setEnabled:TRUE];
+                    });
+                    
+                }
+            }
+        }
+    });
+    
 }
 
 - (IBAction)cookiePressed:(id)sender {
@@ -150,6 +198,7 @@
     
     dispatch_async(dispatch_get_main_queue(), ^{
         // code here
+        NSLog(@"TO LOGIN...");
         free_pbsock(pbs);
         [self performSegueWithIdentifier:@"segueToLogin" sender:self];
     });
@@ -160,7 +209,7 @@
 -(void) listenForEvents {
     pbmsg * m = recv_pbmsg(pbs);
     if (m==NULL) {
-        fprintf(stderr,"CONNECTION CLOSED UNEXPECTEDLY");
+        NSLog(@"CONNECTION CLOSED UNEXPECTEDLY");
         free_pbsock(pbs);
         [gst_backend quit];
         return;
@@ -170,6 +219,11 @@
         [self gstreamerSetUIMessage:@"Negotiating with your PetBot..."];
         fprintf(stderr,"GOT A ICE RESPONSE BACK!\n");
         [self ice_negotiate:m];
+    } else if ((m->pbmsg_type ^  (PBMSG_CLIENT | PBMSG_VIDEO | PBMSG_RESPONSE | PBMSG_STRING | PBMSG_SUCCESS))==0) {
+        NSLog(@"ENABLE SELFIE BUTTON!");
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [selfie_button setEnabled:TRUE];
+        });
     } else if ((m->pbmsg_type & PBMSG_DISCONNECTED) !=0) {
         if (m->pbmsg_from==bb_streamer_id) {
             fprintf(stderr,"The other side exited!\n");
@@ -215,7 +269,13 @@
     assert(ret==0);
     ret= pipe(ice_thread_pipes_from_child);
     assert(ret==0);
-    start_nice_thread(0,ice_thread_pipes_from_child,ice_thread_pipes_to_child);
+    //start_nice_thread(0,ice_thread_pipes_from_child,ice_thread_pipes_to_child);
+    
+    //int * params = (int*)x;
+    int controlling = 0;
+    int to_parent = ice_thread_pipes_from_child[1];
+    int from_parent = ice_thread_pipes_to_child[0];
+    init_ice(controlling, to_parent, from_parent);
     //start_nice_client(pbs);
     
     petbot_state = @"pbstate: ice_request";
@@ -242,6 +302,7 @@
     fprintf(stderr,"LAUNCHED APP FUNCTION\n");
 }
 - (IBAction)abort_pressed:(id)sender {
+    NSLog(@"ABORT PRESSED");
     free_pbsock(pbs);
     [gst_backend quit];
 }

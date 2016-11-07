@@ -1,5 +1,6 @@
 //#import <UIKit/UIKit.h>
 #import "GStreamerBackendDelegate.h"
+#import "PBButton.h"
 
 @interface ViewController : UIViewController <GStreamerBackendDelegate> {
     IBOutlet UILabel *message_label;
@@ -11,6 +12,7 @@
     IBOutlet UIImageView *pet_img;
     IBOutlet UIView *main_view;
  
+    IBOutlet PBButton *selfie_button;
     IBOutlet UILabel *pet_name;
     IBOutlet UIView *pet_view;
 }

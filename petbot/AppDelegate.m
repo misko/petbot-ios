@@ -36,7 +36,7 @@
         if (notification!=nil) {
             NSString * selfieURL = [notification objectForKey:@"mediaUrl"];
             NSString * selfieRMURL = [notification objectForKey:@"rmUrl"];
-            [self showSelfieWithURL:selfieURL RMURL:selfieRMURL];
+            [self showSelfieWithURL:selfieURL RMURL:selfieRMURL from:self.window.rootViewController];
         }
         NSLog(@"LAUNCHED WITH OPTIONS?");
     }
@@ -73,40 +73,54 @@
 {
     NSLog(@"didReceiveRemoteNotification");
     //[UIApplication sharedApplication].applicationIconBadgeNumber
-    long badge = [[userInfo objectForKey:@"badge"] longValue];
-    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:badge];
+    //long badge = [[userInfo objectForKey:@"badge"] longValue];
+    //[[UIApplication sharedApplication] setApplicationIconBadgeNumber:badge];
     //application.applicationIconBadgeNumber = 0;
     //self.textView.text = [userInfo description];
     // We can determine whether an application is launched as a result of the user tapping the action
     // button or whether the notification was delivered to the already-running application by examining
     // the application state.
     
-    if (application.applicationState == UIApplicationStateActive)
-    {
+    NSString * selfieURL = [userInfo objectForKey:@"mediaUrl"];
+    NSString * selfieRMURL = [userInfo objectForKey:@"rmUrl"];
+    if (application.applicationState == UIApplicationStateActive) {
         NSLog(@"from INSIDE APP!");
         // Nothing to do if applicationState is Inactive, the iOS already displayed an alert view.
         /*UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Did receive a Remote Notification" message:[NSString stringWithFormat:@"Your App name received this notification while it was running:\n%@",[[userInfo objectForKey:@"aps"] objectForKey:@"alert"]]delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
         
-        [alertView show];*/
+         [alertView show];*/
+        //[[[[UIApplication sharedApplication] keyWindow] subviews] lastObject];
+        //UIViewController *top = [UIApplication sharedApplication].keyWindow.rootViewController;
+        //if ([top isKindOfClass:[UINavigationController class]]) {
+        //    top = [(UINavigationController*) top visibleViewController];
+        //}
+        //[self.window makeKeyAndVisible];
+        UIViewController *topRootViewController = [UIApplication sharedApplication].keyWindow.rootViewController;
+        while (topRootViewController.presentedViewController)
+        {
+            topRootViewController = topRootViewController.presentedViewController;
+        }
+        [self showSelfieWithURL:selfieURL RMURL:selfieRMURL from:topRootViewController];
     }    else {
         NSLog(@"from OUTSIDE APP!");
         /*UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Did receive a Remote Notification" message:[NSString stringWithFormat:@"Your App name received this notification while it was running:\n%@",[[userInfo objectForKey:@"aps"] objectForKey:@"alert"]]delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
         
-        [alertView show];*/
+         [alertView show];*/
+        
+        [self showSelfieWithURL:selfieURL RMURL:selfieRMURL from:self.window.rootViewController];
     }
-    NSString * selfieURL = [userInfo objectForKey:@"mediaUrl"];
-    NSString * selfieRMURL = [userInfo objectForKey:@"rmUrl"];
-    [self showSelfieWithURL:selfieURL RMURL:selfieRMURL];
+    //[self showSelfieWithURL:selfieURL RMURL:selfieRMURL from:self.window.rootViewController];
 }
 
--(void)showSelfieWithURL:(NSString *)selfieURL RMURL:(NSString*)rmURL {
-    
+-(void)showSelfieWithURL:(NSString *)selfieURL RMURL:(NSString*)rmURL from:(UIViewController *)from_vc {
     UIStoryboard * storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
     SelfieViewController *VC = [storyboard instantiateViewControllerWithIdentifier:@"SelfieView"];
     VC.selfieRMURL=rmURL;
     VC.selfieURL=selfieURL;
     VC.modalPresentationStyle = UIModalPresentationOverCurrentContext;
-    [self.window.rootViewController presentViewController: VC animated:YES completion:nil];
+    //[self.window.rootViewController presentViewController: VC animated:YES completion:nil];
+    //[from_vc presentViewController: VC animated:YES completion:nil];
+    [from_vc presentViewController: VC animated:YES completion:nil];
 }
 
 -(void)application:(UIApplication*)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData*)deviceToken

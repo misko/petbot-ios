@@ -16,4 +16,5 @@ int start_nice_client(pbsock *pbs);
 GThread * start_nice_thread(int controlling, int * from_child, int * to_child);
 pbmsg * make_ice_request();
 int recvd_ice_response(pbmsg * ice_response, int * from_child, int * to_child);
+NiceAgent * init_ice(int controlling, int to_parent, int from_parent);
 #endif

@@ -212,6 +212,7 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="login_button" destination="VQn-YD-4tl" id="qws-dW-HKF"/>
                         <outlet property="password_field" destination="e6f-dT-b7B" id="nZH-Fm-lp1"/>
                         <outlet property="status_label" destination="q7k-oJ-Ngx" id="CB7-ga-FZL"/>
                         <outlet property="username_field" destination="xZS-dE-aW0" id="PEz-v3-7W9"/>
@@ -824,6 +825,7 @@ Generate QR code Show QR code to PetBot PetBot will say "Thanks!"</string>
                         <outlet property="pet_name" destination="rSM-ql-rWX" id="3xy-dr-0id"/>
                         <outlet property="pet_story" destination="Tux-2b-ekR" id="l92-3A-rtc"/>
                         <outlet property="pet_view" destination="bDI-f8-xLi" id="RHQ-I3-DhS"/>
+                        <outlet property="selfie_button" destination="GYk-XX-yR3" id="NPJ-Js-EFa"/>
                         <outlet property="video_container_view" destination="rz3-DE-1dW" id="sx6-qi-ADv"/>
                         <outlet property="video_view" destination="Th9-8M-pM3" id="akr-W5-A53"/>
                         <segue destination="gSf-5C-v15" kind="unwind" identifier="segueToLogin" unwindAction="unwindToLogin:" id="5EL-WR-iEh"/>

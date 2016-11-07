@@ -100,6 +100,8 @@
 }
 
 - (IBAction)loginPressed:(id)sender {
+    [_login_button setEnabled:FALSE];
+    //return;
     //TODO should be ASYNC!!
     
     //build an info object and convert to json
@@ -131,6 +133,8 @@
     //[NSURLConnection sendAsynchronousRequest:request queue:queue completionHandler:^(NSURLResponse *response, NSData *data, NSError *error)
      [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error)
     {
+        
+        [_login_button setEnabled:TRUE];
         if (error) {
             NSLog(@"Error,%@", [error localizedDescription]);
             [status_label setText:@"Failed to connect"];
