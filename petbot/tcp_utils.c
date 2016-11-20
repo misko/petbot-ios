@@ -103,7 +103,6 @@ pbsock* connect_to_server(const char * hostname, int portno, SSL_CTX* ctx) {
 #else
 pbsock* connect_to_server(const char * hostname, int portno) {
 #endif
-    PBPRINTF("TCP_TUILS CONNECT: %s\n",hostname);
     /* socket: create the socket */
     int sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd < 0)  {
@@ -256,6 +255,7 @@ pbsock * new_pbsock(int client_sock) {
 		free_pbsock(pbs);
 		return NULL;
 	}
+	pthread_detach(pbs->keep_alive_thread);
 #endif
 	return pbs;
 }
@@ -399,7 +399,9 @@ pbmsg * recv_all_pbmsg(pbsock *pbs, int read_all) {
 		read_size += SSL_read (pbs->ssl, &m->pbmsg_from, 4);                 
 		if (read_size!=12) {
 			PBPRINTF("TCP_UTILS: Failed to recieve correct size... %d\n",read_size);
-			pbs->state=PBSOCK_DISCONNECTED;
+			if (pbs->state!=PBSOCK_EXIT) {
+				pbs->state=PBSOCK_DISCONNECTED;
+			}
 			#ifdef PBTHREADS
 			pthread_mutex_unlock(&(pbs->recv_mutex));
 			#endif
@@ -443,6 +445,9 @@ pbmsg * recv_all_pbmsg(pbsock *pbs, int read_all) {
 }
 
 size_t send_pbmsg(pbsock *pbs, pbmsg * m) {
+	if (pbs==NULL) {
+		return 0;
+	}
 	if (pbs->state!=PBSOCK_CONNECTED) {
 		return 0;
 	}
@@ -459,7 +464,9 @@ size_t send_pbmsg(pbsock *pbs, pbmsg * m) {
 	r += SSL_write(pbs->ssl, &m->pbmsg_type, 4); 
 	r += SSL_write(pbs->ssl, &m->pbmsg_from, 4); 
 	if (r!=12) {
-		pbsock_set_state(pbs,PBSOCK_DISCONNECTED);
+		if (pbs->state!=PBSOCK_EXIT) {
+			pbsock_set_state(pbs,PBSOCK_DISCONNECTED);
+		}
 		#ifdef PBTHREADS
 		pthread_mutex_unlock(&(pbs->send_mutex));
 		#endif

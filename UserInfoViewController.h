@@ -9,17 +9,22 @@
 #import <UIKit/UIKit.h>
 #import "PBViewController.h"
 #import "PBButton.h"
+#import "PBTextField.h"
 
 @interface UserInfoViewController : PBViewController <NSURLConnectionDataDelegate>
-@property (strong, nonatomic) IBOutlet UITextField *usernameTextField;
-@property (strong, nonatomic) IBOutlet UITextField *emailTextField;
-@property (strong, nonatomic) IBOutlet UITextField *passwordTextField;
-@property (strong, nonatomic) IBOutlet UITextField *confirmTextField;
+@property (strong, nonatomic) IBOutlet PBTextField *usernameTextField;
+@property (strong, nonatomic) IBOutlet PBTextField *emailTextField;
+@property (strong, nonatomic) IBOutlet PBTextField *passwordTextField;
+@property (strong, nonatomic) IBOutlet PBTextField *confirmTextField;
 - (IBAction)continueClicked:(id)sender;
 - (IBAction)usernameChanged:(id)sender;
 @property (strong, nonatomic) IBOutlet PBButton *continueButton;
+@property (strong, nonatomic) IBOutlet UILabel *status_label;
 
 @property (strong, nonatomic) IBOutlet UIView *notifier;
+- (IBAction)password_change:(id)sender;
+- (IBAction)username_changed:(id)sender;
 
+- (IBAction)email_change:(id)sender;
 
 @end

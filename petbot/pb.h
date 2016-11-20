@@ -48,6 +48,7 @@ typedef struct pb_nice_io {
    GMutex negotiate_mutex;
    char * our_nice;
    char * other_nice;
+    
 } pb_nice_io;
 
 #ifndef TARGET_OS_IPHONE

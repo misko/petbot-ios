@@ -30,7 +30,7 @@ GST_DEBUG_CATEGORY_STATIC (debug_category);
     GMainLoop *main_loop;  /* GLib main loop */
     gboolean initialized;  /* To avoid informing the UI multiple times about the initialization */
     UIView *ui_video_view; /* UIView that holds the video */
-
+    int launched;
     ViewController * vc;
 }
 
@@ -40,6 +40,8 @@ GST_DEBUG_CATEGORY_STATIC (debug_category);
 
 -(id) init:(id) uiDelegate videoView:(UIView *)video_view serverInfo:(NSDictionary *)loginInfo vc:(ViewController *)vcx
 {
+    main_loop=nil;
+    launched=0;
     self->vc = vcx;
    // pubsubserver_server = "127.0.0.1"; // TODO UNCOMMENT FOR LIVE!
     if (self = [super init])
@@ -77,9 +79,10 @@ GST_DEBUG_CATEGORY_STATIC (debug_category);
         g_main_loop_unref (main_loop);
         main_loop = NULL;
         
-        
-        gst_element_set_state (pipeline, GST_STATE_NULL);
-        gst_object_unref (pipeline);
+        if (launched==1) {
+            gst_element_set_state (pipeline, GST_STATE_NULL);
+            gst_object_unref (pipeline);
+        }
         [self->vc toLogin];
         fprintf(stderr,"EXIT MAIN LOOP\n");
         GST_DEBUG ("Exited main loop");
@@ -89,8 +92,10 @@ GST_DEBUG_CATEGORY_STATIC (debug_category);
 
 -(void) quit {
     
-    gst_element_set_state (pipeline, GST_STATE_NULL);
-    g_main_loop_quit(main_loop);
+    //gst_element_set_state (pipeline, GST_STATE_NULL);
+    if (main_loop!=nil) {
+        g_main_loop_quit(main_loop);
+    }
 }
 
 
@@ -262,7 +267,7 @@ static void state_changed_cb (GstBus *bus, GstMessage *msg, GStreamerBackend *se
     //GST_DEBUG ("Entering main loop...");
     //main_loop = g_main_loop_new (context, FALSE);
     [self check_initialization_complete];
-    
+    launched=1;
     return;
    /* g_main_loop_run (main_loop); //TODO WE ALREADY CALL RUN MAIN somewhere else.. do we need this?
     //GST_DEBUG ("Exited main loop");

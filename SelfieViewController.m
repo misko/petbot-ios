@@ -213,6 +213,13 @@ NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
 
 
 }
+
+
+- (UIInterfaceOrientationMask)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskPortrait + UIInterfaceOrientationMaskPortraitUpsideDown;
+}
+
+
 - (IBAction)savePressed:(id)sender {
     [self shareVideoWithURL:local_url];
 }

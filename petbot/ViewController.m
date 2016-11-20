@@ -131,8 +131,11 @@
 
 - (IBAction)byePressed:(id)sender {
     NSLog(@"BYE PRESSED");
-    free_pbsock(pbs);
-    [gst_backend quit];
+    if (pbs!=nil) {
+        free_pbsock(pbs);
+        pbs=nil;
+        [gst_backend quit];
+    }
 }
 
 
@@ -200,7 +203,9 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         // code here
         NSLog(@"TO LOGIN...");
-        free_pbsock(pbs);
+        if (pbs!=nil) {
+            free_pbsock(pbs);
+        }
         [self performSegueWithIdentifier:@"segueToLogin" sender:self];
     });
 }
@@ -211,8 +216,11 @@
     pbmsg * m = recv_pbmsg(pbs);
     if (m==NULL) {
         NSLog(@"CONNECTION CLOSED UNEXPECTEDLY");
-        free_pbsock(pbs);
-        [gst_backend quit];
+        if (pbs!=nil) {
+            free_pbsock(pbs);
+            pbs=nil;
+            [gst_backend quit];
+        }
         return;
     }
     if ((m->pbmsg_type ^  (PBMSG_SUCCESS | PBMSG_RESPONSE | PBMSG_ICE | PBMSG_CLIENT | PBMSG_STRING))==0) {
@@ -228,9 +236,11 @@
     } else if ((m->pbmsg_type & PBMSG_DISCONNECTED) !=0) {
         if (m->pbmsg_from==bb_streamer_id) {
             fprintf(stderr,"The other side exited!\n");
-            
-            free_pbsock(pbs);
-            [gst_backend quit];
+            if (pbs!=nil) {
+                free_pbsock(pbs);
+                pbs=nil;
+                [gst_backend quit];
+            }
             return;
             //g_main_loop_quit(main_loop);
         } else {
@@ -315,8 +325,11 @@
 }
 - (IBAction)abort_pressed:(id)sender {
     NSLog(@"ABORT PRESSED");
-    free_pbsock(pbs);
-    [gst_backend quit];
+    if (pbs!=nil) {
+        free_pbsock(pbs);
+        pbs=nil;
+        [gst_backend quit];
+    }
 }
 
 -(void)waitSFSPCA {

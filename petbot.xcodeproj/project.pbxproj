@@ -250,38 +250,21 @@
 		CC23F84C1CBEDA4A00EA0E62 = {
 			isa = PBXGroup;
 			children = (
-				CC56F8811DB3001E009013DD /* PBNotifierLabel.m */,
-				CC6FFEC11DC420E2003969CA /* SelfieViewController.m */,
-				CC6FFEC41DC44162003969CA /* SelfieView.m */,
-				CC6FFEC61DC44187003969CA /* SelfieView.h */,
+				CC4580FC1DE15B3D00178132 /* PBUIElements */,
 				CC6FFEC31DC42126003969CA /* SelfieViewController.h */,
-				CC2411471DB3F08400D1CBFB /* splash2.png */,
-				CC56F8831DB30037009013DD /* PBNotifierLabel.h */,
+				CC6FFEC11DC420E2003969CA /* SelfieViewController.m */,
+				CC6FFEC61DC44187003969CA /* SelfieView.h */,
+				CC6FFEC41DC44162003969CA /* SelfieView.m */,
 				CC24114C1DB406C500D1CBFB /* SetupViewController.h */,
-				CC3259861DB2D68A00EBCDDF /* 8925898_l.jpg */,
-				CC3259761DB2C3D500EBCDDF /* UIColor+PBColor.h */,
-				CC3259771DB2C3D500EBCDDF /* UIColor+PBColor.m */,
-				CC3259801DB2CAAC00EBCDDF /* PBLabel.m */,
-				CC3259821DB2CACB00EBCDDF /* PBLabel.h */,
-				CCED8B861DB09A9100E96B91 /* PBViewController.m */,
-				CC32597A1DB2C6B300EBCDDF /* PBButton.m */,
-				CC3259831DB2D10200EBCDDF /* PBHollowButton.m */,
-				CC3259851DB2D12600EBCDDF /* PBHollowButton.h */,
-				CC32597D1DB2C8A800EBCDDF /* PBTextField.m */,
-				CC56F8841DB30159009013DD /* PBNotifierCircle.m */,
-				CC56F8861DB30170009013DD /* PBNotifierCircle.h */,
-				CC32597F1DB2C8BD00EBCDDF /* PBTextField.h */,
-				CC32597C1DB2C6DD00EBCDDF /* PBButton.h */,
-				CC56F8871DB30292009013DD /* PBNotifierView.m */,
-				CC56F8891DB302BB009013DD /* PBNotifierView.h */,
-				CCED8B881DB09AA100E96B91 /* PBViewController.h */,
-				CC2C33D91D7BEF8F007A886B /* QRViewController.h */,
 				CC2C33C81D702611007A886B /* SetupViewController.m */,
+				CC2411471DB3F08400D1CBFB /* splash2.png */,
+				CC3259861DB2D68A00EBCDDF /* 8925898_l.jpg */,
+				CC2C33D91D7BEF8F007A886B /* QRViewController.h */,
+				CC2C33D71D7BEF84007A886B /* QRViewController.m */,
 				CC2C33D11D7BEDFB007A886B /* UserInfoViewController.h */,
 				CC2C33D21D7BEE05007A886B /* UserInfoViewController.m */,
 				CC2C33D61D7BEF17007A886B /* WifiInfoViewController.h */,
 				CC2C33D41D7BEF0D007A886B /* WifiInfoViewController.m */,
-				CC2C33D71D7BEF84007A886B /* QRViewController.m */,
 				CC5C0B7A1D6A9F9400CC4CEF /* GStreamer.framework */,
 				CC8B24AA1D07A52700FBE180 /* libcrypto.a */,
 				CC2448A61CC61B600036CEB3 /* libiconv.2.4.0.tbd */,
@@ -372,6 +355,31 @@
 				CC23F87F1CBEDA4B00EA0E62 /* Info.plist */,
 			);
 			path = petbotUITests;
+			sourceTree = "<group>";
+		};
+		CC4580FC1DE15B3D00178132 /* PBUIElements */ = {
+			isa = PBXGroup;
+			children = (
+				CC3259761DB2C3D500EBCDDF /* UIColor+PBColor.h */,
+				CC3259771DB2C3D500EBCDDF /* UIColor+PBColor.m */,
+				CC32597C1DB2C6DD00EBCDDF /* PBButton.h */,
+				CC32597A1DB2C6B300EBCDDF /* PBButton.m */,
+				CC3259851DB2D12600EBCDDF /* PBHollowButton.h */,
+				CC3259831DB2D10200EBCDDF /* PBHollowButton.m */,
+				CC32597F1DB2C8BD00EBCDDF /* PBTextField.h */,
+				CC32597D1DB2C8A800EBCDDF /* PBTextField.m */,
+				CC56F8861DB30170009013DD /* PBNotifierCircle.h */,
+				CC56F8841DB30159009013DD /* PBNotifierCircle.m */,
+				CC56F8831DB30037009013DD /* PBNotifierLabel.h */,
+				CC56F8811DB3001E009013DD /* PBNotifierLabel.m */,
+				CC3259821DB2CACB00EBCDDF /* PBLabel.h */,
+				CC3259801DB2CAAC00EBCDDF /* PBLabel.m */,
+				CCED8B881DB09AA100E96B91 /* PBViewController.h */,
+				CCED8B861DB09A9100E96B91 /* PBViewController.m */,
+				CC56F8891DB302BB009013DD /* PBNotifierView.h */,
+				CC56F8871DB30292009013DD /* PBNotifierView.m */,
+			);
+			name = PBUIElements;
 			sourceTree = "<group>";
 		};
 		CC6FFEB51DC324D8003969CA /* selfie */ = {

@@ -117,7 +117,11 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="749" image="8925898_l.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="7ef-gP-mAf"/>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="749" image="8925898_l.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="7ef-gP-mAf">
+                                <constraints>
+                                    <constraint firstAttribute="width" relation="lessThanOrEqual" constant="600" id="NNb-3A-7BV"/>
+                                </constraints>
+                            </imageView>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="xZS-dE-aW0" customClass="PBTextField">
                                 <constraints>
                                     <constraint firstAttribute="width" constant="200" id="Hax-52-VR4"/>
@@ -173,9 +177,10 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="splash2.png" translatesAutoresizingMaskIntoConstraints="NO" id="Wkc-Of-QTI">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="10" verticalHuggingPriority="10" horizontalCompressionResistancePriority="1" verticalCompressionResistancePriority="1" image="splash2.png" translatesAutoresizingMaskIntoConstraints="NO" id="Wkc-Of-QTI">
                                 <constraints>
-                                    <constraint firstAttribute="width" relation="lessThanOrEqual" constant="275" id="cD4-sz-LhJ"/>
+                                    <constraint firstAttribute="width" relation="lessThanOrEqual" constant="250" id="cD4-sz-LhJ"/>
+                                    <constraint firstAttribute="height" relation="lessThanOrEqual" constant="170" id="zJq-5m-mzh"/>
                                 </constraints>
                             </imageView>
                         </subviews>
@@ -186,26 +191,27 @@
                             <constraint firstItem="0oK-Pa-TAr" firstAttribute="leading" secondItem="iDN-TJ-3Ii" secondAttribute="leading" id="2Rd-vX-df6"/>
                             <constraint firstItem="fVm-5r-MJ5" firstAttribute="bottom" secondItem="hYz-Vx-lrb" secondAttribute="top" constant="-8" id="336-bE-g7S"/>
                             <constraint firstItem="7ef-gP-mAf" firstAttribute="top" secondItem="Uva-vt-aHv" secondAttribute="bottom" constant="-20" id="68g-um-kC5"/>
-                            <constraint firstItem="7ef-gP-mAf" firstAttribute="width" secondItem="vha-1s-7CE" secondAttribute="width" id="8jz-PV-Ss7"/>
+                            <constraint firstItem="7ef-gP-mAf" firstAttribute="width" relation="lessThanOrEqual" secondItem="vha-1s-7CE" secondAttribute="width" id="8jz-PV-Ss7"/>
                             <constraint firstItem="VQn-YD-4tl" firstAttribute="height" secondItem="e6f-dT-b7B" secondAttribute="height" id="CJm-l9-peJ"/>
                             <constraint firstItem="e6f-dT-b7B" firstAttribute="leading" secondItem="xZS-dE-aW0" secondAttribute="leading" id="CR8-oL-XgR"/>
                             <constraint firstItem="fVm-5r-MJ5" firstAttribute="leading" secondItem="hYz-Vx-lrb" secondAttribute="leading" id="DPM-8w-UBZ"/>
                             <constraint firstItem="e6f-dT-b7B" firstAttribute="top" secondItem="0oK-Pa-TAr" secondAttribute="bottom" constant="8" id="E4I-Cw-dc6"/>
                             <constraint firstItem="VQn-YD-4tl" firstAttribute="top" secondItem="e6f-dT-b7B" secondAttribute="bottom" constant="8" id="HJM-2m-qR4"/>
                             <constraint firstItem="hYz-Vx-lrb" firstAttribute="centerX" secondItem="vha-1s-7CE" secondAttribute="centerX" id="N4N-bo-l6d"/>
+                            <constraint firstItem="Wkc-Of-QTI" firstAttribute="top" secondItem="hYz-Vx-lrb" secondAttribute="bottom" constant="5" id="NMG-z0-mgk"/>
                             <constraint firstItem="xZS-dE-aW0" firstAttribute="centerX" secondItem="vha-1s-7CE" secondAttribute="centerX" id="OQY-C9-5pT"/>
                             <constraint firstItem="q7k-oJ-Ngx" firstAttribute="centerX" secondItem="vha-1s-7CE" secondAttribute="centerX" id="Raq-4T-tFR"/>
                             <constraint firstItem="iDN-TJ-3Ii" firstAttribute="bottom" secondItem="xZS-dE-aW0" secondAttribute="top" constant="-8" id="RtT-pZ-57a"/>
-                            <constraint firstItem="B0o-SH-Jbb" firstAttribute="top" secondItem="Wkc-Of-QTI" secondAttribute="bottom" constant="-20" id="Sbj-xv-Var"/>
+                            <constraint firstItem="B0o-SH-Jbb" firstAttribute="top" relation="greaterThanOrEqual" secondItem="Wkc-Of-QTI" secondAttribute="bottom" constant="5" id="Sbj-xv-Var"/>
                             <constraint firstItem="7ef-gP-mAf" firstAttribute="leading" secondItem="vha-1s-7CE" secondAttribute="leadingMargin" constant="-20" id="SlS-w3-TYg"/>
                             <constraint firstItem="e6f-dT-b7B" firstAttribute="width" secondItem="xZS-dE-aW0" secondAttribute="width" id="XKx-D0-GQU"/>
                             <constraint firstItem="VQn-YD-4tl" firstAttribute="leading" secondItem="e6f-dT-b7B" secondAttribute="trailing" constant="-200" id="bRL-LM-yIq"/>
-                            <constraint firstItem="iDN-TJ-3Ii" firstAttribute="top" secondItem="Uva-vt-aHv" secondAttribute="bottom" constant="250" id="mgc-P4-4se"/>
+                            <constraint firstItem="iDN-TJ-3Ii" firstAttribute="top" secondItem="Uva-vt-aHv" secondAttribute="bottom" constant="190" id="mgc-P4-4se"/>
                             <constraint firstItem="q7k-oJ-Ngx" firstAttribute="bottom" secondItem="iDN-TJ-3Ii" secondAttribute="top" constant="-5" id="ndt-pi-MN3"/>
                             <constraint firstItem="Wkc-Of-QTI" firstAttribute="centerX" secondItem="vha-1s-7CE" secondAttribute="centerX" id="rj6-FI-CbO"/>
                             <constraint firstItem="e6f-dT-b7B" firstAttribute="height" secondItem="xZS-dE-aW0" secondAttribute="height" id="v1k-b9-CDk"/>
                             <constraint firstItem="VQn-YD-4tl" firstAttribute="width" secondItem="e6f-dT-b7B" secondAttribute="width" id="v5D-df-QuH"/>
-                            <constraint firstItem="Wkc-Of-QTI" firstAttribute="width" secondItem="vha-1s-7CE" secondAttribute="width" constant="-100" id="x8G-ls-SHA"/>
+                            <constraint firstItem="Wkc-Of-QTI" firstAttribute="width" relation="lessThanOrEqual" secondItem="vha-1s-7CE" secondAttribute="width" constant="-100" id="x8G-ls-SHA"/>
                             <constraint firstItem="hYz-Vx-lrb" firstAttribute="top" secondItem="VQn-YD-4tl" secondAttribute="bottom" constant="60" id="xol-Cd-wf0"/>
                             <constraint firstItem="0oK-Pa-TAr" firstAttribute="top" secondItem="xZS-dE-aW0" secondAttribute="bottom" constant="8" id="xxd-Wx-Hzm"/>
                             <constraint firstItem="q7k-oJ-Ngx" firstAttribute="width" secondItem="vha-1s-7CE" secondAttribute="width" constant="-30" id="zuZ-tP-bRP"/>
@@ -247,6 +253,7 @@
                                         <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no"/>
                                         <connections>
                                             <action selector="usernameChanged:" destination="glU-kg-uK6" eventType="editingDidEnd" id="l9e-wC-fbk"/>
+                                            <action selector="username_changed:" destination="glU-kg-uK6" eventType="editingChanged" id="Jb8-gm-auH"/>
                                         </connections>
                                     </textField>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Password" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qKd-ks-RrU" customClass="PBLabel">
@@ -257,6 +264,11 @@
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="UCO-TM-81V" customClass="PBTextField">
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" secureTextEntry="YES"/>
+                                        <connections>
+                                            <action selector="password_change:" destination="glU-kg-uK6" eventType="editingChanged" id="Ods-Hi-3xw"/>
+                                            <action selector="password_change:" destination="glU-kg-uK6" eventType="editingDidEnd" id="WOJ-c5-gKw"/>
+                                            <action selector="password_change:" destination="glU-kg-uK6" eventType="valueChanged" id="iuF-2X-whW"/>
+                                        </connections>
                                     </textField>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Re-enter Password" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sL3-X2-Sar" customClass="PBLabel">
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -266,6 +278,11 @@
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Z3d-ti-kQB" customClass="PBTextField">
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" secureTextEntry="YES"/>
+                                        <connections>
+                                            <action selector="password_change:" destination="glU-kg-uK6" eventType="editingDidEnd" id="0T4-bN-ZKj"/>
+                                            <action selector="password_change:" destination="glU-kg-uK6" eventType="editingChanged" id="N9L-9q-vQw"/>
+                                            <action selector="password_change:" destination="glU-kg-uK6" eventType="valueChanged" id="UQ3-5y-yh5"/>
+                                        </connections>
                                     </textField>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Email" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UNE-zo-FeM" customClass="PBLabel">
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -275,12 +292,16 @@
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ycH-nb-qLr" customClass="PBTextField">
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no"/>
+                                        <connections>
+                                            <action selector="email_change:" destination="glU-kg-uK6" eventType="valueChanged" id="eWx-0x-LYd"/>
+                                            <action selector="email_change:" destination="glU-kg-uK6" eventType="editingChanged" id="zkF-pH-BLm"/>
+                                            <action selector="password_change:" destination="glU-kg-uK6" eventType="editingDidEnd" id="rp3-UM-KEC"/>
+                                        </connections>
                                     </textField>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FiS-BQ-Lfx" customClass="PBButton">
                                         <state key="normal" title="Next"/>
                                         <connections>
                                             <action selector="continueClicked:" destination="glU-kg-uK6" eventType="touchUpInside" id="AgK-DT-WME"/>
-                                            <segue destination="Zhs-Xk-epr" kind="presentation" identifier="userInfoToWifiInfo" id="Xry-na-4SC"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -344,13 +365,21 @@
                                     <constraint firstItem="xGP-RL-D2V" firstAttribute="centerY" secondItem="hV4-Kw-hql" secondAttribute="centerY" id="ZLg-Tx-HC6"/>
                                 </constraints>
                             </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="STATUS" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3ge-Uh-qLb">
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="Fap-No-4bu" firstAttribute="centerY" secondItem="gGC-Pn-qNi" secondAttribute="centerY" id="CzP-0y-UGP"/>
                             <constraint firstItem="hV4-Kw-hql" firstAttribute="top" secondItem="yix-KN-tBL" secondAttribute="bottom" id="IWd-e2-0oX"/>
+                            <constraint firstItem="3ge-Uh-qLb" firstAttribute="centerX" secondItem="gGC-Pn-qNi" secondAttribute="centerX" id="Ikb-Ai-VOD"/>
+                            <constraint firstItem="3ge-Uh-qLb" firstAttribute="top" secondItem="hV4-Kw-hql" secondAttribute="bottom" constant="8" id="Nmh-Rf-pEl"/>
                             <constraint firstItem="hV4-Kw-hql" firstAttribute="centerX" secondItem="gGC-Pn-qNi" secondAttribute="centerX" id="ZXA-sU-V1h"/>
                             <constraint firstAttribute="leadingMargin" secondItem="DvN-pl-rQT" secondAttribute="leading" constant="6" id="h3E-kV-r7a"/>
+                            <constraint firstItem="3ge-Uh-qLb" firstAttribute="width" secondItem="gGC-Pn-qNi" secondAttribute="width" id="jLz-ik-yK9"/>
                             <constraint firstItem="DvN-pl-rQT" firstAttribute="width" secondItem="AHW-UD-XaL" secondAttribute="width" constant="50" id="k0o-oB-QUd"/>
                             <constraint firstItem="hV4-Kw-hql" firstAttribute="width" secondItem="gGC-Pn-qNi" secondAttribute="width" id="nfP-hR-keu"/>
                             <constraint firstItem="Z3C-KA-FfF" firstAttribute="top" secondItem="DvN-pl-rQT" secondAttribute="bottom" constant="8" id="prM-RA-HdX"/>
@@ -364,7 +393,9 @@
                         <outlet property="emailTextField" destination="ycH-nb-qLr" id="M0Y-gb-np7"/>
                         <outlet property="notifier" destination="hV4-Kw-hql" id="sFn-QA-Dcg"/>
                         <outlet property="passwordTextField" destination="UCO-TM-81V" id="YeM-Aa-WOf"/>
+                        <outlet property="status_label" destination="3ge-Uh-qLb" id="hNy-8f-uZH"/>
                         <outlet property="usernameTextField" destination="7sV-LY-xav" id="4oI-u1-gbS"/>
+                        <segue destination="Zhs-Xk-epr" kind="presentation" identifier="userInfoToWifiInfo" id="9MV-ab-XyG"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="GwM-f0-TpS" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -397,7 +428,7 @@
                                     </textField>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="uYU-ca-ZmC" customClass="PBTextField">
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" secureTextEntry="YES"/>
+                                        <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no"/>
                                     </textField>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4wg-ir-msu" customClass="PBButton">
                                         <state key="normal" title="Continue"/>
@@ -637,7 +668,7 @@ Generate QR code Show QR code to PetBot PetBot will say "Thanks!"</string>
                                             <constraint firstItem="Th9-8M-pM3" firstAttribute="centerX" secondItem="rz3-DE-1dW" secondAttribute="centerX" id="ohW-V4-VMR"/>
                                         </constraints>
                                     </view>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="splash2.png" translatesAutoresizingMaskIntoConstraints="NO" id="rca-6b-m6h">
+                                    <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="splash2.png" translatesAutoresizingMaskIntoConstraints="NO" id="rca-6b-m6h">
                                         <constraints>
                                             <constraint firstAttribute="width" relation="lessThanOrEqual" constant="100" id="AHQ-96-y3n"/>
                                         </constraints>
