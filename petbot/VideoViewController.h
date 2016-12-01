@@ -1,8 +1,9 @@
 //#import <UIKit/UIKit.h>
 #import "GStreamerBackendDelegate.h"
+#import "PBViewController.h"
 #import "PBButton.h"
 
-@interface ViewController : UIViewController <GStreamerBackendDelegate> {
+@interface VideoViewController : PBViewController <GStreamerBackendDelegate> {
     IBOutlet UILabel *message_label;
     IBOutlet UIView *video_view;
     IBOutlet UIView *video_container_view;
@@ -24,5 +25,10 @@
 -(void) gstreamerHideLoadView;
 -(void) setLoginArray:(NSDictionary *)dictionary;
 -(void) toLogin;
-
+- (IBAction)tapped:(id)sender;
+- (IBAction)swipeLeft:(id)sender;
+- (IBAction)swipeRight:(id)sender;
+- (IBAction)swipeDown:(id)sender;
+- (IBAction)swipeUp:(id)sender;
+- (IBAction)longPress:(id)sender;
 @end

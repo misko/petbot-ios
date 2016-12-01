@@ -197,6 +197,16 @@ pbsock * new_pbsock(int client_sock, SSL_CTX* ctx, int accept) {
 #else
 pbsock * new_pbsock(int client_sock) {
 #endif
+	struct timeval tv;
+
+	tv.tv_sec =3;
+	tv.tv_usec = 0 ;
+
+	if (setsockopt(client_sock, SOL_SOCKET, SO_RCVTIMEO, (char *)&tv, sizeof tv) == -1) {
+		perror("setsockopt error");
+		return NULL;
+	}
+
 	pbsock * pbs = (pbsock*)calloc(1,sizeof(pbsock));
 	if (pbs==NULL) {
 		PBPRINTF("TCP_UTILS: Failed to amlloc pbssock\n");
@@ -243,10 +253,18 @@ pbsock * new_pbsock(int client_sock) {
 		free_pbsock(pbs);
 		return NULL;
 	}
+	if (pthread_mutex_init(&(pbs->waiting_threads_mutex), NULL) != 0) {
+		PBPRINTF("TCP_UTILS: Failed to init pbthreads waiting threads mutex\n");
+		pthread_mutex_destroy(&(pbs->send_mutex));
+		pthread_mutex_destroy(&(pbs->recv_mutex));
+		free_pbsock(pbs);
+		return NULL;
+	}
 	if (pthread_cond_init(&(pbs->cond), NULL) != 0) {
 		PBPRINTF("TCP_UTILS: Failed to init pbthreads cond\n");
 		pthread_mutex_destroy(&(pbs->send_mutex));
 		pthread_mutex_destroy(&(pbs->recv_mutex));
+		pthread_mutex_destroy(&(pbs->waiting_threads_mutex));
 		free_pbsock(pbs);
 		return NULL;
 	}
@@ -255,6 +273,7 @@ pbsock * new_pbsock(int client_sock) {
 		free_pbsock(pbs);
 		return NULL;
 	}
+	pthread_detach(pbs->keep_alive_thread);
 #endif
 	return pbs;
 }
@@ -267,16 +286,38 @@ void pbsock_set_state(pbsock * pbs, pbsock_state state) {
 }
 
 #ifdef PBTHREADS
+int increment_waiting_threads(pbsock * pbs) {
+	if (pthread_mutex_lock(&(pbs->waiting_threads_mutex))!=0) {
+		PBPRINTF("TCP_UTILS: Failed to get send lock for wait state!\n");
+		exit(1);
+	}
+	pbs->waiting_threads++;
+	pthread_mutex_unlock(&(pbs->waiting_threads_mutex));
+}
+
+int decrement_waiting_threads(pbsock * pbs) {
+	if (pthread_mutex_lock(&(pbs->waiting_threads_mutex))!=0) {
+		PBPRINTF("TCP_UTILS: Failed to get send lock for wait state!\n");
+		exit(1);
+	}
+	pbs->waiting_threads--;
+	pthread_mutex_unlock(&(pbs->waiting_threads_mutex));
+}
+#endif
+
+#ifdef PBTHREADS
 //TODO might miss a statechange! if state changes back to original state quickyly - do we care?
 pbsock_state pbsock_wait_state(pbsock *pbs) {
 	if (pbs->state==PBSOCK_EXIT) {
 		return PBSOCK_EXIT; //if we are trying to kill the socket dont take any more waiters
 	}
+
+	increment_waiting_threads(pbs);
+
 	if (pthread_mutex_lock(&(pbs->send_mutex))!=0) {
 		PBPRINTF("TCP_UTILS: Failed to get send lock for wait state!\n");
 		exit(1);
 	}
-	pbs->waiting_threads++;
 	pbsock_state old_state = pbs->state;
 	while (old_state==pbs->state) {
 		PBPRINTF("TCP_UTILS: THREAD WAITING ON STATE CHANGE\n");
@@ -286,10 +327,14 @@ pbsock_state pbsock_wait_state(pbsock *pbs) {
 		}
 
 	}
-	pbs->waiting_threads--;
 	pbsock_state new_state = pbs->state;
 	PBPRINTF("TCP_UTILS: THREAD DONE WAITING ON STATE CHANGE\n");
 	pthread_mutex_unlock(&(pbs->send_mutex));
+
+
+
+	decrement_waiting_threads(pbs);
+
 	pthread_cond_broadcast(&(pbs->cond));
 	return new_state;
 }
@@ -313,7 +358,7 @@ void free_pbsock(pbsock *pbs) {
 			pbs->ssl=0;
 		}
 		#endif
-		free(pbs);
+		//free(pbs);
 	} else if (pbs->keep_alive_thread!=0) {
 		PBPRINTF("TCP_UTILS: Setting state to exit\n");
 		pbsock_set_state(pbs,PBSOCK_EXIT);
@@ -322,7 +367,7 @@ void free_pbsock(pbsock *pbs) {
 		#ifdef PBSSL
 		if (pbs->ssl!=NULL) {
 			SSL_free(pbs->ssl);
-			pbs->ssl=0;
+			pbs->ssl = 0;
 		}
 		#endif
 		free(pbs);
@@ -360,7 +405,7 @@ pbmsg * new_pbmsg() {
 
 pbmsg * new_pbmsg_from_str(const char * s) {
 	pbmsg * m = new_pbmsg();
-	m->pbmsg_len=strlen(s)+1;
+	m->pbmsg_len=(uint32_t)strlen(s)+1;
 	m->pbmsg=strdup(s);
 	m->pbmsg_type=PBMSG_STRING;
 	return m;
@@ -368,7 +413,7 @@ pbmsg * new_pbmsg_from_str(const char * s) {
 
 pbmsg * new_pbmsg_from_str_wtype(const char * s, int type) {
 	pbmsg * m = new_pbmsg();
-	m->pbmsg_len=strlen(s)+1;
+	m->pbmsg_len=(uint32_t)strlen(s)+1;
 	m->pbmsg=strdup(s);
 	m->pbmsg_type=type;
 	return m;
@@ -379,11 +424,16 @@ pbmsg * recv_pbmsg(pbsock *pbs) {
 }
 
 pbmsg * recv_all_pbmsg(pbsock *pbs, int read_all) {
+	if (pbs==NULL) {
+		return NULL;
+	}
 	if (pbs->state!=PBSOCK_CONNECTED) {
 		return NULL;
 	}
-#ifdef PBTHREADS 
+#ifdef PBTHREADS
+	increment_waiting_threads(pbs);
 	if (pthread_mutex_lock(&(pbs->recv_mutex))!=0) {
+		decrement_waiting_threads(pbs);
 		PBPRINTF("TCP_UTILS: FAILED TO LOCK!\n");
 		return NULL;
 	}
@@ -393,14 +443,17 @@ pbmsg * recv_all_pbmsg(pbsock *pbs, int read_all) {
 	m=new_pbmsg();
 	int read_size=0;
 	do {
-		read_size = SSL_read (pbs->ssl, &m->pbmsg_len, 4);                 
-		read_size += SSL_read (pbs->ssl, &m->pbmsg_type, 4);                 
+		read_size = SSL_read (pbs->ssl, &m->pbmsg_len, 4);
+		read_size += SSL_read (pbs->ssl, &m->pbmsg_type, 4);
 		read_size += SSL_read (pbs->ssl, &m->pbmsg_from, 4);                 
 		if (read_size!=12) {
 			PBPRINTF("TCP_UTILS: Failed to recieve correct size... %d\n",read_size);
-			pbs->state=PBSOCK_DISCONNECTED;
+			if (pbs->state!=PBSOCK_EXIT) {
+				pbs->state=PBSOCK_DISCONNECTED;
+			}
 			#ifdef PBTHREADS
 			pthread_mutex_unlock(&(pbs->recv_mutex));
+			decrement_waiting_threads(pbs);
 			#endif
 			free_pbmsg(m);
 			return NULL;
@@ -415,6 +468,7 @@ pbmsg * recv_all_pbmsg(pbsock *pbs, int read_all) {
 		PBPRINTF("TCP_UTILS: Failed to malloc data for pbmsg\n");
 		#ifdef PBTHREADS
 		pthread_mutex_unlock(&(pbs->recv_mutex));
+		decrement_waiting_threads(pbs);
 		#endif
 		free_pbmsg(m);
 		return NULL;
@@ -426,6 +480,7 @@ pbmsg * recv_all_pbmsg(pbsock *pbs, int read_all) {
 			PBPRINTF("TCP_UTILS: Something failed in read of TCP socket\n");
 			#ifdef PBTHREADS
 			pthread_mutex_unlock(&(pbs->recv_mutex));
+			decrement_waiting_threads(pbs);
 			#endif
 			free_pbmsg(m);
 			return NULL;
@@ -437,16 +492,22 @@ pbmsg * recv_all_pbmsg(pbsock *pbs, int read_all) {
 #endif
 	#ifdef PBTHREADS
 	pthread_mutex_unlock(&(pbs->recv_mutex));
+	decrement_waiting_threads(pbs);
 	#endif
 	return m;
 }
 
 size_t send_pbmsg(pbsock *pbs, pbmsg * m) {
+	if (pbs==NULL) {
+		return 0;
+	}
 	if (pbs->state!=PBSOCK_CONNECTED) {
 		return 0;
 	}
-#ifdef PBTHREADS 
+#ifdef PBTHREADS
+	increment_waiting_threads(pbs);
 	if (pthread_mutex_lock(&(pbs->send_mutex))!=0) {
+		decrement_waiting_threads(pbs);
 		PBPRINTF("TCP_UTILS: FAILED TO LOCK!\n");
 		return 0;
 	}
@@ -458,9 +519,12 @@ size_t send_pbmsg(pbsock *pbs, pbmsg * m) {
 	r += SSL_write(pbs->ssl, &m->pbmsg_type, 4); 
 	r += SSL_write(pbs->ssl, &m->pbmsg_from, 4); 
 	if (r!=12) {
-		pbsock_set_state(pbs,PBSOCK_DISCONNECTED);
+		if (pbs->state!=PBSOCK_EXIT) {
+			pbsock_set_state(pbs,PBSOCK_DISCONNECTED);
+		}
 		#ifdef PBTHREADS
 		pthread_mutex_unlock(&(pbs->send_mutex));
+		decrement_waiting_threads(pbs);
 		#endif
 		PBPRINTF("TCP_UTILS: Failed to send_pbmsg write length\n");
 		return 0;
@@ -473,6 +537,7 @@ size_t send_pbmsg(pbsock *pbs, pbmsg * m) {
 			PBPRINTF("TCP_UTILS: Failed to send message write\n");
 			#ifdef PBTHREADS
 			pthread_mutex_unlock(&(pbs->send_mutex));
+			decrement_waiting_threads(pbs);
 			#endif
 			return 0;
 		}	
@@ -483,6 +548,7 @@ size_t send_pbmsg(pbsock *pbs, pbmsg * m) {
 #endif
 	#ifdef PBTHREADS
 	pthread_mutex_unlock(&(pbs->send_mutex));
+	decrement_waiting_threads(pbs);
 	#endif
 	return ret;
 }
@@ -517,7 +583,7 @@ pbmsg * recv_all_fd_pbmsg(int fd, int read_all) {
 	read_size=0;
 	while (read_size<m->pbmsg_len) {
 		size_t ret = read(fd,m->pbmsg,m->pbmsg_len);
-		if (ret==0 || ret<0) {
+		if (ret==0) {
 			PBPRINTF("TCP_UTILS: Something failed in read of TCP socket\n");
 			free_pbmsg(m);
 			return NULL;
@@ -587,7 +653,7 @@ int write_file(const char *fn , char * buffer, size_t len) {
 	}
 	size_t ret = fwrite(buffer, len, 1, fptr);
 	fclose(fptr);
-	return ret;
+	return (int)ret;
 }
 
 pbmsg * new_pbmsg_from_ptr_and_int(void * x , int z) {
@@ -602,7 +668,8 @@ pbmsg * new_pbmsg_from_ptr_and_int(void * x , int z) {
 	};
 	void ** y = (void **)m->pbmsg;
 	*y=x;
-	*(y+1)=(void*)z;
+    int * inty = (int*)(y+1);
+	*inty=z;
 	return m;
 }
 
@@ -628,7 +695,7 @@ pbmsg * new_pbmsg_from_file(const char * fn) {
 		return NULL;
 	}
 	pbmsg * m = new_pbmsg();
-	m->pbmsg_len = len;
+	m->pbmsg_len = (uint32_t)len;
 	m->pbmsg_type = PBMSG_FILE;
 	m->pbmsg = data;
 	return m;
@@ -695,7 +762,7 @@ int pbmsg_has_type(pbmsg * m , int ty ) {
 unsigned int pbmsg_hash(const char *str) {
         unsigned int hash = 5381;
         int c;
-        while (c = *str++)
+        while ((c = *str++))
             hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
         return hash;
 }

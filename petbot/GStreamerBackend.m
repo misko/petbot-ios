@@ -1,5 +1,5 @@
 #import "GStreamerBackend.h"
-
+#import "VideoViewController.h"
 #include <gst/gst.h>
 #include <gst/video/video.h>
 #include <agent.h>
@@ -31,18 +31,18 @@ GST_DEBUG_CATEGORY_STATIC (debug_category);
     gboolean initialized;  /* To avoid informing the UI multiple times about the initialization */
     UIView *ui_video_view; /* UIView that holds the video */
     int launched;
-    ViewController * vc;
+    VideoViewController * vvc;
 }
 
 /*
  * Interface methods
  */
 
--(id) init:(id) uiDelegate videoView:(UIView *)video_view serverInfo:(NSDictionary *)loginInfo vc:(ViewController *)vcx
+-(id) init:(id) uiDelegate videoView:(UIView *)video_view serverInfo:(NSDictionary *)loginInfo vvc:(VideoViewController *)vvcx
 {
     main_loop=nil;
     launched=0;
-    self->vc = vcx;
+    self->vvc = vvcx;
    // pubsubserver_server = "127.0.0.1"; // TODO UNCOMMENT FOR LIVE!
     if (self = [super init])
     {
@@ -83,7 +83,7 @@ GST_DEBUG_CATEGORY_STATIC (debug_category);
             gst_element_set_state (pipeline, GST_STATE_NULL);
             gst_object_unref (pipeline);
         }
-        [self->vc toLogin];
+        [self->vvc toLogin];
         fprintf(stderr,"EXIT MAIN LOOP\n");
         GST_DEBUG ("Exited main loop");
     });

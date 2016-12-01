@@ -31,7 +31,7 @@
 		CC2448C41CC6D9240036CEB3 /* EaglUIVIew.m in Sources */ = {isa = PBXBuildFile; fileRef = CC2448BC1CC6D9240036CEB3 /* EaglUIVIew.m */; };
 		CC2448C51CC6D9240036CEB3 /* gst_ios_init.m in Sources */ = {isa = PBXBuildFile; fileRef = CC2448BE1CC6D9240036CEB3 /* gst_ios_init.m */; };
 		CC2448C61CC6D9240036CEB3 /* GStreamerBackend.m in Sources */ = {isa = PBXBuildFile; fileRef = CC2448C01CC6D9240036CEB3 /* GStreamerBackend.m */; };
-		CC2448C71CC6D9240036CEB3 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CC2448C31CC6D9240036CEB3 /* ViewController.m */; };
+		CC2448C71CC6D9240036CEB3 /* VideoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CC2448C31CC6D9240036CEB3 /* VideoViewController.m */; };
 		CC2C33C91D702611007A886B /* SetupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CC2C33C81D702611007A886B /* SetupViewController.m */; };
 		CC2C33D31D7BEE05007A886B /* UserInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CC2C33D21D7BEE05007A886B /* UserInfoViewController.m */; };
 		CC2C33D51D7BEF0D007A886B /* WifiInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CC2C33D41D7BEF0D007A886B /* WifiInfoViewController.m */; };
@@ -42,6 +42,8 @@
 		CC3259811DB2CAAC00EBCDDF /* PBLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = CC3259801DB2CAAC00EBCDDF /* PBLabel.m */; };
 		CC3259841DB2D10200EBCDDF /* PBHollowButton.m in Sources */ = {isa = PBXBuildFile; fileRef = CC3259831DB2D10200EBCDDF /* PBHollowButton.m */; };
 		CC3259871DB2D68A00EBCDDF /* 8925898_l.jpg in Resources */ = {isa = PBXBuildFile; fileRef = CC3259861DB2D68A00EBCDDF /* 8925898_l.jpg */; };
+		CC4A4CBC1DED530300EFFD51 /* silence.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = CC4A4CBB1DED530300EFFD51 /* silence.mp3 */; };
+		CC4A4CBE1DEEBA0300EFFD51 /* SoundViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CC4A4CBD1DEEBA0300EFFD51 /* SoundViewController.m */; };
 		CC56F8821DB3001E009013DD /* PBNotifierLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = CC56F8811DB3001E009013DD /* PBNotifierLabel.m */; };
 		CC56F8851DB30159009013DD /* PBNotifierCircle.m in Sources */ = {isa = PBXBuildFile; fileRef = CC56F8841DB30159009013DD /* PBNotifierCircle.m */; };
 		CC56F8881DB30292009013DD /* PBNotifierView.m in Sources */ = {isa = PBXBuildFile; fileRef = CC56F8871DB30292009013DD /* PBNotifierView.m */; };
@@ -142,8 +144,8 @@
 		CC2448BF1CC6D9240036CEB3 /* GStreamerBackend.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GStreamerBackend.h; sourceTree = "<group>"; };
 		CC2448C01CC6D9240036CEB3 /* GStreamerBackend.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GStreamerBackend.m; sourceTree = "<group>"; };
 		CC2448C11CC6D9240036CEB3 /* GStreamerBackendDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GStreamerBackendDelegate.h; sourceTree = "<group>"; };
-		CC2448C21CC6D9240036CEB3 /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		CC2448C31CC6D9240036CEB3 /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		CC2448C21CC6D9240036CEB3 /* VideoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoViewController.h; sourceTree = "<group>"; };
+		CC2448C31CC6D9240036CEB3 /* VideoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoViewController.m; sourceTree = "<group>"; };
 		CC2C33C81D702611007A886B /* SetupViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SetupViewController.m; sourceTree = "<group>"; };
 		CC2C33D11D7BEDFB007A886B /* UserInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserInfoViewController.h; sourceTree = "<group>"; };
 		CC2C33D21D7BEE05007A886B /* UserInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserInfoViewController.m; sourceTree = "<group>"; };
@@ -162,6 +164,9 @@
 		CC3259831DB2D10200EBCDDF /* PBHollowButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBHollowButton.m; sourceTree = "<group>"; };
 		CC3259851DB2D12600EBCDDF /* PBHollowButton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PBHollowButton.h; sourceTree = "<group>"; };
 		CC3259861DB2D68A00EBCDDF /* 8925898_l.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = 8925898_l.jpg; path = ../../../../../Downloads/8925898_l.jpg; sourceTree = "<group>"; };
+		CC4A4CBB1DED530300EFFD51 /* silence.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = silence.mp3; sourceTree = SOURCE_ROOT; };
+		CC4A4CBD1DEEBA0300EFFD51 /* SoundViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SoundViewController.m; sourceTree = "<group>"; };
+		CC4A4CBF1DEEBA3600EFFD51 /* SoundViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SoundViewController.h; sourceTree = "<group>"; };
 		CC56F8811DB3001E009013DD /* PBNotifierLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBNotifierLabel.m; sourceTree = "<group>"; };
 		CC56F8831DB30037009013DD /* PBNotifierLabel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PBNotifierLabel.h; sourceTree = "<group>"; };
 		CC56F8841DB30159009013DD /* PBNotifierCircle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBNotifierCircle.m; sourceTree = "<group>"; };
@@ -298,6 +303,7 @@
 		CC23F8571CBEDA4B00EA0E62 /* petbot */ = {
 			isa = PBXGroup;
 			children = (
+				CC4A4CBB1DED530300EFFD51 /* silence.mp3 */,
 				CC6FFEAF1DC2FA0E003969CA /* petbot.entitlements */,
 				CC24114D1DB4075400D1CBFB /* petbot_180.png */,
 				CCA48C621DA7565300275348 /* nice_utils.c */,
@@ -312,11 +318,13 @@
 				CC2448BC1CC6D9240036CEB3 /* EaglUIVIew.m */,
 				CC2448BF1CC6D9240036CEB3 /* GStreamerBackend.h */,
 				CC2448C01CC6D9240036CEB3 /* GStreamerBackend.m */,
-				CC2448C21CC6D9240036CEB3 /* ViewController.h */,
-				CC2448C31CC6D9240036CEB3 /* ViewController.m */,
+				CC2448C21CC6D9240036CEB3 /* VideoViewController.h */,
+				CC2448C31CC6D9240036CEB3 /* VideoViewController.m */,
 				CC23F85B1CBEDA4B00EA0E62 /* AppDelegate.h */,
 				CC23F85C1CBEDA4B00EA0E62 /* AppDelegate.m */,
 				CC23F8611CBEDA4B00EA0E62 /* Main.storyboard */,
+				CC4A4CBD1DEEBA0300EFFD51 /* SoundViewController.m */,
+				CC4A4CBF1DEEBA3600EFFD51 /* SoundViewController.h */,
 				CC23F8641CBEDA4B00EA0E62 /* Assets.xcassets */,
 				CC2411491DB3F2AF00D1CBFB /* petbot167.png */,
 				CC23F8661CBEDA4B00EA0E62 /* LaunchScreen.storyboard */,
@@ -546,6 +554,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CC4A4CBC1DED530300EFFD51 /* silence.mp3 in Resources */,
 				CC23F8681CBEDA4B00EA0E62 /* LaunchScreen.storyboard in Resources */,
 				CCD38ABA1D0B5954005EF60A /* TODO in Resources */,
 				CC3259871DB2D68A00EBCDDF /* 8925898_l.jpg in Resources */,
@@ -736,10 +745,11 @@
 				CC2C33D51D7BEF0D007A886B /* WifiInfoViewController.m in Sources */,
 				CCED8B871DB09A9100E96B91 /* PBViewController.m in Sources */,
 				CC3259781DB2C3D500EBCDDF /* UIColor+PBColor.m in Sources */,
-				CC2448C71CC6D9240036CEB3 /* ViewController.m in Sources */,
+				CC2448C71CC6D9240036CEB3 /* VideoViewController.m in Sources */,
 				CC2448C51CC6D9240036CEB3 /* gst_ios_init.m in Sources */,
 				CC56F8821DB3001E009013DD /* PBNotifierLabel.m in Sources */,
 				CC2C33D31D7BEE05007A886B /* UserInfoViewController.m in Sources */,
+				CC4A4CBE1DEEBA0300EFFD51 /* SoundViewController.m in Sources */,
 				CC2C33D81D7BEF84007A886B /* QRViewController.m in Sources */,
 				CC32597E1DB2C8A800EBCDDF /* PBTextField.m in Sources */,
 				CC2448C61CC6D9240036CEB3 /* GStreamerBackend.m in Sources */,

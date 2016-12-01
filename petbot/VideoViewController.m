@@ -3,27 +3,21 @@
 #import <AVFoundation/AVFoundation.h>
 #import <AudioToolbox/AudioServices.h>
 
-#import "ViewController.h"
+#import "VideoViewController.h"
+#import "PBViewController.h"
 #import "GStreamerBackend.h"
-
+#import "LoginViewController.h"
+#import "SoundViewController.h"
 #import "AppDelegate.h"
 #include "tcp_utils.h"
 #include "nice_utils.h"
 #include "pb.h"
 
-@interface ViewController () {
+@interface VideoViewController () {
     GStreamerBackend *gst_backend;
     int media_width;
     int media_height;
-    NSDictionary * loginArray;
-    NSDictionary * loginInfo;
-    NSString * pubsubserver_secret;
-    NSString * pubsubserver_server;
-    NSString * pubsubserver_username;
-    NSString * pubsubserver_protocol;
     int bb_streamer_id;
-    int pubsubserver_port;
-    pbsock * pbs;
     NSString * petbot_state; //connecting, ice_request, ice_negotiate, streaming, logoff
     int ice_thread_pipes_to_child[2];
     int ice_thread_pipes_from_child[2];
@@ -31,10 +25,11 @@
     AVAudioPlayer *player;
     UIVisualEffectView *blurEffectView;
     pb_nice_io * pbnio;
+    NSString * status ;
 }
 @end
 
-@implementation ViewController
+@implementation VideoViewController
 
 -(NSMutableArray*)pbserverLSWithType:(NSString *)ty {
     NSDictionary *newDatasetInfo = [NSDictionary dictionaryWithObjectsAndKeys:@"mp3", @"file_type", @"1", @"start_idx", @"10", @"end_idx",nil];
@@ -210,6 +205,42 @@
     });
 }
 
+- (IBAction)tapped:(id)sender {
+    pbmsg * m = new_pbmsg_from_str_wtype("iterate", PBMSG_VIDEO | PBMSG_REQUEST | PBMSG_STRING);
+    send_pbmsg(pbs, m);
+    free_pbmsg(m);
+}
+
+- (IBAction)swipeLeft:(id)sender {
+    pbmsg * m = new_pbmsg_from_str_wtype("adjust_fx -1", PBMSG_VIDEO | PBMSG_REQUEST | PBMSG_STRING);
+    send_pbmsg(pbs, m);
+    free_pbmsg(m);
+}
+
+- (IBAction)swipeRight:(id)sender {
+    pbmsg * m = new_pbmsg_from_str_wtype("adjust_fx 1", PBMSG_VIDEO | PBMSG_REQUEST | PBMSG_STRING);
+    send_pbmsg(pbs, m);
+    free_pbmsg(m);
+}
+
+- (IBAction)swipeDown:(id)sender {
+    pbmsg * m = new_pbmsg_from_str_wtype("adjust_exp -1", PBMSG_VIDEO | PBMSG_REQUEST | PBMSG_STRING);
+    send_pbmsg(pbs, m);
+    free_pbmsg(m);
+}
+
+- (IBAction)swipeUp:(id)sender {
+    pbmsg * m = new_pbmsg_from_str_wtype("adjust_exp 1", PBMSG_VIDEO | PBMSG_REQUEST | PBMSG_STRING);
+    send_pbmsg(pbs, m);
+    free_pbmsg(m);
+}
+
+- (IBAction)longPress:(id)sender {
+    pbmsg * m = new_pbmsg_from_str_wtype("iterate 1", PBMSG_VIDEO | PBMSG_REQUEST | PBMSG_STRING);
+    send_pbmsg(pbs, m);
+    free_pbmsg(m);
+}
+
 
 
 -(void) listenForEvents {
@@ -254,7 +285,22 @@
     });
 }
 
--(void) connect {
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if (status!=nil && [[segue identifier] isEqualToString:@"segueToLogin"]) {
+        LoginViewController * lc = [segue destinationViewController];
+        [lc setStatus:status];
+        status =nil;
+        //ViewController.user = [self.users objectInListAtIndex:[self.tableView indexPathForSelectedRow].row];
+    }
+    
+    if ([[segue identifier] isEqualToString:@"segueToSound"]) {
+        SoundViewController * svc = [segue destinationViewController];
+        [svc setLoginArray:loginArray];
+        //ViewController.user = [self.users objectInListAtIndex:[self.tableView indexPathForSelectedRow].row];
+    }
+}
+
+-(void) connect:(int)retries {
     fprintf(stderr, "pbstate: Connecting...");
 #ifdef PBSSL
     SSL_CTX* ctx;
@@ -267,8 +313,18 @@
     pbs = connect_to_server_with_key(pbhost,port,key);
 #endif
     if (pbs==NULL) {
+        if (retries >=0 ) {
+            NSLog(@"RETRY RETRY");
+            sleep(1);
+            return [self connect:retries-1];
+        }
         //TODO error handling!!!!
-        exit(1);
+        dispatch_async(dispatch_get_main_queue(), ^{
+            status = @"Failed to connect to PB server, try again soon";
+            [self performSegueWithIdentifier:@"segueToLogin" sender:self];
+            
+        });
+        return;
     }
     
     //start up the listener
@@ -385,10 +441,6 @@
  * Methods from UIViewController
  */
 
--(void)setLoginArray:(NSDictionary *)dictionary {
-    NSLog(@"Someone called login array");
-    loginArray = dictionary;
-}
 
 - (void)viewDidLoad
 {
@@ -411,41 +463,49 @@
     }
     
     
-    self->loginInfo=[loginArray objectForKey:@"pubsubserver"];
+    [self setupLogin];
     
     /* Make these constant for now, later tutorials will change them */
     media_width = 640;
     media_height = 480;
     petbot_state = @"connecting";
-    //TODO check for errors here?
-    //self->loginInfo=loginInfo;
-    pubsubserver_port = [[self->loginInfo objectForKey:@"port"] intValue];
-    pubsubserver_secret = [self->loginInfo objectForKey:@"secret"];
-    pubsubserver_server = [self->loginInfo objectForKey:@"server"];
-    NSLog(@"server in load is %@ %@",pubsubserver_server,[self->loginInfo objectForKey:@"server"]);
-    pubsubserver_username = [self->loginInfo objectForKey:@"username"];    bb_streamer_id=0;
+    bb_streamer_id=0;
     
     
     //[self soundList];
     [self gstreamerSetUIMessage:@"Trying to connect to PetBot..."];
     //activityIndicator.transform = CGAffineTransformMakeScale(2, 2);
     
-    fprintf(stderr,"MAKING new connection x1.... \n");
     
-    gst_backend = [[GStreamerBackend alloc] init:self videoView:video_view serverInfo:[loginArray objectForKey:@"pubsubserver"] vc:self];
+    gst_backend = [[GStreamerBackend alloc] init:self videoView:video_view serverInfo:[loginArray objectForKey:@"pubsubserver"] vvc:self];
     /* Start the bus monitoring task */
-    fprintf(stderr,"MAKING new connection x2.... \n");
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        fprintf(stderr,"MAKING new connection x3.... \n");
-        [self connect];
-        fprintf(stderr,"MAKING new connection x4.... \n");
+        [self connect:3];
     });
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        fprintf(stderr,"MAKING new connection x5.... \n");
         [self waitSFSPCA];
-        fprintf(stderr,"MAKING new connection x6.... \n");
     });
-    fprintf(stderr,"MAKING new connection x7.... \n");
+    
+    //play sound locally
+    AVAudioSession *session = [AVAudioSession sharedInstance];
+    [session setCategory:AVAudioSessionCategoryPlayback error:nil];
+    NSString * mp3URL = [[NSBundle mainBundle] pathForResource:@"silence" ofType:@"mp3"];
+    NSData *audioData = [NSData dataWithContentsOfFile:mp3URL];
+    //NSData *audioData = [NSData dataWithContentsOfURL:mp3URL];
+    NSError* error;
+    player = [[AVAudioPlayer alloc] initWithData:audioData error:&error];
+    [player play];
+}
+
+- (IBAction)longPressSound:(UILongPressGestureRecognizer*)sender {
+     if (sender.state == UIGestureRecognizerStateBegan) {
+            [self performSegueWithIdentifier:@"segueToSound" sender:self];
+     }
+}
+
+
+- (IBAction)unwindToStream:(UIStoryboardSegue *)segue {
+    
 }
 
 - (void)didReceiveMemoryWarning

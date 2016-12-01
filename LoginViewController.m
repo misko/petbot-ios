@@ -11,8 +11,8 @@
 
 #import "UIColor+PBColor.h"
 #import "LoginViewController.h"
-#import "ViewController.h"
 #import "SelfieViewController.h"
+#import "VideoViewController.h"
 #import "pb.h"
 
 @import AVFoundation;
@@ -21,8 +21,8 @@
 //http://stackoverflow.com/questions/37886600/ios-10-doesnt-print-nslogs - no NSLOG?
 
 @interface LoginViewController () {
-        NSDictionary * loginArray;
     IBOutlet UILabel *status_label;
+    NSString * status ;
     AVPlayerViewController *playerViewController;
 }
 @end
@@ -30,9 +30,18 @@
 @implementation LoginViewController
 
 
+-(void)viewDidAppear:(BOOL)animated {
+    //[super viewDidAppear:<#animated#>];
+    if (status!=nil) {
+        [self toastStatus:false Message:status];
+        status=nil;
+    }
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+ 
     
     playerViewController = [[AVPlayerViewController alloc] init];
 
@@ -69,8 +78,8 @@
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([[segue identifier] isEqualToString:@"streamSegue"]) {
-        ViewController * vc = [segue destinationViewController];
-        [vc setLoginArray:loginArray];
+        VideoViewController * vvc = [segue destinationViewController];
+        [vvc setLoginArray:loginArray];
         //ViewController.user = [self.users objectInListAtIndex:[self.tableView indexPathForSelectedRow].row];
     }
 }
@@ -137,6 +146,7 @@
         [_login_button setEnabled:TRUE];
         if (error) {
             NSLog(@"Error,%@", [error localizedDescription]);
+            [self toastStatus:false Message:@"Failed to connect to PB server"];
             [status_label setText:@"Failed to connect"];
         }
         else
@@ -150,13 +160,15 @@
                 [status_label setText:@"Username/Password wrong"];
                 [_username_field colorRed];
                 [_password_field colorRed];
-            } else {
+            } else if ([status isEqual:@1]) {
                 fprintf(stderr,"Logged in!");
                 [[NSUserDefaults standardUserDefaults] setValue:_username_field.text forKey:@"username"];
                 [[NSUserDefaults standardUserDefaults] setValue:_password_field.text forKey:@"password"];
                 [[NSUserDefaults standardUserDefaults] synchronize];
                 
                 [self performSegueWithIdentifier:@"streamSegue" sender:self];
+            } else {
+                [self toastStatus:false Message:@"Failed to connect to PB server"];
             }
             for (NSArray *aDay in loginArray){
                 //Do something
@@ -196,4 +208,7 @@
 }
 */
 
+-(void) setStatus:(NSString *)statusx {
+    status = statusx;
+}
 @end

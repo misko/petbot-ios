@@ -17,5 +17,5 @@
 @property (strong, nonatomic) IBOutlet PBTextField *password_field;
 @property (strong, nonatomic) IBOutlet PBButton *login_button;
 
-
+-(void) setStatus:(NSString *)status;
 @end

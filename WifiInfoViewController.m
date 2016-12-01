@@ -11,7 +11,6 @@
 
 #import "UIColor+PBColor.h"
 
-#import "ViewController.h"
 #import "pb.h"
 
 @interface WifiInfoViewController () {

@@ -8,7 +8,6 @@
 
 #import "UserInfoViewController.h"
 #import "WifiInfoViewController.h"
-#import "ViewController.h"
 #import "UIColor+PBColor.h"
 #import "pb.h"
 
@@ -57,19 +56,19 @@
 
 -(BOOL)checkButtonStatus{
     if (![username_err isEqualToString:@""]) {
-        [_status_label setText:username_err];
+        [_status_label setText:[username_err uppercaseString]];
         [_usernameTextField colorRed];
         return false;
     }
     [_usernameTextField colorBlue];
     if (![password_err isEqualToString:@""]) {
-        [_status_label setText:password_err];
+        [_status_label setText:[password_err uppercaseString]];
         [_passwordTextField colorRed];
         return false;
     }
     [_passwordTextField colorBlue];
     if (![email_err isEqualToString:@""]) {
-        [_status_label setText:email_err];
+        [_status_label setText:[email_err uppercaseString]];
         [_emailTextField colorRed];
         return false;
     }
@@ -219,6 +218,13 @@
 - (IBAction)email_change:(id)sender {
     [self check_email];
     [self checkButtonStatus];
+}
+
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+    [_usernameTextField resignFirstResponder];
+    [_emailTextField resignFirstResponder];
+    [_passwordTextField resignFirstResponder];
+    [_confirmTextField resignFirstResponder];
 }
 
 @end

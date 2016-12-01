@@ -77,8 +77,9 @@ typedef struct pbsock {
 #endif
 #ifdef PBTHREADS
 	pthread_t keep_alive_thread;
-	pthread_mutex_t send_mutex; 
-	pthread_mutex_t recv_mutex; 
+	pthread_mutex_t send_mutex;
+	pthread_mutex_t recv_mutex;
+	pthread_mutex_t waiting_threads_mutex;
 	pthread_cond_t cond;
 	int keep_alive_time;
 	int waiting_threads; //need to hold pbs->send_mutex to modify this!
@@ -100,6 +101,10 @@ pbsock_state pbsock_get_state(pbsock *pbs);
 #ifdef PBTHREADS
 void *keep_alive_handler(void * v );
 pbsock_state pbsock_wait_state(pbsock * pbs);
+
+int increment_waiting_threads(pbsock * pbs);
+int decrement_waiting_threads(pbsock * pbs);
+
 #endif
 
 #ifdef PBSSL

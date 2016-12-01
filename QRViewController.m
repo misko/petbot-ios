@@ -8,7 +8,6 @@
 
 #import "QRViewController.h"
 #import "WifiInfoViewController.h"
-#import "ViewController.h"
 #import "pb.h"
 #import "tcp_utils.h"
 

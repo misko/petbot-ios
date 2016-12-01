@@ -7,7 +7,6 @@
 //
 
 #import "SetupViewController.h"
-#import "ViewController.h"
 #import "pb.h"
 
 @interface SetupViewController () {
