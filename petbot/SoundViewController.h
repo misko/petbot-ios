@@ -9,8 +9,9 @@
 #import <UIKit/UIKit.h>
 #import "PBViewController.h"
 
-@interface SoundViewController : PBViewController
+@interface SoundViewController : PBViewController <UITableViewDelegate, UITableViewDataSource>
 
 
+@property (strong, nonatomic) IBOutlet UITableView *tableview;
 -(void) setLoginArray:(NSDictionary *)dictionary;
 @end

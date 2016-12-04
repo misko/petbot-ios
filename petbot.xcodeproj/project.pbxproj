@@ -9,6 +9,10 @@
 /* Begin PBXBuildFile section */
 		7FFE431F7F28074F20969ECE /* libPods-petbotUITests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 18710344F87D9B38F573CC0D /* libPods-petbotUITests.a */; };
 		A7ED669B8896567F4294BE5E /* libPods-petbotTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 53D72D7152664D64A235A083 /* libPods-petbotTests.a */; };
+		CC0559141DF3B69C00FA5D0D /* SliderCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CC0559131DF3B69C00FA5D0D /* SliderCell.m */; };
+		CC0559181DF3B72100FA5D0D /* SwitchCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CC0559171DF3B72100FA5D0D /* SwitchCell.m */; };
+		CC05591A1DF3B72C00FA5D0D /* ButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CC0559191DF3B72C00FA5D0D /* ButtonCell.m */; };
+		CC05591C1DF3B73600FA5D0D /* ValueCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CC05591B1DF3B73600FA5D0D /* ValueCell.m */; };
 		CC23F85A1CBEDA4B00EA0E62 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = CC23F8591CBEDA4B00EA0E62 /* main.m */; };
 		CC23F85D1CBEDA4B00EA0E62 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = CC23F85C1CBEDA4B00EA0E62 /* AppDelegate.m */; };
 		CC23F8631CBEDA4B00EA0E62 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CC23F8611CBEDA4B00EA0E62 /* Main.storyboard */; };
@@ -36,12 +40,14 @@
 		CC2C33D31D7BEE05007A886B /* UserInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CC2C33D21D7BEE05007A886B /* UserInfoViewController.m */; };
 		CC2C33D51D7BEF0D007A886B /* WifiInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CC2C33D41D7BEF0D007A886B /* WifiInfoViewController.m */; };
 		CC2C33D81D7BEF84007A886B /* QRViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CC2C33D71D7BEF84007A886B /* QRViewController.m */; };
+		CC2E17271DF25F3800A1AD44 /* SoundTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CC2E17261DF25F3800A1AD44 /* SoundTableViewController.m */; };
 		CC3259781DB2C3D500EBCDDF /* UIColor+PBColor.m in Sources */ = {isa = PBXBuildFile; fileRef = CC3259771DB2C3D500EBCDDF /* UIColor+PBColor.m */; };
 		CC32597B1DB2C6B300EBCDDF /* PBButton.m in Sources */ = {isa = PBXBuildFile; fileRef = CC32597A1DB2C6B300EBCDDF /* PBButton.m */; };
 		CC32597E1DB2C8A800EBCDDF /* PBTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = CC32597D1DB2C8A800EBCDDF /* PBTextField.m */; };
 		CC3259811DB2CAAC00EBCDDF /* PBLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = CC3259801DB2CAAC00EBCDDF /* PBLabel.m */; };
 		CC3259841DB2D10200EBCDDF /* PBHollowButton.m in Sources */ = {isa = PBXBuildFile; fileRef = CC3259831DB2D10200EBCDDF /* PBHollowButton.m */; };
 		CC3259871DB2D68A00EBCDDF /* 8925898_l.jpg in Resources */ = {isa = PBXBuildFile; fileRef = CC3259861DB2D68A00EBCDDF /* 8925898_l.jpg */; };
+		CC3C1C141DF3D2E000A7F17B /* RecordCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CC3C1C131DF3D2E000A7F17B /* RecordCell.m */; };
 		CC4A4CBC1DED530300EFFD51 /* silence.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = CC4A4CBB1DED530300EFFD51 /* silence.mp3 */; };
 		CC4A4CBE1DEEBA0300EFFD51 /* SoundViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CC4A4CBD1DEEBA0300EFFD51 /* SoundViewController.m */; };
 		CC56F8821DB3001E009013DD /* PBNotifierLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = CC56F8811DB3001E009013DD /* PBNotifierLabel.m */; };
@@ -107,6 +113,14 @@
 		55845B80B42262C9D92FC586 /* Pods-petbot.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-petbot.release.xcconfig"; path = "Pods/Target Support Files/Pods-petbot/Pods-petbot.release.xcconfig"; sourceTree = "<group>"; };
 		7F5E4F206B8437F049ADF652 /* Pods-petbotUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-petbotUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-petbotUITests/Pods-petbotUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		955BF0A3EE7E9A2299F1B6F2 /* Pods-petbotTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-petbotTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-petbotTests/Pods-petbotTests.release.xcconfig"; sourceTree = "<group>"; };
+		CC0559131DF3B69C00FA5D0D /* SliderCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SliderCell.m; path = tablecells/SliderCell.m; sourceTree = "<group>"; };
+		CC0559161DF3B6C400FA5D0D /* SliderCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SliderCell.h; sourceTree = "<group>"; };
+		CC0559171DF3B72100FA5D0D /* SwitchCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SwitchCell.m; path = tablecells/SwitchCell.m; sourceTree = "<group>"; };
+		CC0559191DF3B72C00FA5D0D /* ButtonCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ButtonCell.m; sourceTree = "<group>"; };
+		CC05591B1DF3B73600FA5D0D /* ValueCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ValueCell.m; path = tablecells/ValueCell.m; sourceTree = "<group>"; };
+		CC05591D1DF3B74100FA5D0D /* SwitchCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwitchCell.h; sourceTree = "<group>"; };
+		CC05591E1DF3B74800FA5D0D /* ValueCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ValueCell.h; sourceTree = "<group>"; };
+		CC05591F1DF3B75000FA5D0D /* ButtonCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ButtonCell.h; sourceTree = "<group>"; };
 		CC23F8551CBEDA4A00EA0E62 /* petbot.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = petbot.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CC23F8591CBEDA4B00EA0E62 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		CC23F85B1CBEDA4B00EA0E62 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -153,6 +167,8 @@
 		CC2C33D61D7BEF17007A886B /* WifiInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WifiInfoViewController.h; sourceTree = "<group>"; };
 		CC2C33D71D7BEF84007A886B /* QRViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QRViewController.m; sourceTree = "<group>"; };
 		CC2C33D91D7BEF8F007A886B /* QRViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QRViewController.h; sourceTree = "<group>"; };
+		CC2E17251DF25EF800A1AD44 /* SoundTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SoundTableViewController.h; sourceTree = "<group>"; };
+		CC2E17261DF25F3800A1AD44 /* SoundTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SoundTableViewController.m; sourceTree = "<group>"; };
 		CC3259761DB2C3D500EBCDDF /* UIColor+PBColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+PBColor.h"; sourceTree = "<group>"; };
 		CC3259771DB2C3D500EBCDDF /* UIColor+PBColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+PBColor.m"; sourceTree = "<group>"; };
 		CC32597A1DB2C6B300EBCDDF /* PBButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBButton.m; sourceTree = "<group>"; };
@@ -164,6 +180,8 @@
 		CC3259831DB2D10200EBCDDF /* PBHollowButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBHollowButton.m; sourceTree = "<group>"; };
 		CC3259851DB2D12600EBCDDF /* PBHollowButton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PBHollowButton.h; sourceTree = "<group>"; };
 		CC3259861DB2D68A00EBCDDF /* 8925898_l.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = 8925898_l.jpg; path = ../../../../../Downloads/8925898_l.jpg; sourceTree = "<group>"; };
+		CC3C1C121DF3D2CF00A7F17B /* RecordCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecordCell.h; sourceTree = "<group>"; };
+		CC3C1C131DF3D2E000A7F17B /* RecordCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RecordCell.m; path = tablecells/RecordCell.m; sourceTree = "<group>"; };
 		CC4A4CBB1DED530300EFFD51 /* silence.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = silence.mp3; sourceTree = SOURCE_ROOT; };
 		CC4A4CBD1DEEBA0300EFFD51 /* SoundViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SoundViewController.m; sourceTree = "<group>"; };
 		CC4A4CBF1DEEBA3600EFFD51 /* SoundViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SoundViewController.h; sourceTree = "<group>"; };
@@ -252,6 +270,23 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		CC0559151DF3B6A200FA5D0D /* tablecells */ = {
+			isa = PBXGroup;
+			children = (
+				CC0559131DF3B69C00FA5D0D /* SliderCell.m */,
+				CC0559171DF3B72100FA5D0D /* SwitchCell.m */,
+				CC05591B1DF3B73600FA5D0D /* ValueCell.m */,
+				CC3C1C131DF3D2E000A7F17B /* RecordCell.m */,
+				CC0559191DF3B72C00FA5D0D /* ButtonCell.m */,
+				CC0559161DF3B6C400FA5D0D /* SliderCell.h */,
+				CC05591F1DF3B75000FA5D0D /* ButtonCell.h */,
+				CC3C1C121DF3D2CF00A7F17B /* RecordCell.h */,
+				CC05591E1DF3B74800FA5D0D /* ValueCell.h */,
+				CC05591D1DF3B74100FA5D0D /* SwitchCell.h */,
+			);
+			name = tablecells;
+			sourceTree = "<group>";
+		};
 		CC23F84C1CBEDA4A00EA0E62 = {
 			isa = PBXGroup;
 			children = (
@@ -303,6 +338,7 @@
 		CC23F8571CBEDA4B00EA0E62 /* petbot */ = {
 			isa = PBXGroup;
 			children = (
+				CC0559151DF3B6A200FA5D0D /* tablecells */,
 				CC4A4CBB1DED530300EFFD51 /* silence.mp3 */,
 				CC6FFEAF1DC2FA0E003969CA /* petbot.entitlements */,
 				CC24114D1DB4075400D1CBFB /* petbot_180.png */,
@@ -323,6 +359,8 @@
 				CC23F85B1CBEDA4B00EA0E62 /* AppDelegate.h */,
 				CC23F85C1CBEDA4B00EA0E62 /* AppDelegate.m */,
 				CC23F8611CBEDA4B00EA0E62 /* Main.storyboard */,
+				CC2E17251DF25EF800A1AD44 /* SoundTableViewController.h */,
+				CC2E17261DF25F3800A1AD44 /* SoundTableViewController.m */,
 				CC4A4CBD1DEEBA0300EFFD51 /* SoundViewController.m */,
 				CC4A4CBF1DEEBA3600EFFD51 /* SoundViewController.h */,
 				CC23F8641CBEDA4B00EA0E62 /* Assets.xcassets */,
@@ -738,8 +776,10 @@
 				CC6FFEC51DC44162003969CA /* SelfieView.m in Sources */,
 				CC2448C41CC6D9240036CEB3 /* EaglUIVIew.m in Sources */,
 				CC6FFEC21DC420E2003969CA /* SelfieViewController.m in Sources */,
+				CC05591A1DF3B72C00FA5D0D /* ButtonCell.m in Sources */,
 				CC56F8881DB30292009013DD /* PBNotifierView.m in Sources */,
 				CC32597B1DB2C6B300EBCDDF /* PBButton.m in Sources */,
+				CC0559141DF3B69C00FA5D0D /* SliderCell.m in Sources */,
 				CC23F85D1CBEDA4B00EA0E62 /* AppDelegate.m in Sources */,
 				CC56F8851DB30159009013DD /* PBNotifierCircle.m in Sources */,
 				CC2C33D51D7BEF0D007A886B /* WifiInfoViewController.m in Sources */,
@@ -749,6 +789,8 @@
 				CC2448C51CC6D9240036CEB3 /* gst_ios_init.m in Sources */,
 				CC56F8821DB3001E009013DD /* PBNotifierLabel.m in Sources */,
 				CC2C33D31D7BEE05007A886B /* UserInfoViewController.m in Sources */,
+				CC0559181DF3B72100FA5D0D /* SwitchCell.m in Sources */,
+				CC3C1C141DF3D2E000A7F17B /* RecordCell.m in Sources */,
 				CC4A4CBE1DEEBA0300EFFD51 /* SoundViewController.m in Sources */,
 				CC2C33D81D7BEF84007A886B /* QRViewController.m in Sources */,
 				CC32597E1DB2C8A800EBCDDF /* PBTextField.m in Sources */,
@@ -758,6 +800,8 @@
 				CC23F85A1CBEDA4B00EA0E62 /* main.m in Sources */,
 				CCA48C641DA7565300275348 /* nice_utils.c in Sources */,
 				CC3259841DB2D10200EBCDDF /* PBHollowButton.m in Sources */,
+				CC2E17271DF25F3800A1AD44 /* SoundTableViewController.m in Sources */,
+				CC05591C1DF3B73600FA5D0D /* ValueCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

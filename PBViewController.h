@@ -24,5 +24,11 @@
 -(void)toastStatus:(bool)status Message:(NSString*)msg;
 -(void)toastPinColor:(UIColor*)c Message:(NSString*)msg;
 -(void)setLoginArray:(NSDictionary *)dictionary;
--(NSDictionary *)parseConfig:(NSString*)str;
+-(NSMutableDictionary *)parseConfig:(NSString*)str;
+
+//PBS ops
+-(void)send_msg:(const char*)msg type:(int)ty;
+
+//FILE OPS
+-(NSMutableArray*)pbserverLSWithType:(NSString *)ty;
 @end

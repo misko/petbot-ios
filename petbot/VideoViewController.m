@@ -31,45 +31,9 @@
 
 @implementation VideoViewController
 
--(NSMutableArray*)pbserverLSWithType:(NSString *)ty {
-    NSDictionary *newDatasetInfo = [NSDictionary dictionaryWithObjectsAndKeys:@"mp3", @"file_type", @"1", @"start_idx", @"10", @"end_idx",nil];
-    
-    //make the json payload
-    NSError *error;
-    NSData* jsonData = [NSJSONSerialization dataWithJSONObject:newDatasetInfo options:0 error:&error];
-    
-    //make the url request
-    NSURL * url = [NSURL URLWithString:[NSString stringWithFormat:@"%s%@", HTTPS_ADDRESS_PB_LS, pubsubserver_secret]];
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
-    [request setHTTPMethod:@"POST"];
-    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
-    [request setHTTPBody:jsonData];
-    
-    //send the request
-    NSURLResponse * response;
-    NSData * data = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
-    if (error) {
-        NSLog(@"Error,%@", [error localizedDescription]);
-    } else {
-        //parse the return json
-        NSDictionary * d = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
-        if (error) {
-            NSLog(@"Error,%@", [error localizedDescription]);
-        } else {
-            NSNumber *status = d[@"status"];
-            if ([status isEqual:@0]) {
-                NSLog(@"SERVER QUERY FAILED?");
-            } else {
-                NSMutableArray * files =  d[@"files"];
-                return files;
-            }
-        }
-    }
-    return nil;
-}
 
--(void)soundList {
+
+/*-(void)soundList {
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     dispatch_async(queue, ^{
         // the slow stuff to be done in the background
@@ -84,7 +48,7 @@
             //NSLog(@"FILE %@ has %@\n",[file objectAtIndex:0] , [file objectAtIndex:1]);
         }
     });
-}
+}*/
 
 -(void)playSoundFromURL:(NSString *)url_string {
     
@@ -115,9 +79,9 @@
                 NSString * url = [NSString stringWithFormat:@"%s%@/%@",HTTPS_ADDRESS_PB_DL,pubsubserver_secret,filekey];
                 //tell the petbot to play this!
                 NSString * pb_sound_str = [NSString stringWithFormat:@"PLAYURL %@",url];
-                pbmsg * m = new_pbmsg_from_str_wtype([pb_sound_str UTF8String], PBMSG_SOUND | PBMSG_REQUEST | PBMSG_STRING);
-                send_pbmsg(pbs, m);
-                free_pbmsg(m);
+                
+                
+                [self send_msg:[pb_sound_str UTF8String] type:(PBMSG_SOUND | PBMSG_REQUEST | PBMSG_STRING)];
                 [self playSoundFromURL:url];
             }
         }
@@ -165,10 +129,8 @@
                 if ([status isEqual:@0]) {
                     //lets get a new selfie!
                     //dont enable button until selfie is done????
-                    pbmsg * m = new_pbmsg_from_str_wtype("selfie", PBMSG_VIDEO | PBMSG_REQUEST | PBMSG_STRING);
-                    send_pbmsg(pbs, m);
-                    free_pbmsg(m);
-                } else {
+                    [self send_msg:"selfie" type:( PBMSG_VIDEO | PBMSG_REQUEST | PBMSG_STRING)];
+                } else if ([status isEqual:@1]) {
                     long selfies = [[d objectForKey:@"count"] longValue];
                     [[UIApplication sharedApplication] setApplicationIconBadgeNumber:(selfies-1)];
                     NSString * selfieurl =  d[@"selfie_url"];
@@ -178,7 +140,8 @@
                         [appDelegate showSelfieWithURL:selfieurl RMURL:rmurl from:self];
                         [selfie_button setEnabled:TRUE];
                     });
-                    
+                } else {
+                    NSLog(@"Failed to get selfie status");
                 }
             }
         }
@@ -187,9 +150,7 @@
 }
 
 - (IBAction)cookiePressed:(id)sender {
-    pbmsg * m = new_pbmsg_from_str_wtype("cookie", PBMSG_COOKIE | PBMSG_REQUEST | PBMSG_STRING);
-    send_pbmsg(pbs, m);
-    free_pbmsg(m);
+    [self send_msg:"cookie" type:(PBMSG_COOKIE | PBMSG_REQUEST | PBMSG_STRING)];
     AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
 }
 
@@ -206,39 +167,27 @@
 }
 
 - (IBAction)tapped:(id)sender {
-    pbmsg * m = new_pbmsg_from_str_wtype("iterate", PBMSG_VIDEO | PBMSG_REQUEST | PBMSG_STRING);
-    send_pbmsg(pbs, m);
-    free_pbmsg(m);
+    [self send_msg:"iterate" type:(PBMSG_VIDEO | PBMSG_REQUEST | PBMSG_STRING)];
 }
 
 - (IBAction)swipeLeft:(id)sender {
-    pbmsg * m = new_pbmsg_from_str_wtype("adjust_fx -1", PBMSG_VIDEO | PBMSG_REQUEST | PBMSG_STRING);
-    send_pbmsg(pbs, m);
-    free_pbmsg(m);
+    [self send_msg:"adjust_fx -1" type:(PBMSG_VIDEO | PBMSG_REQUEST | PBMSG_STRING)];
 }
 
 - (IBAction)swipeRight:(id)sender {
-    pbmsg * m = new_pbmsg_from_str_wtype("adjust_fx 1", PBMSG_VIDEO | PBMSG_REQUEST | PBMSG_STRING);
-    send_pbmsg(pbs, m);
-    free_pbmsg(m);
+    [self send_msg:"adjust_fx 1" type:(PBMSG_VIDEO | PBMSG_REQUEST | PBMSG_STRING)];
 }
 
 - (IBAction)swipeDown:(id)sender {
-    pbmsg * m = new_pbmsg_from_str_wtype("adjust_exp -1", PBMSG_VIDEO | PBMSG_REQUEST | PBMSG_STRING);
-    send_pbmsg(pbs, m);
-    free_pbmsg(m);
+    [self send_msg:"adjust_exp -1" type:(PBMSG_VIDEO | PBMSG_REQUEST | PBMSG_STRING)];
 }
 
 - (IBAction)swipeUp:(id)sender {
-    pbmsg * m = new_pbmsg_from_str_wtype("adjust_exp 1", PBMSG_VIDEO | PBMSG_REQUEST | PBMSG_STRING);
-    send_pbmsg(pbs, m);
-    free_pbmsg(m);
+    [self send_msg:"adjust_exp 1" type:(PBMSG_VIDEO | PBMSG_REQUEST | PBMSG_STRING)];
 }
 
 - (IBAction)longPress:(id)sender {
-    pbmsg * m = new_pbmsg_from_str_wtype("iterate 1", PBMSG_VIDEO | PBMSG_REQUEST | PBMSG_STRING);
-    send_pbmsg(pbs, m);
-    free_pbmsg(m);
+    [self send_msg:"iterate 1" type:(PBMSG_VIDEO | PBMSG_REQUEST | PBMSG_STRING)];
 }
 
 

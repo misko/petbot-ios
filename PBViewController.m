@@ -36,10 +36,58 @@
     for (NSString * line in ar) {
         NSArray * line_to_bits = [line componentsSeparatedByString:@"\t"];
         if ([line_to_bits count]==2) {
-            [d setValue:line_to_bits[0] forKey:line_to_bits[1]];
+            [d setValue:line_to_bits[1] forKey:[line_to_bits[0] lowercaseString]];
         }
     }
     return d;
+}
+
+
+
+-(void)send_msg:(const char*)msg type:(int)ty {
+    pbmsg * m = new_pbmsg_from_str_wtype(msg, ty);
+    send_pbmsg(pbs, m);
+    free_pbmsg(m);
+}
+
+-(NSMutableArray*)pbserverLSWithType:(NSString *)ty {
+    NSDictionary *newDatasetInfo = [NSDictionary dictionaryWithObjectsAndKeys:@"mp3", @"file_type", @"1", @"start_idx", @"10", @"end_idx",nil];
+    
+    //make the json payload
+    NSError *error;
+    NSData* jsonData = [NSJSONSerialization dataWithJSONObject:newDatasetInfo options:0 error:&error];
+    
+    //make the url request
+    NSURL * url = [NSURL URLWithString:[NSString stringWithFormat:@"%s%@", HTTPS_ADDRESS_PB_LS, pubsubserver_secret]];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+    [request setHTTPMethod:@"POST"];
+    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
+    [request setHTTPBody:jsonData];
+    
+    //send the request
+    NSURLResponse * response;
+    NSData * data = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
+    if (error) {
+        NSLog(@"Error,%@", [error localizedDescription]);
+    } else {
+        //parse the return json
+        NSDictionary * d = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
+        if (error) {
+            NSLog(@"Error,%@", [error localizedDescription]);
+        } else {
+            NSNumber *status = d[@"status"];
+            if ([status isEqual:@0]) {
+                NSLog(@"SERVER QUERY FAILED?");
+            } else if ([status isEqual:@1]) {
+                NSMutableArray * files =  d[@"files"];
+                return files;
+            } else {
+                NSLog(@"SERVER FAILED TO RESPOND PROPERLY");
+            }
+        }
+    }
+    return nil;
 }
 
 - (void)setupLogin {
