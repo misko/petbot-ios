@@ -7,12 +7,13 @@
 //
 
 #import "RecordCell.h"
-
+#import "SoundClipCell.h"
 #import "SwitchCell.h"
 #import "ValueCell.h"
 #import "ButtonCell.h"
 #import "SliderCell.h"
 #import "SoundViewController.h"
+#import "SoundPickerController.h"
 #include "tcp_utils.h"
 #include "nice_utils.h"
 #include "pb.h"
@@ -33,6 +34,12 @@
     NSArray *sections;
     
     NSDictionary * config;
+    NSArray * sounds;
+    bool selecting_selfie_sound;
+    bool selecting_alert_sound;
+    
+    UILabel * ui_selfie_timeout_text;
+    UILabel * ui_selfie_length_text;
 }
 @property (strong, nonatomic) IBOutlet UISlider *volumeSlider;
 @property (strong, nonatomic) IBOutlet UIButton *doneButton;
@@ -119,8 +126,14 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
     }
     
-    if ([cellIdentifier isEqualToString:@"TitleCell"] || [cellIdentifier isEqualToString:@"ButtonCell"] || [cellIdentifier isEqualToString:@"SwitchCell"] || [cellIdentifier isEqualToString:@"ValueCell"]) {
-        cell.textLabel.text = [cell_labels objectAtIndex:indexPath.row];
+    if ([cellIdentifier isEqualToString:@"TitleCell"] || [cellIdentifier isEqualToString:@"ButtonCell"] || [cellIdentifier isEqualToString:@"SwitchCell"] || [cellIdentifier isEqualToString:@"ValueCell"] || [cellIdentifier isEqualToString:@"DetailCell"] || [cellIdentifier isEqualToString:@"DetailRightCell"])  {
+        NSString * label =[cell_labels objectAtIndex:indexPath.row];
+        NSArray * parts = [label componentsSeparatedByString:@"/"];
+        
+        cell.textLabel.text = parts[0];
+        if ([parts count]>1) {
+            cell.detailTextLabel.text = parts[1];
+        }
     }
     
     
@@ -135,16 +148,34 @@
             [sc.ui_slider setValue:[[config objectForKey:@"master_volume"] floatValue]/63];
             [sc.ui_slider addTarget:self action:@selector(volumeChange:) forControlEvents:UIControlEventValueChanged];
         } else {
-            [sc setEditing:false];
+            [sc.ui_slider setEnabled:false];
+        }
+    }
+    if ([cell_name isEqualToString:@"selfie_sound"]) {
+        ButtonCell * bc = cell;
+        if (sounds!=nil) {
+            [bc.ui_button addTarget:self action:@selector(selfieSoundSelect:) forControlEvents:UIControlEventTouchUpInside];
+            [bc.ui_button setEnabled:true];
+        } else {
+            [bc.ui_button setEnabled:false];
+        }
+    }
+    if ([cell_name isEqualToString:@"alert_sound"]) {
+        ButtonCell * bc = cell;
+        if (sounds!=nil) {
+            [bc.ui_button addTarget:self action:@selector(alertSoundSelect:) forControlEvents:UIControlEventTouchUpInside];
+            [bc.ui_button setEnabled:true];
+        } else {
+            [bc.ui_button setEnabled:false];
         }
     }
 
     //system stuff
     if ([cell_name isEqualToString:@"version"]) {
         if ([config objectForKey:@"version"]!=nil) {
-            cell.textLabel.text = [NSString stringWithFormat:@"%@\t%@",[cell_labels objectAtIndex:indexPath.row],[config objectForKey:@"version"]];
+            cell.detailTextLabel.text = [config objectForKey:@"version"];
         } else {
-            cell.textLabel.text = [NSString stringWithFormat:@"%@\t%@",[cell_labels objectAtIndex:indexPath.row],@"?"];
+            cell.detailTextLabel.text = @"?";
         }
     }
     if ([cell_name isEqualToString:@"led_enable"]) {
@@ -165,12 +196,75 @@
         [bc.ui_button addTarget:self action:@selector(helpButton:) forControlEvents:UIControlEventTouchUpInside];
     }
     
+    //selfie stuff
+    if ([cell_name isEqualToString:@"selfie_timeout"]) {
+        ValueCell * vc = cell;
+        ui_selfie_timeout_text = vc.ui_label;
+        if ([config objectForKey:@"selfie_timeout"]!=nil) {
+            [vc.ui_stepper setMaximumValue:24];
+            [vc.ui_stepper setMinimumValue:1];
+            [vc.ui_stepper setValue:[[config objectForKey:@"selfie_timeout"] floatValue]/(60*60)];
+            [vc.ui_label setText:[self secondsToStr:[vc.ui_stepper value]*60*60]];
+            [vc.ui_stepper addTarget:self action:@selector(selfieTimeoutChange:) forControlEvents:UIControlEventValueChanged];
+            [vc.ui_stepper setEnabled:true];
+        } else {
+            [vc.ui_stepper setEnabled:false];
+        }
+        
+    }
+    if ([cell_name isEqualToString:@"selfie_length"]) {
+        ValueCell * vc = cell;
+        ui_selfie_length_text = vc.ui_label;
+        if ([config objectForKey:@"selfie_length"]!=nil) {
+            [vc.ui_stepper setMaximumValue:50];
+            [vc.ui_stepper setMinimumValue:15];
+            [vc.ui_stepper setValue:[[config objectForKey:@"selfie_length"] floatValue]];
+            [vc.ui_label setText:[self secondsToStr:[vc.ui_stepper value]]];
+            [vc.ui_stepper addTarget:self action:@selector(selfieLengthChange:) forControlEvents:UIControlEventValueChanged];
+            [vc.ui_stepper setEnabled:true];
+        } else {
+            [vc.ui_stepper setEnabled:false];
+        }
+        
+    }
+    if ([cell_name isEqualToString:@"selfie_enable"]) {
+        SwitchCell * sc = cell;
+        if ([config objectForKey:@"selfie_enable"]!=nil) {
+            [sc.ui_switch setEnabled:true];
+            [sc.ui_switch setOn:[[config objectForKey:@"selfie_enable"] intValue]==1];
+        } else {
+            [sc.ui_switch setEnabled:false];
+        }
+    }
+    if ([cell_name isEqualToString:@"selfie_sensitivity_slider"]) {
+        SliderCell * sc = cell;
+        if ([config objectForKey:@"selfie_pet_sensitivity"]!=nil) {
+            [sc.ui_slider setEnabled:true];
+            [sc.ui_slider setValue:[[config objectForKey:@"selfie_pet_sensitivity"] floatValue]];
+            [sc.ui_slider addTarget:self action:@selector(selfieSensitivityChange:) forControlEvents:UIControlEventValueChanged];
+        } else {
+            [sc.ui_slider setEnabled:false];
+        }
+    }
+    if ([cell_name isEqualToString:@"motion_sensitivity_slider"]) {
+        SliderCell * sc = cell;
+        if ([config objectForKey:@"selfie_mot_sensitivity"]!=nil) {
+            [sc.ui_slider setEnabled:true];
+            [sc.ui_slider setValue:[[config objectForKey:@"selfie_mot_sensitivity"] floatValue]];
+            [sc.ui_slider addTarget:self action:@selector(motionSensitivityChange:) forControlEvents:UIControlEventValueChanged];
+        } else {
+            [sc.ui_slider setEnabled:false];
+        }
+        
+        [sc.ui_slider setEnabled:false];// mot is messed up in basic firmware
+    }
     
-    if ([cellIdentifier isEqualToString:@"SwitchCell"]) {
+    /*if ([cellIdentifier isEqualToString:@"SwitchCell"]) {
         SwitchCell * sc = cell;
         [sc.ui_switch addTarget:self action:@selector(changeSwitch:) forControlEvents:UIControlEventValueChanged];
         //[ addTarget:<#(nullable id)#> action:<#(nonnull SEL)#> forControlEvents:<#(UIControlEvents)#>];
-    }
+    }*/
+    NSLog(@"PROCESSED %@\n",cell_name);
     
     return cell;
 }
@@ -228,6 +322,53 @@
 
 //END TABLE VIEW DATASOURCE
 
+
+- (IBAction)unwindToSettings:(UIStoryboardSegue *)segue {
+    
+}
+
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if ([[segue identifier] isEqualToString:@"toSoundPicker"]) {
+        SoundPickerController * spc = [segue destinationViewController];
+        [spc setSounds:sounds];
+    }
+}
+
+-(IBAction)selfieSensitivityChange:(UISlider*)sender {
+    NSString * set_selfie_sensitivity = [NSString stringWithFormat:@"selfie_pet_sensitivity\t%f",[sender value]];
+    [self send_msg:[set_selfie_sensitivity UTF8String] type:(PBMSG_CONFIG_SET | PBMSG_STRING | PBMSG_REQUEST)];
+}
+
+-(IBAction)motionSensitivityChange:(UISlider*)sender {
+    NSString * set_motion_sensitivity = [NSString stringWithFormat:@"selfie_mot_sensitivity\t%f",[sender value]];
+    [self send_msg:[set_motion_sensitivity UTF8String] type:(PBMSG_CONFIG_SET | PBMSG_STRING | PBMSG_REQUEST)];
+}
+
+-(IBAction)selfieLengthChange:(UIStepper*)sender {
+    NSLog(@"SELFIE LENGTH CHANGE");
+    [ui_selfie_length_text setText:[self secondsToStr:[sender value]]];
+    NSString * set_vol_string = [NSString stringWithFormat:@"selfie_length\t%d",(int)([sender value])];
+    [self send_msg:[set_vol_string UTF8String] type:(PBMSG_CONFIG_SET | PBMSG_STRING | PBMSG_REQUEST)];
+}
+-(IBAction)selfieTimeoutChange:(UIStepper*)sender {
+    NSLog(@"SELFIE TIMEOUT CHANGE");
+    [ui_selfie_timeout_text setText:[self secondsToStr:[sender value]*60*60]];
+    NSString * set_vol_string = [NSString stringWithFormat:@"selfie_timeout\t%d",(int)([sender value]*60*60)];
+    [self send_msg:[set_vol_string UTF8String] type:(PBMSG_CONFIG_SET | PBMSG_STRING | PBMSG_REQUEST)];
+}
+
+-(IBAction)selfieSoundSelect:(id)sender {
+    selecting_selfie_sound=true;
+    selecting_alert_sound=false;
+    [self performSegueWithIdentifier:@"toSoundPicker" sender:self];
+}
+
+-(IBAction)alertSoundSelect:(id)sender {
+    selecting_selfie_sound=false;
+    selecting_alert_sound=true;
+    [self performSegueWithIdentifier:@"toSoundPicker" sender:self];
+}
+
 -(IBAction)updateButton:(id)sender {
     NSLog(@"GOING TO UPDATE!");
 }
@@ -255,18 +396,27 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    sounds = nil;
     config = [NSMutableDictionary dictionary];
     [self setupLogin];
     [self connect:3];
-    labels_selfie = [NSArray arrayWithObjects:@"take selfie automatically",@"selfie timeout",@"selfie length",@"selfie sensitivity",@"",@"motion sensitivity",@"", nil];
-    types_selfie = [NSArray arrayWithObjects:@"SwitchCell",@"ValueCell",@"ValueCell",@"TitleCell",@"SliderCell",@"TitleCell",@"SliderCell", nil];
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        sounds = [self pbserverLSWithType:@"mp3"];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [_tableview reloadData];
+        });
+    });
+    labels_selfie = [NSArray arrayWithObjects:@"Enable/Take selfies automatically",@"Frequency/Minimum time between selfies",@"Duration/Length of each selfie",@"Sensitivity/Higher values trigger with greater confidence",@"",@"Motion/Higher values trigger more often",@"", nil];
+    types_selfie = [NSArray arrayWithObjects:@"SwitchCell",@"ValueCell",@"ValueCell",@"DetailCell",@"SliderCell",@"DetailCell",@"SliderCell", nil];
     names_selfie = [NSArray arrayWithObjects:@"selfie_enable",@"selfie_timeout",@"selfie_length",@"selfie_sensitivity",@"selfie_sensitivity_slider",@"motion_sensitivity",@"motion_sensitivity_slider",nil];
-    labels_sound = [NSArray arrayWithObjects:@"Volume",@"",@"selfie sound",@"alert sound",@"record",nil];
-    types_sound = [NSArray arrayWithObjects:@"TitleCell",@"SliderCell",@"ButtonCell",@"ButtonCell",@"RecordCell", nil];
+    
+    labels_sound = [NSArray arrayWithObjects:@"Volume/Loudness on PetBot",@"",@"Selfie Sound/Played when a selfie is triggered",@"Alert Sound/Played when you press sound alert",@"Record/Upload your voice to your petbot!",nil];
+    types_sound = [NSArray arrayWithObjects:@"DetailCell",@"SliderCell",@"ButtonCell",@"ButtonCell",@"RecordCell", nil];
     names_sound = [NSArray arrayWithObjects:@"volume",@"volume_slider",@"selfie_sound",@"alert_sound",@"record", nil];
     
-    labels_system = [NSArray arrayWithObjects:@"LED",@"update",@"Version",@"help", nil];
-    types_system = [NSArray arrayWithObjects:@"SwitchCell",@"ButtonCell",@"TitleCell",@"ButtonCell", nil];
+    labels_system = [NSArray arrayWithObjects:@"LED enable",@"Update/Retrieve the latest PetBot firmeware",@"Version",@"Help/Our online manual and troubleshooting", nil];
+    types_system = [NSArray arrayWithObjects:@"SwitchCell",@"ButtonCell",@"DetailRightCell",@"ButtonCell", nil];
     names_system = [NSArray arrayWithObjects:@"led_enable",@"update",@"version",@"help", nil];
     
     sections = [NSArray arrayWithObjects:@"System",@"Sound",@"Selfie", nil];

@@ -9,4 +9,6 @@
 
 @interface ValueCell : UITableViewCell {
 }
+@property (strong, nonatomic) IBOutlet UILabel *ui_label;
+@property (strong, nonatomic) IBOutlet UIStepper *ui_stepper;
 @end

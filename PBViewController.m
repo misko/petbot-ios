@@ -149,10 +149,24 @@
 
 }
 
+-(NSString *)secondsToStr:(float )sec {
+    if (sec>(60*60)) {
+        return [NSString stringWithFormat:@"%dhr", (int)(sec/(60*60))];
+    } else if (sec>60) {
+        return [NSString stringWithFormat:@"%dm", (int)(sec/60)];
+    }
+    return [NSString stringWithFormat:@"%ds", (int)sec];
+}
 
 -(void)setLoginArray:(NSDictionary *)dictionary {
     NSLog(@"Someone called login array");
     loginArray = dictionary;
+}
+
+
+-(void)setSounds:(NSArray *)snds {
+    //NSLog(@"Someone called login array");
+    sounds=snds;
 }
 
 
