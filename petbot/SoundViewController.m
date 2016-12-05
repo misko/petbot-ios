@@ -597,6 +597,12 @@
         [self stopRecording];
     }
     [rc.progressView setProgressTintColor:[UIColor PBBlue]];
+    NSError *error;
+    AVAudioSession *audioSession = [AVAudioSession sharedInstance];
+    [audioSession overrideOutputAudioPort:AVAudioSessionPortOverrideSpeaker error:&error];
+    if(error) {
+        NSLog(@"Error: AudioSession cannot use speakers");
+    }
         player = [[AVAudioPlayer alloc] initWithContentsOfURL:recorder.url error:nil];
         [player setDelegate:self];
         [player play];
