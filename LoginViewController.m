@@ -50,10 +50,10 @@
     
     NSString * username = [[NSUserDefaults standardUserDefaults] stringForKey:@"username"];
     NSString * password = [[NSUserDefaults standardUserDefaults] stringForKey:@"password"];
-    if (username!=nil){
+    if (username!=nil && ![username isEqualToString:@""]){
         [_username_field setText:username];
     }
-    if (password!=nil) {
+    if (password!=nil && ![password isEqualToString:@""]) {
         [_password_field setText:password];
     }
     
@@ -69,6 +69,59 @@
 
     // Do any additional setup after loading the view.
 
+}
+- (IBAction)forgetMePressed:(id)sender {
+    //only do if able to deauth properly1!!!
+    [_forgetme_button setEnabled:FALSE];
+    
+    //build an info object and convert to json
+    NSString *uniqueIdentifier = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
+    NSString *deviceToken = [[NSUserDefaults standardUserDefaults] objectForKey:@"deviceToken"];
+    if (deviceToken==nil) {
+        deviceToken=uniqueIdentifier;
+    }
+    NSDictionary *newDatasetInfo = [NSDictionary dictionaryWithObjectsAndKeys:deviceToken, @"deviceID",nil];
+    
+    //convert object to data
+    NSError *error;
+    NSData* jsonData = [NSJSONSerialization dataWithJSONObject:newDatasetInfo options:0 error:&error];
+    
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
+    //NSString * url = [NSString stringWithFormat:@"%s", HTTPS_ADDRESS_QRCODE_JSON];
+    [request setURL:[NSURL URLWithString:[NSString stringWithFormat:@"%s", HTTPS_ADDRESS_DEAUTH]]];
+    [request setHTTPMethod:@"POST"];
+    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
+    [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
+    [request setHTTPBody:jsonData];
+    
+    // print json:
+    NSLog(@"JSON summary: %@", [[NSString alloc] initWithData:jsonData
+                                                     encoding:NSUTF8StringEncoding]);
+    
+    [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error)
+     {
+         [_forgetme_button setEnabled:TRUE];
+         if (error) {
+             NSLog(@"Error,%@", [error localizedDescription]);
+             [self toastStatus:false Message:@"Failed to connect to PB server"];
+             [status_label setText:@"Failed to connect"];
+         } else {
+             NSLog(@"%@", [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
+             NSDictionary * response = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
+             NSNumber *status = response[@"status"];
+             if ([status isEqual:@0]) {
+                 [self toastStatus:false Message:@"Failed to connect to PB server"];
+             } else if ([status isEqual:@1]) {
+                 [[NSUserDefaults standardUserDefaults] setValue:@"" forKey:@"username"];
+                 [[NSUserDefaults standardUserDefaults] setValue:@"" forKey:@"password"];
+                 [_username_field setText:@""];
+                 [_password_field setText:@""];
+                 [[NSUserDefaults standardUserDefaults] synchronize];
+             } else {
+                 [self toastStatus:false Message:@"Failed to connect to PB server"];
+             }
+         }
+     }];
 }
 
 - (void)didReceiveMemoryWarning {

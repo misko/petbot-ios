@@ -27,10 +27,6 @@
     return @"Select sound clip";
 }
 
-- (IBAction)touchDone:(id)sender {
-    [_doneButton setEnabled:false];
-    [self performSegueWithIdentifier:@"segueToSettings" sender:self];
-}
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     NSLog(@"COUNT OF SOUNDS %d\n",[sounds count]);
     return [sounds count];
@@ -52,14 +48,33 @@
     
     SoundClipCell * scc = cell;
     NSString * label = [[sounds objectAtIndex:indexPath.row] objectAtIndex:1];
-    [scc.selectButton setTitle:label forState:UIControlStateNormal];
+    
+    scc->fid = [[sounds objectAtIndex:indexPath.row] objectAtIndex:0];
+    scc->fn = [[sounds objectAtIndex:indexPath.row] objectAtIndex:1];
+    [scc.ui_label setText:label];
+    //[scc.selectButton setTitle:label forState:UIControlStateNormal];
     
     return cell;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    NSLog(@"SELECTED!");
+    SoundClipCell  * scc = [tableView cellForRowAtIndexPath:indexPath];
+    [[NSUserDefaults standardUserDefaults] setValue:scc->fid forKey:@"alert_sound_fid"];
+    [[NSUserDefaults standardUserDefaults] setValue:scc->fn forKey:@"alert_sound_fn"];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    [self performSegueWithIdentifier:@"segueToSettings" sender:self];
+    
 }
 
 
 //END TABLE VIEW DATASOURCE
 
+
+- (IBAction)touchDone:(id)sender {
+    [_doneButton setEnabled:false];
+    [self performSegueWithIdentifier:@"segueToSettings" sender:self];
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];

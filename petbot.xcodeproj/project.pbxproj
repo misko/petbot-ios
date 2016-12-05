@@ -63,6 +63,15 @@
 		CCA48C641DA7565300275348 /* nice_utils.c in Sources */ = {isa = PBXBuildFile; fileRef = CCA48C621DA7565300275348 /* nice_utils.c */; };
 		CCD38ABA1D0B5954005EF60A /* TODO in Resources */ = {isa = PBXBuildFile; fileRef = CCD38AB91D0B5954005EF60A /* TODO */; };
 		CCDA221E1DF4105300D76CF9 /* SoundPickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = CCDA221D1DF4105300D76CF9 /* SoundPickerController.m */; };
+		CCDA224E1DF5409500D76CF9 /* video_camera.pdf in Resources */ = {isa = PBXBuildFile; fileRef = CCDA22451DF5409500D76CF9 /* video_camera.pdf */; };
+		CCDA224F1DF5409500D76CF9 /* camera.pdf in Resources */ = {isa = PBXBuildFile; fileRef = CCDA22461DF5409500D76CF9 /* camera.pdf */; };
+		CCDA22501DF5409500D76CF9 /* bell.pdf in Resources */ = {isa = PBXBuildFile; fileRef = CCDA22471DF5409500D76CF9 /* bell.pdf */; };
+		CCDA22511DF5409500D76CF9 /* exit.pdf in Resources */ = {isa = PBXBuildFile; fileRef = CCDA22481DF5409500D76CF9 /* exit.pdf */; };
+		CCDA22521DF5409500D76CF9 /* treat.pdf in Resources */ = {isa = PBXBuildFile; fileRef = CCDA22491DF5409500D76CF9 /* treat.pdf */; };
+		CCDA22531DF5409500D76CF9 /* gear.pdf in Resources */ = {isa = PBXBuildFile; fileRef = CCDA224A1DF5409500D76CF9 /* gear.pdf */; };
+		CCDA22541DF5409500D76CF9 /* play_grey.pdf in Resources */ = {isa = PBXBuildFile; fileRef = CCDA224B1DF5409500D76CF9 /* play_grey.pdf */; };
+		CCDA22551DF5409500D76CF9 /* play_green.pdf in Resources */ = {isa = PBXBuildFile; fileRef = CCDA224C1DF5409500D76CF9 /* play_green.pdf */; };
+		CCDA22561DF5409500D76CF9 /* record.pdf in Resources */ = {isa = PBXBuildFile; fileRef = CCDA224D1DF5409500D76CF9 /* record.pdf */; };
 		CCE22D531CE12ED30096CA68 /* LoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CCE22D521CE12ED30096CA68 /* LoginViewController.m */; };
 		CCED8B871DB09A9100E96B91 /* PBViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CCED8B861DB09A9100E96B91 /* PBViewController.m */; };
 		DCFE6642827B9F210B103294 /* libPods-petbot.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 347E91F8EE74CAF13F18A24A /* libPods-petbot.a */; };
@@ -211,6 +220,15 @@
 		CCD38AB91D0B5954005EF60A /* TODO */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TODO; sourceTree = "<group>"; };
 		CCDA221D1DF4105300D76CF9 /* SoundPickerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SoundPickerController.m; sourceTree = "<group>"; };
 		CCDA221F1DF4106100D76CF9 /* SoundPickerController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SoundPickerController.h; sourceTree = "<group>"; };
+		CCDA22451DF5409500D76CF9 /* video_camera.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = video_camera.pdf; sourceTree = "<group>"; };
+		CCDA22461DF5409500D76CF9 /* camera.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = camera.pdf; sourceTree = "<group>"; };
+		CCDA22471DF5409500D76CF9 /* bell.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = bell.pdf; sourceTree = "<group>"; };
+		CCDA22481DF5409500D76CF9 /* exit.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = exit.pdf; sourceTree = "<group>"; };
+		CCDA22491DF5409500D76CF9 /* treat.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = treat.pdf; sourceTree = "<group>"; };
+		CCDA224A1DF5409500D76CF9 /* gear.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = gear.pdf; sourceTree = "<group>"; };
+		CCDA224B1DF5409500D76CF9 /* play_grey.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = play_grey.pdf; sourceTree = "<group>"; };
+		CCDA224C1DF5409500D76CF9 /* play_green.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = play_green.pdf; sourceTree = "<group>"; };
+		CCDA224D1DF5409500D76CF9 /* record.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; path = record.pdf; sourceTree = "<group>"; };
 		CCE22D511CE12ED30096CA68 /* LoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LoginViewController.h; path = ../LoginViewController.h; sourceTree = "<group>"; };
 		CCE22D521CE12ED30096CA68 /* LoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LoginViewController.m; path = ../LoginViewController.m; sourceTree = "<group>"; };
 		CCED8B821DB072C200E96B91 /* pb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pb.h; sourceTree = "<group>"; };
@@ -372,6 +390,7 @@
 				CC2E17251DF25EF800A1AD44 /* SoundTableViewController.h */,
 				CC2E17261DF25F3800A1AD44 /* SoundTableViewController.m */,
 				CC4A4CBD1DEEBA0300EFFD51 /* SoundViewController.m */,
+				CCDA22201DF537F000D76CF9 /* images */,
 				CC4A4CBF1DEEBA3600EFFD51 /* SoundViewController.h */,
 				CC23F8641CBEDA4B00EA0E62 /* Assets.xcassets */,
 				CC2411491DB3F2AF00D1CBFB /* petbot167.png */,
@@ -447,6 +466,22 @@
 			);
 			path = selfie;
 			sourceTree = "<group>";
+		};
+		CCDA22201DF537F000D76CF9 /* images */ = {
+			isa = PBXGroup;
+			children = (
+				CCDA22451DF5409500D76CF9 /* video_camera.pdf */,
+				CCDA22461DF5409500D76CF9 /* camera.pdf */,
+				CCDA22471DF5409500D76CF9 /* bell.pdf */,
+				CCDA22481DF5409500D76CF9 /* exit.pdf */,
+				CCDA22491DF5409500D76CF9 /* treat.pdf */,
+				CCDA224A1DF5409500D76CF9 /* gear.pdf */,
+				CCDA224B1DF5409500D76CF9 /* play_grey.pdf */,
+				CCDA224C1DF5409500D76CF9 /* play_green.pdf */,
+				CCDA224D1DF5409500D76CF9 /* record.pdf */,
+			);
+			path = images;
+			sourceTree = SOURCE_ROOT;
 		};
 		CFFC9D71996F3A2CAE937DC9 /* Frameworks */ = {
 			isa = PBXGroup;
@@ -602,16 +637,25 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CCDA22551DF5409500D76CF9 /* play_green.pdf in Resources */,
 				CC4A4CBC1DED530300EFFD51 /* silence.mp3 in Resources */,
 				CC23F8681CBEDA4B00EA0E62 /* LaunchScreen.storyboard in Resources */,
+				CCDA22511DF5409500D76CF9 /* exit.pdf in Resources */,
 				CCD38ABA1D0B5954005EF60A /* TODO in Resources */,
+				CCDA224E1DF5409500D76CF9 /* video_camera.pdf in Resources */,
 				CC3259871DB2D68A00EBCDDF /* 8925898_l.jpg in Resources */,
 				CC23F8651CBEDA4B00EA0E62 /* Assets.xcassets in Resources */,
+				CCDA22541DF5409500D76CF9 /* play_grey.pdf in Resources */,
 				CC24114E1DB4075400D1CBFB /* petbot_180.png in Resources */,
+				CCDA224F1DF5409500D76CF9 /* camera.pdf in Resources */,
+				CCDA22501DF5409500D76CF9 /* bell.pdf in Resources */,
 				CC24114A1DB3F2AF00D1CBFB /* petbot167.png in Resources */,
+				CCDA22521DF5409500D76CF9 /* treat.pdf in Resources */,
 				CC2448BA1CC6D7CF0036CEB3 /* notes in Resources */,
 				CC2411481DB3F08400D1CBFB /* splash2.png in Resources */,
 				CC23F8631CBEDA4B00EA0E62 /* Main.storyboard in Resources */,
+				CCDA22531DF5409500D76CF9 /* gear.pdf in Resources */,
+				CCDA22561DF5409500D76CF9 /* record.pdf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

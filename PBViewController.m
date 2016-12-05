@@ -163,6 +163,42 @@
     loginArray = dictionary;
 }
 
+/*^(BOOL ok) {
+[self populateSounds];
+}];
+*/
+-(void) uploadFile:(NSURL *)fileURL withFilename:(NSString *)filename withCallBack:(void (^)(BOOL ok))cb {
+    NSString *urlString = [NSString stringWithFormat:@"%s%@",HTTPS_ADDRESS_PB_UL,pubsubserver_secret];
+    NSMutableURLRequest * request= [[NSMutableURLRequest alloc] init];
+    [request setURL:[NSURL URLWithString:urlString]];
+    [request setHTTPMethod:@"POST"];
+    NSString *boundary = @"---------------------------14737809831466499882746641449";
+    NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@",boundary];
+    [request addValue:contentType forHTTPHeaderField: @"Content-Type"];
+    NSMutableData *postbody = [NSMutableData data];
+    [postbody appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+    [postbody appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"file\"; filename=\"%@.m4a\"\r\n", filename] dataUsingEncoding:NSUTF8StringEncoding]];
+    [postbody appendData:[@"Content-Type: application/octet-stream\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+    NSData *data = [[NSData alloc] initWithContentsOfURL:fileURL];
+    [postbody appendData:[NSData dataWithData:data]];
+    [postbody appendData:[[NSString stringWithFormat:@"\r\n--%@--\r\n",boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+    [request setHTTPBody:postbody];
+    
+    [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
+        NSString * returnString = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+        NSLog(@"filename is %@",filename);
+        NSLog(@"%@", returnString);
+        if(data==nil || error) {
+            cb(false);
+        } else {
+            cb(true);
+        }
+    }];
+    
+    //NSData *returnData = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:nil];
+    
+    return ;
+}
 
 -(void)setSounds:(NSArray *)snds {
     //NSLog(@"Someone called login array");

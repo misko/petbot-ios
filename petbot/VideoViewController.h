@@ -17,9 +17,18 @@
     IBOutlet UILabel *pet_name;
     IBOutlet UIView *pet_view;
 }
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint *selfieLandScapeVertical;
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint *selfiePortraitHorizontal;
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint *selfieLandScapeHorizontal;
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint *selfiePortraitVertical;
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint *alertPortraitHorizontal;
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint *alertPortraitVertical;
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint *alertLandScapeVertical;
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint *alertLandScapeHorizontal;
 
-
+    
 /* From GStreamerBackendDelegate */
+- (IBAction)showMenu:(id)sender;
 -(void) gstreamerInitialized;
 -(void) gstreamerSetUIMessage:(NSString *)message;
 -(void) gstreamerHideLoadView;

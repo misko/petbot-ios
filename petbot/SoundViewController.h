@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "PBViewController.h"
+#import "PBHollowButton.h"
 
-@interface SoundViewController : PBViewController <UITableViewDelegate, UITableViewDataSource>
+@interface SoundViewController : PBViewController <UITableViewDelegate, UITableViewDataSource, AVAudioRecorderDelegate>
 
 
 @property (strong, nonatomic) IBOutlet UITableView *tableview;

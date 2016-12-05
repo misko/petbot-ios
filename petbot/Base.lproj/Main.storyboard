@@ -167,11 +167,6 @@
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="New user" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fVm-5r-MJ5" customClass="PBLabel">
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="q7k-oJ-Ngx" userLabel="status">
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
                                 <nil key="textColor"/>
@@ -183,41 +178,52 @@
                                     <constraint firstAttribute="height" relation="lessThanOrEqual" constant="170" id="zJq-5m-mzh"/>
                                 </constraints>
                             </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1Md-4K-wyB" customClass="PBHollowButton">
+                                <color key="backgroundColor" red="0.2901960784" green="0.56470588239999997" blue="0.8862745098" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <state key="normal" title="Forget me">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="forgetMePressed:" destination="0Un-OQ-HIV" eventType="touchUpInside" id="HT1-Jz-Mwo"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="iDN-TJ-3Ii" firstAttribute="leading" secondItem="xZS-dE-aW0" secondAttribute="leading" id="0T5-Hj-62y"/>
-                            <constraint firstItem="iDN-TJ-3Ii" firstAttribute="top" secondItem="7ef-gP-mAf" secondAttribute="bottom" constant="-30" id="1u8-H4-7z5"/>
+                            <constraint firstItem="iDN-TJ-3Ii" firstAttribute="top" secondItem="7ef-gP-mAf" secondAttribute="bottom" constant="-50" id="1u8-H4-7z5"/>
                             <constraint firstItem="0oK-Pa-TAr" firstAttribute="leading" secondItem="iDN-TJ-3Ii" secondAttribute="leading" id="2Rd-vX-df6"/>
-                            <constraint firstItem="fVm-5r-MJ5" firstAttribute="bottom" secondItem="hYz-Vx-lrb" secondAttribute="top" constant="-8" id="336-bE-g7S"/>
                             <constraint firstItem="7ef-gP-mAf" firstAttribute="top" secondItem="Uva-vt-aHv" secondAttribute="bottom" constant="-20" id="68g-um-kC5"/>
                             <constraint firstItem="7ef-gP-mAf" firstAttribute="width" relation="lessThanOrEqual" secondItem="vha-1s-7CE" secondAttribute="width" constant="40" id="8jz-PV-Ss7"/>
+                            <constraint firstItem="1Md-4K-wyB" firstAttribute="width" secondItem="hYz-Vx-lrb" secondAttribute="width" id="AnQ-PJ-WOZ"/>
                             <constraint firstItem="VQn-YD-4tl" firstAttribute="height" secondItem="e6f-dT-b7B" secondAttribute="height" id="CJm-l9-peJ"/>
                             <constraint firstItem="e6f-dT-b7B" firstAttribute="leading" secondItem="xZS-dE-aW0" secondAttribute="leading" id="CR8-oL-XgR"/>
-                            <constraint firstItem="fVm-5r-MJ5" firstAttribute="leading" secondItem="hYz-Vx-lrb" secondAttribute="leading" id="DPM-8w-UBZ"/>
                             <constraint firstItem="e6f-dT-b7B" firstAttribute="top" secondItem="0oK-Pa-TAr" secondAttribute="bottom" constant="8" id="E4I-Cw-dc6"/>
                             <constraint firstItem="VQn-YD-4tl" firstAttribute="top" secondItem="e6f-dT-b7B" secondAttribute="bottom" constant="8" id="HJM-2m-qR4"/>
                             <constraint firstItem="hYz-Vx-lrb" firstAttribute="centerX" secondItem="vha-1s-7CE" secondAttribute="centerX" id="N4N-bo-l6d"/>
                             <constraint firstItem="Wkc-Of-QTI" firstAttribute="top" secondItem="hYz-Vx-lrb" secondAttribute="bottom" constant="5" id="NMG-z0-mgk"/>
                             <constraint firstItem="xZS-dE-aW0" firstAttribute="centerX" secondItem="vha-1s-7CE" secondAttribute="centerX" id="OQY-C9-5pT"/>
+                            <constraint firstItem="1Md-4K-wyB" firstAttribute="centerX" secondItem="vha-1s-7CE" secondAttribute="centerX" id="PZU-73-t8f"/>
                             <constraint firstItem="q7k-oJ-Ngx" firstAttribute="centerX" secondItem="vha-1s-7CE" secondAttribute="centerX" id="Raq-4T-tFR"/>
                             <constraint firstItem="iDN-TJ-3Ii" firstAttribute="bottom" secondItem="xZS-dE-aW0" secondAttribute="top" constant="-8" id="RtT-pZ-57a"/>
                             <constraint firstItem="B0o-SH-Jbb" firstAttribute="top" relation="greaterThanOrEqual" secondItem="Wkc-Of-QTI" secondAttribute="bottom" constant="5" id="Sbj-xv-Var"/>
                             <constraint firstItem="7ef-gP-mAf" firstAttribute="leading" secondItem="vha-1s-7CE" secondAttribute="leadingMargin" constant="-20" id="SlS-w3-TYg"/>
                             <constraint firstItem="e6f-dT-b7B" firstAttribute="width" secondItem="xZS-dE-aW0" secondAttribute="width" id="XKx-D0-GQU"/>
                             <constraint firstItem="VQn-YD-4tl" firstAttribute="leading" secondItem="e6f-dT-b7B" secondAttribute="trailing" constant="-200" id="bRL-LM-yIq"/>
-                            <constraint firstItem="iDN-TJ-3Ii" firstAttribute="top" secondItem="Uva-vt-aHv" secondAttribute="bottom" constant="190" id="mgc-P4-4se"/>
+                            <constraint firstItem="iDN-TJ-3Ii" firstAttribute="top" secondItem="Uva-vt-aHv" secondAttribute="bottom" constant="150" id="mgc-P4-4se"/>
                             <constraint firstItem="q7k-oJ-Ngx" firstAttribute="bottom" secondItem="iDN-TJ-3Ii" secondAttribute="top" constant="-5" id="ndt-pi-MN3"/>
+                            <constraint firstItem="hYz-Vx-lrb" firstAttribute="top" secondItem="1Md-4K-wyB" secondAttribute="bottom" constant="14" id="rPk-W0-lWQ"/>
                             <constraint firstItem="Wkc-Of-QTI" firstAttribute="centerX" secondItem="vha-1s-7CE" secondAttribute="centerX" id="rj6-FI-CbO"/>
                             <constraint firstItem="e6f-dT-b7B" firstAttribute="height" secondItem="xZS-dE-aW0" secondAttribute="height" id="v1k-b9-CDk"/>
                             <constraint firstItem="VQn-YD-4tl" firstAttribute="width" secondItem="e6f-dT-b7B" secondAttribute="width" id="v5D-df-QuH"/>
                             <constraint firstItem="Wkc-Of-QTI" firstAttribute="width" relation="lessThanOrEqual" secondItem="vha-1s-7CE" secondAttribute="width" constant="-100" id="x8G-ls-SHA"/>
-                            <constraint firstItem="hYz-Vx-lrb" firstAttribute="top" secondItem="VQn-YD-4tl" secondAttribute="bottom" constant="60" id="xol-Cd-wf0"/>
+                            <constraint firstItem="hYz-Vx-lrb" firstAttribute="top" secondItem="VQn-YD-4tl" secondAttribute="bottom" constant="100" id="xol-Cd-wf0"/>
                             <constraint firstItem="0oK-Pa-TAr" firstAttribute="top" secondItem="xZS-dE-aW0" secondAttribute="bottom" constant="8" id="xxd-Wx-Hzm"/>
                             <constraint firstItem="q7k-oJ-Ngx" firstAttribute="width" secondItem="vha-1s-7CE" secondAttribute="width" constant="-30" id="zuZ-tP-bRP"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="forgetme_button" destination="1Md-4K-wyB" id="XeZ-u9-Z3y"/>
                         <outlet property="login_button" destination="VQn-YD-4tl" id="qws-dW-HKF"/>
                         <outlet property="password_field" destination="e6f-dT-b7B" id="nZH-Fm-lp1"/>
                         <outlet property="status_label" destination="q7k-oJ-Ngx" id="CB7-ga-FZL"/>
@@ -227,7 +233,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="WAp-he-tHd" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-311" y="22"/>
+            <point key="canvasLocation" x="-311.25" y="21.25"/>
         </scene>
         <!--User Info View Controller-->
         <scene sceneID="Mwn-EC-yaC">
@@ -690,13 +696,13 @@ Generate QR code Show QR code to PetBot PetBot will say "Thanks!"</string>
                                         <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                         <color key="highlightedColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                     </label>
-                                    <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" verticalCompressionResistancePriority="751" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Tpb-wo-PKF" userLabel="bye" customClass="PBButton">
+                                    <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" verticalCompressionResistancePriority="751" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Tpb-wo-PKF" userLabel="bye" customClass="PBButton">
                                         <color key="backgroundColor" red="0.18772074580192566" green="0.51381963491439819" blue="0.9836958646774292" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" constant="90" id="poH-oq-fek"/>
+                                            <constraint firstAttribute="height" constant="50" id="78v-Rk-o7a"/>
+                                            <constraint firstAttribute="width" constant="50" id="poH-oq-fek"/>
                                         </constraints>
-                                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="15"/>
-                                        <state key="normal" title="BYE :(">
+                                        <state key="normal" image="exit">
                                             <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </state>
                                         <userDefinedRuntimeAttributes>
@@ -708,10 +714,10 @@ Generate QR code Show QR code to PetBot PetBot will say "Thanks!"</string>
                                             <action selector="byePressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="oBo-Ap-MSj"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" verticalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GYk-XX-yR3" userLabel="Selfie" customClass="PBButton">
+                                    <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" verticalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GYk-XX-yR3" userLabel="Selfie" customClass="PBButton">
                                         <color key="backgroundColor" red="0.18823529411764706" green="0.51372549019607838" blue="0.98431372549019602" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="15"/>
-                                        <state key="normal" title="Selfie">
+                                        <rect key="contentStretch" x="0.0" y="0.0" width="0.80000000000000004" height="1"/>
+                                        <state key="normal" image="video_camera">
                                             <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </state>
                                         <userDefinedRuntimeAttributes>
@@ -723,10 +729,20 @@ Generate QR code Show QR code to PetBot PetBot will say "Thanks!"</string>
                                             <action selector="selfiePressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="n44-Oc-F8y"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="T27-Ti-Fh4" userLabel="Cookie" customClass="PBButton">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xuR-6w-AWC" customClass="PBButton">
+                                        <color key="backgroundColor" red="0.2901960784" green="0.56470588239999997" blue="0.8862745098" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <state key="normal" title="menu" image="gear"/>
+                                        <connections>
+                                            <action selector="showMenu:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Dhi-oK-TBM"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="T27-Ti-Fh4" userLabel="Cookie" customClass="PBButton">
                                         <color key="backgroundColor" red="0.18772074580192566" green="0.51381963491439819" blue="0.9836958646774292" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="15"/>
-                                        <state key="normal" title="Cookie">
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="50" id="T7J-mA-KAM"/>
+                                            <constraint firstAttribute="width" secondItem="T27-Ti-Fh4" secondAttribute="height" multiplier="1:1" id="szE-9g-9oM"/>
+                                        </constraints>
+                                        <state key="normal" image="treat">
                                             <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </state>
                                         <userDefinedRuntimeAttributes>
@@ -738,11 +754,10 @@ Generate QR code Show QR code to PetBot PetBot will say "Thanks!"</string>
                                             <action selector="cookiePressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="MNQ-oo-1ug"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4ZB-iI-915" customClass="PBButton">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4ZB-iI-915" customClass="PBButton">
                                         <color key="backgroundColor" red="0.18772074580192566" green="0.51381963491439819" blue="0.9836958646774292" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <gestureRecognizers/>
-                                        <fontDescription key="fontDescription" type="system" weight="medium" pointSize="15"/>
-                                        <state key="normal" title="Sound">
+                                        <state key="normal" title="alert" image="bell">
                                             <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </state>
                                         <userDefinedRuntimeAttributes>
@@ -752,7 +767,6 @@ Generate QR code Show QR code to PetBot PetBot will say "Thanks!"</string>
                                         </userDefinedRuntimeAttributes>
                                         <connections>
                                             <action selector="playSound:" destination="BYZ-38-t0r" eventType="touchUpInside" id="DVG-iD-FrT"/>
-                                            <outletCollection property="gestureRecognizers" destination="IfL-n4-YHo" appends="YES" id="qFg-7j-Fep"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -761,24 +775,41 @@ Generate QR code Show QR code to PetBot PetBot will say "Thanks!"</string>
                                     <constraint firstItem="rca-6b-m6h" firstAttribute="centerX" secondItem="SZR-oQ-e7L" secondAttribute="centerX" id="0nE-R3-KqZ"/>
                                     <constraint firstItem="rz3-DE-1dW" firstAttribute="centerY" secondItem="SZR-oQ-e7L" secondAttribute="centerY" id="1P3-9M-D79"/>
                                     <constraint firstAttribute="bottom" secondItem="DGb-Sr-ZUM" secondAttribute="bottom" id="3r8-5E-a62"/>
+                                    <constraint firstItem="xuR-6w-AWC" firstAttribute="height" secondItem="Tpb-wo-PKF" secondAttribute="height" id="6MV-ck-6pv"/>
                                     <constraint firstItem="Tpb-wo-PKF" firstAttribute="leading" secondItem="SZR-oQ-e7L" secondAttribute="leading" constant="20" id="82i-7M-41S"/>
+                                    <constraint firstItem="4ZB-iI-915" firstAttribute="top" secondItem="T27-Ti-Fh4" secondAttribute="top" id="B2Y-2P-M5R"/>
+                                    <constraint firstItem="xuR-6w-AWC" firstAttribute="top" secondItem="Tpb-wo-PKF" secondAttribute="top" id="BYj-g0-cUl"/>
+                                    <constraint firstItem="4ZB-iI-915" firstAttribute="bottom" secondItem="GYk-XX-yR3" secondAttribute="top" constant="-10" id="FZp-zj-zMX"/>
+                                    <constraint firstItem="GYk-XX-yR3" firstAttribute="width" secondItem="T27-Ti-Fh4" secondAttribute="width" id="FwH-OG-XoX"/>
                                     <constraint firstItem="DGb-Sr-ZUM" firstAttribute="width" secondItem="SZR-oQ-e7L" secondAttribute="width" id="I53-6X-CWU"/>
                                     <constraint firstItem="Tpb-wo-PKF" firstAttribute="top" secondItem="SZR-oQ-e7L" secondAttribute="top" constant="20" id="KPj-Tl-hQc"/>
-                                    <constraint firstItem="T27-Ti-Fh4" firstAttribute="width" secondItem="Tpb-wo-PKF" secondAttribute="width" id="KUk-3E-4bt"/>
-                                    <constraint firstItem="4ZB-iI-915" firstAttribute="width" secondItem="Tpb-wo-PKF" secondAttribute="width" id="OQ9-ij-6CN"/>
-                                    <constraint firstItem="GYk-XX-yR3" firstAttribute="width" secondItem="Tpb-wo-PKF" secondAttribute="width" id="P3h-cm-yrx"/>
+                                    <constraint firstItem="T27-Ti-Fh4" firstAttribute="bottom" secondItem="GYk-XX-yR3" secondAttribute="bottom" id="M0d-jO-UHr"/>
+                                    <constraint firstItem="T27-Ti-Fh4" firstAttribute="leading" secondItem="4ZB-iI-915" secondAttribute="leading" id="Npu-hk-4tb"/>
+                                    <constraint firstAttribute="trailing" secondItem="xuR-6w-AWC" secondAttribute="trailing" constant="20" id="OfY-O8-VOa"/>
+                                    <constraint firstItem="4ZB-iI-915" firstAttribute="width" secondItem="T27-Ti-Fh4" secondAttribute="width" id="PCb-aN-kuv"/>
                                     <constraint firstItem="rca-6b-m6h" firstAttribute="top" secondItem="SZR-oQ-e7L" secondAttribute="top" constant="-50" id="RPV-sz-EUI"/>
                                     <constraint firstItem="DGb-Sr-ZUM" firstAttribute="leading" secondItem="SZR-oQ-e7L" secondAttribute="leading" id="St6-Bw-sS0"/>
                                     <constraint firstItem="rz3-DE-1dW" firstAttribute="height" secondItem="SZR-oQ-e7L" secondAttribute="height" id="Tlm-we-1Tn"/>
+                                    <constraint firstItem="GYk-XX-yR3" firstAttribute="height" secondItem="T27-Ti-Fh4" secondAttribute="height" id="U97-Az-geJ"/>
                                     <constraint firstItem="4ZB-iI-915" firstAttribute="leading" secondItem="SZR-oQ-e7L" secondAttribute="leading" constant="20" id="VPA-sh-64a"/>
-                                    <constraint firstAttribute="trailing" secondItem="GYk-XX-yR3" secondAttribute="trailing" constant="20" id="fCf-7Y-eMN"/>
-                                    <constraint firstAttribute="bottom" secondItem="4ZB-iI-915" secondAttribute="bottom" constant="20" id="gZF-dt-IdH"/>
+                                    <constraint firstItem="T27-Ti-Fh4" firstAttribute="leading" secondItem="GYk-XX-yR3" secondAttribute="leading" id="Wng-tf-Za1"/>
+                                    <constraint firstItem="xuR-6w-AWC" firstAttribute="width" secondItem="Tpb-wo-PKF" secondAttribute="width" id="feN-6Q-JZZ"/>
                                     <constraint firstAttribute="trailing" secondItem="T27-Ti-Fh4" secondAttribute="trailing" constant="20" id="hZq-8m-AdS"/>
                                     <constraint firstAttribute="bottom" secondItem="T27-Ti-Fh4" secondAttribute="bottom" constant="20" id="l2s-69-ejb"/>
                                     <constraint firstItem="rz3-DE-1dW" firstAttribute="centerX" secondItem="SZR-oQ-e7L" secondAttribute="centerX" id="lHM-n5-Rea"/>
+                                    <constraint firstItem="4ZB-iI-915" firstAttribute="height" secondItem="T27-Ti-Fh4" secondAttribute="height" id="n3r-Zy-V49"/>
                                     <constraint firstItem="rz3-DE-1dW" firstAttribute="width" secondItem="SZR-oQ-e7L" secondAttribute="width" id="sFh-Ug-ydi"/>
-                                    <constraint firstItem="GYk-XX-yR3" firstAttribute="top" secondItem="SZR-oQ-e7L" secondAttribute="top" constant="20" id="tsV-je-kz9"/>
+                                    <constraint firstItem="GYk-XX-yR3" firstAttribute="bottom" secondItem="T27-Ti-Fh4" secondAttribute="top" constant="-10" id="t5P-94-pf4"/>
+                                    <constraint firstItem="GYk-XX-yR3" firstAttribute="centerX" secondItem="SZR-oQ-e7L" secondAttribute="centerX" id="vl2-SL-Tev"/>
                                 </constraints>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="FZp-zj-zMX"/>
+                                        <exclude reference="t5P-94-pf4"/>
+                                        <exclude reference="Npu-hk-4tb"/>
+                                        <exclude reference="Wng-tf-Za1"/>
+                                    </mask>
+                                </variation>
                             </view>
                             <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bDI-f8-xLi">
                                 <subviews>
@@ -861,12 +892,20 @@ Generate QR code Show QR code to PetBot PetBot will say "Thanks!"</string>
                     </view>
                     <connections>
                         <outlet property="activityIndicator" destination="4o0-9g-BLa" id="RT6-vq-yjb"/>
+                        <outlet property="alertLandScapeHorizontal" destination="Npu-hk-4tb" id="9Pg-wJ-HOp"/>
+                        <outlet property="alertLandScapeVertical" destination="FZp-zj-zMX" id="XQG-W7-CxJ"/>
+                        <outlet property="alertPortraitHorizontal" destination="VPA-sh-64a" id="891-FU-j44"/>
+                        <outlet property="alertPortraitVertical" destination="B2Y-2P-M5R" id="FTP-at-goj"/>
                         <outlet property="main_view" destination="SZR-oQ-e7L" id="0MC-ie-eQ6"/>
                         <outlet property="message_label" destination="DGb-Sr-ZUM" id="mjn-aZ-AsJ"/>
                         <outlet property="pet_img" destination="iH2-gr-dk1" id="YXP-T0-4SC"/>
                         <outlet property="pet_name" destination="rSM-ql-rWX" id="3xy-dr-0id"/>
                         <outlet property="pet_story" destination="Tux-2b-ekR" id="l92-3A-rtc"/>
                         <outlet property="pet_view" destination="bDI-f8-xLi" id="RHQ-I3-DhS"/>
+                        <outlet property="selfieLandScapeHorizontal" destination="Wng-tf-Za1" id="USf-U0-DVS"/>
+                        <outlet property="selfieLandScapeVertical" destination="t5P-94-pf4" id="kkc-OM-jwT"/>
+                        <outlet property="selfiePortraitHorizontal" destination="vl2-SL-Tev" id="FFJ-ok-EeV"/>
+                        <outlet property="selfiePortraitVertical" destination="M0d-jO-UHr" id="zTY-fx-58J"/>
                         <outlet property="selfie_button" destination="GYk-XX-yR3" id="NPJ-Js-EFa"/>
                         <outlet property="video_container_view" destination="rz3-DE-1dW" id="sx6-qi-ADv"/>
                         <outlet property="video_view" destination="Th9-8M-pM3" id="akr-W5-A53"/>
@@ -902,11 +941,6 @@ Generate QR code Show QR code to PetBot PetBot will say "Thanks!"</string>
                         <action selector="longPress:" destination="BYZ-38-t0r" id="5JG-tP-lIL"/>
                     </connections>
                 </pongPressGestureRecognizer>
-                <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.5" id="IfL-n4-YHo">
-                    <connections>
-                        <action selector="longPressSound:" destination="BYZ-38-t0r" id="yzZ-iT-vbI"/>
-                    </connections>
-                </pongPressGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="558" y="22"/>
         </scene>
@@ -922,9 +956,8 @@ Generate QR code Show QR code to PetBot PetBot will say "Thanks!"</string>
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="qVY-Aq-mIU">
-                                <frame key="frameInset" minY="28" width="375" height="593"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="qVY-Aq-mIU">
+                                <frame key="frameInset" minY="28" width="375" height="595"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="ButtonCell" textLabel="IQ6-jf-dUD" detailTextLabel="9Tf-Se-TsU" style="IBUITableViewCellStyleSubtitle" id="RCm-SE-heR" customClass="ButtonCell">
@@ -949,8 +982,8 @@ Generate QR code Show QR code to PetBot PetBot will say "Thanks!"</string>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uP2-gr-19I">
-                                                    <frame key="frameInset" minX="337" minY="6" width="30" height="30"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <frame key="frameInset" minY="46.15%" width="30" height="30" maxX="8"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="28"/>
                                                     <state key="normal" title="&gt;"/>
                                                 </button>
@@ -985,8 +1018,8 @@ Generate QR code Show QR code to PetBot PetBot will say "Thanks!"</string>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" continuous="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zZx-gK-Oct">
-                                                    <frame key="frameInset" minX="26" minY="5" width="323" height="31"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <frame key="frameInset" minX="26" minY="5" height="31" maxX="26"/>
+                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                                 </slider>
                                             </subviews>
                                         </tableViewCellContentView>
@@ -1016,8 +1049,8 @@ Generate QR code Show QR code to PetBot PetBot will say "Thanks!"</string>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="zeH-ip-cgZ">
-                                                    <frame key="frameInset" minX="307" minY="6" width="51" height="31"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <frame key="frameInset" minY="50.00%" width="51" height="31" maxX="17"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                                 </switch>
                                             </subviews>
                                         </tableViewCellContentView>
@@ -1033,15 +1066,15 @@ Generate QR code Show QR code to PetBot PetBot will say "Thanks!"</string>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vnO-4g-MzU">
-                                                    <frame key="frameInset" minX="123" minY="11" width="135" height="21"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <frame key="frameInset" minY="50.00%" width="135" height="21" maxX="117"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" continuous="NO" maximumValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="zEG-rJ-mnh">
-                                                    <frame key="frameInset" minX="265" minY="7" width="94" height="29"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <frame key="frameInset" minY="50.00%" width="94" height="29" maxX="16"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                                 </stepper>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="EEo-7t-AMc">
                                                     <frame key="frameInset" minX="15" minY="4" width="34" height="21"/>
@@ -1064,37 +1097,39 @@ Generate QR code Show QR code to PetBot PetBot will say "Thanks!"</string>
                                             <outlet property="ui_stepper" destination="zEG-rJ-mnh" id="Qle-bc-RGv"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="RecordCell" rowHeight="172" id="NjQ-nX-qdt" customClass="RecordCell">
-                                        <rect key="frame" x="0.0" y="248" width="375" height="172"/>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="RecordCell" rowHeight="146" id="NjQ-nX-qdt" customClass="RecordCell">
+                                        <rect key="frame" x="0.0" y="248" width="375" height="146"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="NjQ-nX-qdt" id="Cza-7n-dGU">
-                                            <frame key="frameInset" width="375" height="171"/>
+                                            <frame key="frameInset" width="375" height="145"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" fixedFrame="YES" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="t9S-7C-JeD">
-                                                    <frame key="frameInset" minX="22" minY="20" width="330" height="2"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <progressView opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" semanticContentAttribute="playback" verticalHuggingPriority="750" fixedFrame="YES" progressViewStyle="bar" translatesAutoresizingMaskIntoConstraints="NO" id="t9S-7C-JeD">
+                                                    <frame key="frameInset" minX="22" minY="19" height="3" maxX="23"/>
+                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                                    <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <color key="tintColor" red="0.85770797729492188" green="0.047220458015242044" blue="0.15725353017526189" alpha="1" colorSpace="calibratedRGB"/>
                                                 </progressView>
-                                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IVh-5T-LeK">
-                                                    <frame key="frameInset" minX="53" minY="41" width="49" height="30"/>
+                                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IVh-5T-LeK" customClass="PBHollowButton">
+                                                    <frame key="frameInset" minX="22" minY="29" width="120" height="30"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <state key="normal" title="Record"/>
                                                 </button>
-                                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1qr-01-Q4C">
-                                                    <frame key="frameInset" minX="261" minY="41" width="62" height="30"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1qr-01-Q4C" customClass="PBHollowButton">
+                                                    <frame key="frameInset" minY="29" width="120" height="30" maxX="23"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                                                     <state key="normal" title="Playback"/>
                                                 </button>
-                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Sound name" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="pNb-7g-aZv">
-                                                    <frame key="frameInset" minX="19" minY="91" width="333" height="30"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Sound name" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="pNb-7g-aZv" customClass="PBTextField">
+                                                    <frame key="frameInset" minX="22" minY="67" height="30" maxX="23"/>
+                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                                     <nil key="textColor"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <textInputTraits key="textInputTraits"/>
                                                 </textField>
-                                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Pu7-pQ-eAl">
-                                                    <frame key="frameInset" minX="143" minY="132" width="88" height="30"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Pu7-pQ-eAl" customClass="PBHollowButton">
+                                                    <frame key="frameInset" minX="29.87%" minY="105" width="40.00%" height="30"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <state key="normal" title="Upload/Save"/>
                                                 </button>
                                             </subviews>
@@ -1108,7 +1143,7 @@ Generate QR code Show QR code to PetBot PetBot will say "Thanks!"</string>
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="SoundClipCell" id="MLX-eE-9pR" customClass="SoundClipCell">
-                                        <rect key="frame" x="0.0" y="420" width="375" height="44"/>
+                                        <rect key="frame" x="0.0" y="394" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="MLX-eE-9pR" id="d1o-Lu-5qE">
                                             <frame key="frameInset" width="375" height="43"/>
@@ -1132,7 +1167,7 @@ Generate QR code Show QR code to PetBot PetBot will say "Thanks!"</string>
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="DetailCell" textLabel="jGN-gY-c3J" detailTextLabel="WRJ-ga-sCX" style="IBUITableViewCellStyleSubtitle" id="jXT-zG-qqd">
-                                        <rect key="frame" x="0.0" y="464" width="375" height="44"/>
+                                        <rect key="frame" x="0.0" y="438" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="jXT-zG-qqd" id="hXF-RS-mEj">
                                             <frame key="frameInset" width="375" height="43"/>
@@ -1156,7 +1191,7 @@ Generate QR code Show QR code to PetBot PetBot will say "Thanks!"</string>
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="DetailRightCell" textLabel="ans-QB-4wa" detailTextLabel="7Bp-h0-QEs" style="IBUITableViewCellStyleValue1" id="na5-r3-Ov8">
-                                        <rect key="frame" x="0.0" y="508" width="375" height="44"/>
+                                        <rect key="frame" x="0.0" y="482" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="na5-r3-Ov8" id="fzl-Xo-mAL">
                                             <frame key="frameInset" width="375" height="43"/>
@@ -1185,16 +1220,33 @@ Generate QR code Show QR code to PetBot PetBot will say "Thanks!"</string>
                                     <outlet property="delegate" destination="s5a-HO-x0s" id="AqU-wC-Uj8"/>
                                 </connections>
                             </tableView>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Y36-qx-8dQ" customClass="PBHollowButton">
-                                <frame key="frameInset" minX="273" minY="629" width="86" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Done"/>
-                                <connections>
-                                    <action selector="touchDone:" destination="s5a-HO-x0s" eventType="touchUpInside" id="QrN-i1-PzA"/>
-                                </connections>
-                            </button>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="NQK-OB-RAY">
+                                <frame key="frameInset" height="44"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <items>
+                                    <barButtonItem style="plain" id="gKR-iU-IaJ">
+                                        <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="Y36-qx-8dQ" customClass="PBHollowButton">
+                                            <rect key="frame" x="16" y="7" width="86" height="30"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <state key="normal" title="Done"/>
+                                            <connections>
+                                                <action selector="touchDone:" destination="s5a-HO-x0s" eventType="touchUpInside" id="QrN-i1-PzA"/>
+                                            </connections>
+                                        </button>
+                                        <connections>
+                                            <action selector="touchDone:" destination="s5a-HO-x0s" id="RrF-tP-BZn"/>
+                                        </connections>
+                                    </barButtonItem>
+                                </items>
+                            </toolbar>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="qVY-Aq-mIU" firstAttribute="width" secondItem="NOD-Bj-rg2" secondAttribute="width" id="XEt-wQ-xv5"/>
+                            <constraint firstItem="qVY-Aq-mIU" firstAttribute="top" secondItem="SAg-IK-0Lq" secondAttribute="bottom" constant="8" id="dPW-Pp-HmI"/>
+                            <constraint firstItem="qVY-Aq-mIU" firstAttribute="centerX" secondItem="NOD-Bj-rg2" secondAttribute="centerX" id="qjJ-91-eTW"/>
+                            <constraint firstItem="SdL-22-ucC" firstAttribute="top" secondItem="qVY-Aq-mIU" secondAttribute="bottom" constant="46" id="vQ3-PL-rsH"/>
+                        </constraints>
                     </view>
                     <connections>
                         <outlet property="doneButton" destination="Y36-qx-8dQ" id="Phb-82-Xz3"/>
@@ -1220,9 +1272,7 @@ Generate QR code Show QR code to PetBot PetBot will say "Thanks!"</string>
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="RVm-Uj-1sh">
-                                <frame key="frameInset" minY="28" width="375" height="593"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="RVm-Uj-1sh">
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="SoundClipCell" id="nt3-e5-gIR" customClass="SoundClipCell">
@@ -1232,21 +1282,23 @@ Generate QR code Show QR code to PetBot PetBot will say "Thanks!"</string>
                                             <frame key="frameInset" width="375" height="43"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dBO-yx-XSA">
-                                                    <frame key="frameInset" minX="19" minY="8" width="296" height="30"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <state key="normal" title="Button"/>
-                                                </button>
-                                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FEY-60-96T">
-                                                    <frame key="frameInset" minX="312" minY="8" width="55" height="30"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FEY-60-96T" customClass="PBHollowButton">
+                                                    <frame key="frameInset" minY="8" width="84" height="30" maxX="8"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                                                     <state key="normal" title="DELETE"/>
                                                 </button>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fVG-2I-ghM">
+                                                    <frame key="frameInset" minX="8" minY="11" width="74.39%" height="21"/>
+                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
                                             </subviews>
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="removeButton" destination="FEY-60-96T" id="ibz-uB-s2l"/>
-                                            <outlet property="selectButton" destination="dBO-yx-XSA" id="UfV-NQ-tUF"/>
+                                            <outlet property="ui_label" destination="fVG-2I-ghM" id="sAU-v9-658"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -1255,16 +1307,33 @@ Generate QR code Show QR code to PetBot PetBot will say "Thanks!"</string>
                                     <outlet property="delegate" destination="EBt-dg-RDn" id="Pia-aw-Q6z"/>
                                 </connections>
                             </tableView>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ocH-ra-c6d" customClass="PBHollowButton">
-                                <frame key="frameInset" minX="270" minY="629" width="85" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Done"/>
-                                <connections>
-                                    <action selector="touchDone:" destination="EBt-dg-RDn" eventType="touchUpInside" id="PPG-Y2-p44"/>
-                                </connections>
-                            </button>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Ib4-Wz-Mqh">
+                                <frame key="frameInset" height="44"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <items>
+                                    <barButtonItem style="plain" id="3T9-n8-NbM">
+                                        <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="ocH-ra-c6d" customClass="PBHollowButton">
+                                            <rect key="frame" x="16" y="7" width="85" height="30"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <state key="normal" title="Done"/>
+                                            <connections>
+                                                <action selector="touchDone:" destination="EBt-dg-RDn" eventType="touchUpInside" id="PPG-Y2-p44"/>
+                                            </connections>
+                                        </button>
+                                        <connections>
+                                            <action selector="touchDone:" destination="EBt-dg-RDn" id="i8M-8E-Zku"/>
+                                        </connections>
+                                    </barButtonItem>
+                                </items>
+                            </toolbar>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="RVm-Uj-1sh" firstAttribute="centerX" secondItem="tfB-lS-Lcr" secondAttribute="centerX" id="AEF-xt-NVw"/>
+                            <constraint firstItem="RVm-Uj-1sh" firstAttribute="width" secondItem="tfB-lS-Lcr" secondAttribute="width" id="edG-SX-2UJ"/>
+                            <constraint firstItem="nN2-Lb-DJE" firstAttribute="top" secondItem="RVm-Uj-1sh" secondAttribute="bottom" constant="46" id="nZh-Hm-nJV"/>
+                            <constraint firstItem="RVm-Uj-1sh" firstAttribute="top" secondItem="Hta-Af-oZl" secondAttribute="bottom" constant="8" id="r3l-VM-Cqw"/>
+                        </constraints>
                     </view>
                     <connections>
                         <outlet property="doneButton" destination="ocH-ra-c6d" id="Rlg-Vx-56d"/>
@@ -1275,11 +1344,16 @@ Generate QR code Show QR code to PetBot PetBot will say "Thanks!"</string>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ZPs-LX-kHM" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <exit id="wzJ-zO-qog" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="2148" y="11.244377811094454"/>
+            <point key="canvasLocation" x="2146.4000000000001" y="10.344827586206897"/>
         </scene>
     </scenes>
     <resources>
         <image name="8925898_l.jpg" width="2513" height="1669"/>
+        <image name="bell" width="80" height="80"/>
+        <image name="exit" width="80" height="80"/>
+        <image name="gear" width="80" height="80"/>
         <image name="splash2.png" width="560" height="170"/>
+        <image name="treat" width="81" height="81"/>
+        <image name="video_camera" width="81" height="81"/>
     </resources>
 </document>

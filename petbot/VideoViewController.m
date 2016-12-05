@@ -32,7 +32,38 @@
 @implementation VideoViewController
 
 
-
+-(void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+    
+    NSArray * landscape_constraints = [NSArray arrayWithObjects:_selfieLandScapeVertical,_selfieLandScapeHorizontal, _alertLandScapeVertical,_alertLandScapeHorizontal, nil];
+    NSArray * portrait_constraints = [NSArray arrayWithObjects:_selfiePortraitVertical,_selfiePortraitHorizontal,_alertPortraitVertical, _alertPortraitHorizontal, nil];
+    [coordinator animateAlongsideTransition:^(id<UIViewControllerTransitionCoordinatorContext> context)
+     {
+         UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
+         // do whatever
+         if (UIInterfaceOrientationIsPortrait(orientation)){
+             
+             
+             //portrait
+             [NSLayoutConstraint deactivateConstraints:landscape_constraints];
+             [NSLayoutConstraint activateConstraints:portrait_constraints];
+         } else {
+             
+             //landscape
+             [NSLayoutConstraint deactivateConstraints:portrait_constraints];
+             [NSLayoutConstraint activateConstraints:landscape_constraints];
+             //[_selfieLandScapeVertical enable
+         }
+     } completion:^(id<UIViewControllerTransitionCoordinatorContext> context)
+     {
+         
+     }];
+    
+    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+    
+    if(size.width > size.height) {
+    } else {
+    }
+}
 /*-(void)soundList {
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     dispatch_async(queue, ^{
@@ -70,20 +101,32 @@
 }
 
 - (IBAction)playSound:(id)sender {
+    
+    AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
         dispatch_async(queue, ^{
             NSMutableArray * files = [self pbserverLSWithType:@"mp3"];
-            if ([files count]>0) {
-                NSMutableArray * file = [files objectAtIndex:0];
-                NSString * filekey = [file objectAtIndex:0];
-                NSString * url = [NSString stringWithFormat:@"%s%@/%@",HTTPS_ADDRESS_PB_DL,pubsubserver_secret,filekey];
+            
+            NSString * sound_fid = [[NSUserDefaults standardUserDefaults] stringForKey:@"alert_sound_fid"];
+            bool found = false;
+            for (NSArray * ar in files) {
+                if ([ar[0] isEqualToString:sound_fid]) {
+                    found=true;
+                    break;
+                }
+            }
+            if (sound_fid==nil || [sound_fid isEqualToString:@""] || found==false) {
+                sound_fid = @"00000000000000000000000000000000"; //default alert sound
+            }
+            
+                //NSMutableArray * file = [files objectAtIndex:0];
+                //NSString * filekey = [file objectAtIndex:0];
+                NSString * url = [NSString stringWithFormat:@"%s%@/%@",HTTPS_ADDRESS_PB_DL,pubsubserver_secret,sound_fid];
                 //tell the petbot to play this!
                 NSString * pb_sound_str = [NSString stringWithFormat:@"PLAYURL %@",url];
                 
-                
                 [self send_msg:[pb_sound_str UTF8String] type:(PBMSG_SOUND | PBMSG_REQUEST | PBMSG_STRING)];
                 [self playSoundFromURL:url];
-            }
         }
     );
 }
@@ -102,6 +145,8 @@
 - (IBAction)selfiePressed:(id)sender {
     //first lets check if there is selfies waiting
     [selfie_button setEnabled:FALSE];
+    
+    AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     dispatch_async(queue, ^{
         NSURL * url = [NSURL URLWithString:[NSString stringWithFormat:@"%s%@", HTTPS_ADDRESS_PB_SELFIE_LAST, pubsubserver_secret]];
@@ -446,10 +491,8 @@
     [player play];
 }
 
-- (IBAction)longPressSound:(UILongPressGestureRecognizer*)sender {
-     if (sender.state == UIGestureRecognizerStateBegan) {
+- (IBAction)showMenu:(id)sender {
             [self performSegueWithIdentifier:@"segueToSound" sender:self];
-     }
 }
 
 

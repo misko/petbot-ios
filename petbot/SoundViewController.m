@@ -5,8 +5,11 @@
 //  Created by Misko Dzamba on 2016-05-09.
 //  Copyright © 2016 PetBot. All rights reserved.
 //
-
+#import "UIColor+PBColor.h"
+#import <AVFoundation/AVFoundation.h>
+#import <AudioToolbox/AudioServices.h>
 #import "RecordCell.h"
+#import "PBTextField.h"
 #import "SoundClipCell.h"
 #import "SwitchCell.h"
 #import "ValueCell.h"
@@ -14,6 +17,7 @@
 #import "SliderCell.h"
 #import "SoundViewController.h"
 #import "SoundPickerController.h"
+#import "PBButton.h"
 #include "tcp_utils.h"
 #include "nice_utils.h"
 #include "pb.h"
@@ -40,6 +44,16 @@
     
     UILabel * ui_selfie_timeout_text;
     UILabel * ui_selfie_length_text;
+    
+    NSURL * outputFileURL;
+    AVAudioPlayer *player;
+    AVAudioRecorder *recorder;
+    UIProgressView * record_progress;
+    NSTimer * record_timer;
+    
+    RecordCell * rc ;
+    
+    int max_record_time;
 }
 @property (strong, nonatomic) IBOutlet UISlider *volumeSlider;
 @property (strong, nonatomic) IBOutlet UIButton *doneButton;
@@ -153,7 +167,7 @@
     }
     if ([cell_name isEqualToString:@"selfie_sound"]) {
         ButtonCell * bc = cell;
-        if (sounds!=nil) {
+        if (sounds!=nil && [config objectForKey:@"selfie_sound"]!=nil) {
             [bc.ui_button addTarget:self action:@selector(selfieSoundSelect:) forControlEvents:UIControlEventTouchUpInside];
             [bc.ui_button setEnabled:true];
         } else {
@@ -168,6 +182,14 @@
         } else {
             [bc.ui_button setEnabled:false];
         }
+    }
+    if ([cell_name isEqualToString:@"record"]) {
+        rc = cell;
+        [rc.ui_record_button addTarget:self action:@selector(recordTapped:) forControlEvents:UIControlEventTouchUpInside];
+        [rc.ui_play_button addTarget:self action:@selector(playTapped:) forControlEvents:UIControlEventTouchUpInside];
+        [rc.ui_upload_button addTarget:self action:@selector(uploadTapped:) forControlEvents:UIControlEventTouchUpInside];
+        
+        
     }
 
     //system stuff
@@ -394,12 +416,45 @@
     
 }
 
+-(void)setupSound {
+    // Disable Stop/Play button when application launches
+    //[_stopButton setEnabled:NO];
+    //[_playButton setEnabled:NO];
+    
+    // Set the audio file
+    NSArray *pathComponents = [NSArray arrayWithObjects:
+                               [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject],
+                               @"petbot_sound_clip.mp4a",
+                               nil];
+    outputFileURL = [NSURL fileURLWithPathComponents:pathComponents];
+    
+    
+    // Setup audio session
+    AVAudioSession *session = [AVAudioSession sharedInstance];
+    [session setCategory:AVAudioSessionCategoryPlayAndRecord error:nil];
+    
+    // Define the recorder setting
+    NSMutableDictionary *recordSetting = [[NSMutableDictionary alloc] init];
+    
+    [recordSetting setValue:[NSNumber numberWithInt:kAudioFormatMPEG4AAC] forKey:AVFormatIDKey];
+    [recordSetting setValue:[NSNumber numberWithFloat:44100.0] forKey:AVSampleRateKey];
+    [recordSetting setValue:[NSNumber numberWithInt: 2] forKey:AVNumberOfChannelsKey];
+    
+    // Initiate and prepare the recorder
+    recorder = [[AVAudioRecorder alloc] initWithURL:outputFileURL settings:recordSetting error:NULL];
+    recorder.delegate = self;
+    recorder.meteringEnabled = YES;
+    [recorder prepareToRecord];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     sounds = nil;
+    
     config = [NSMutableDictionary dictionary];
     [self setupLogin];
     [self connect:3];
+    [self setupSound];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         sounds = [self pbserverLSWithType:@"mp3"];
@@ -508,5 +563,133 @@
     
     
 }
+
+
+-(IBAction)uploadTapped:(id)sender {
+    NSLog(@"Upload tapped");
+    if ([[rc.ui_sound_name text] isEqualToString:@""]) {
+        [rc.ui_sound_name colorRed];
+        [self toastStatus:false Message:@"Sound clip name cannot be blank!"];
+        return ;
+    }
+    
+    [rc.ui_sound_name colorBlue];
+    [self uploadFile:outputFileURL withFilename:[rc.ui_sound_name text] withCallBack:^(BOOL ok) {
+        NSLog(@"Upload done?");
+        dispatch_async(dispatch_get_main_queue(), ^{
+            sounds=nil;
+            [_tableview reloadData];
+        });
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            sounds = [self pbserverLSWithType:@"mp3"];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [_tableview reloadData];
+            });
+        });
+    }];
+    /*^
+     */
+}
+
+
+- (IBAction)playTapped:(id)sender {
+    if (recorder.recording) {
+        [self stopRecording];
+    }
+    [rc.progressView setProgressTintColor:[UIColor PBBlue]];
+        player = [[AVAudioPlayer alloc] initWithContentsOfURL:recorder.url error:nil];
+        [player setDelegate:self];
+        [player play];
+        
+        if (record_timer!=nil) {
+            [record_timer invalidate];
+            record_timer=nil;
+        }
+        record_timer = [NSTimer scheduledTimerWithTimeInterval:0.3 target:self selector:@selector(updateProgress) userInfo:nil repeats:YES];
+}
+
+-(void)startRecording {
+    
+    [rc.progressView setProgressTintColor:[UIColor PBRed]];
+    if (record_timer!=nil) {
+        [record_timer invalidate];
+        record_timer=nil;
+    }
+    AVAudioSession *session = [AVAudioSession sharedInstance];
+    [session setActive:YES error:nil];
+    
+    // Start recording
+    [recorder record];
+    record_timer = [NSTimer scheduledTimerWithTimeInterval:0.3 target:self selector:@selector(updateProgress) userInfo:nil repeats:YES];
+    [rc.ui_record_button setTitle:@"Record Done" forState:UIControlStateNormal];
+    
+    [rc.ui_play_button setEnabled:NO];
+}
+
+-(void)stopRecording {
+    
+    if (record_timer!=nil) {
+        [record_timer invalidate];
+        record_timer=nil;
+    }
+    // stop recording
+    [recorder stop];
+    [rc.ui_record_button setTitle:@"Record" forState:UIControlStateNormal];
+    
+    AVAudioSession *audioSession = [AVAudioSession sharedInstance];
+    [audioSession setActive:NO error:nil];
+    
+    [rc.ui_play_button setEnabled:YES];
+}
+
+//audio delegates
+- (IBAction)recordTapped:(id)sender {
+    // Stop the audio player before recording
+    if (player.playing) {
+        [player stop];
+    }
+    
+    if (!recorder.recording) {
+        [self startRecording];
+    } else {
+        [self stopRecording];
+    }
+    
+    //[_stopButton setEnabled:YES];
+}
+
+- (void)updateProgress {
+    // Update the slider about the music time
+    if([recorder isRecording]) {
+        [rc.progressView setProgress:recorder.currentTime/SOUND_MAX_RECORD];
+        if (recorder.currentTime>SOUND_MAX_RECORD) {
+            [self recordTapped:nil];
+        }
+    } else if ([player isPlaying]) {
+        [rc.progressView setProgress:player.currentTime/SOUND_MAX_RECORD];
+    }
+}
+
+- (void) audioPlayerDidFinishPlaying:(AVAudioPlayer *)player successfully:(BOOL)flag{
+    /*UIAlertView *alert = [[UIAlertView alloc] initWithTitle: @"Done"
+     message: @"Finish playing the recording!"
+     delegate: nil
+     cancelButtonTitle:@"OK"
+     otherButtonTitles:nil];
+     [alert show];*/
+    
+    if (record_timer!=nil) {
+        [record_timer invalidate];
+        record_timer=nil;
+    }
+}
+
+
+- (void) audioRecorderDidFinishRecording:(AVAudioRecorder *)avrecorder successfully:(BOOL)flag{
+    //[_recordPauseButton setTitle:@"Record" forState:UIControlStateNormal];
+    
+    [rc.ui_play_button setEnabled:YES];
+}
+
 
 @end

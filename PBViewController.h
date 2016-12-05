@@ -34,4 +34,5 @@
 -(NSMutableArray*)pbserverLSWithType:(NSString *)ty;
 
 -(NSString *)secondsToStr:(float )sec;
+-(void) uploadFile:(NSURL *)fileURL withFilename:(NSString *)filename withCallBack:(void (^)(BOOL ok))cb;
 @end

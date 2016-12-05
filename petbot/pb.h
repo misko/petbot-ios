@@ -13,6 +13,7 @@
 #define HTTPS_ADDRESS "https://petbot.ca:5000/"
 #define HTTPS_ADDRESS_PB_STATIC HTTPS_ADDRESS "static/"
 #define HTTPS_ADDRESS_AUTH HTTPS_ADDRESS "AUTH"
+#define HTTPS_ADDRESS_DEAUTH HTTPS_ADDRESS "DEAUTH"
 #define HTTPS_ADDRESS_QRCODE_JSON HTTPS_ADDRESS "PB_QRCODE_JSON"
 #define HTTPS_ADDRESS_SETUP_CHECK HTTPS_ADDRESS "SETUP/CHECK"
 #define HTTPS_ADDRESS_PB_REGISTER HTTPS_ADDRESS "PB_REGISTER"
@@ -30,6 +31,8 @@
 
 #define SELFIE_FN "/tmp/selfie.mov"
 #define SELFIE_TIMEOUT 3600
+
+#define SOUND_MAX_RECORD 10
 
 //#define PBPRINTF(fmt, args...)    fprintf(stderr, fmt, ## args)
 #define PBPRINTF(fmt, args...) fprintf(stderr, "DEBUG: %s:%d:%s(): " fmt, \

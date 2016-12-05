@@ -7,7 +7,9 @@
 //
 #import "SoundClipCell.h"
 
-@implementation SoundClipCell
+@implementation SoundClipCell {
+    
+}
 
 NSString * fileid;
 NSString * name;
@@ -24,6 +26,8 @@ NSString * name;
 -(void)layoutSubviews{
     [super layoutSubviews];
 }
+
+
 
 /*
  - (void)setSelected:(BOOL)selected animated:(BOOL)animated
