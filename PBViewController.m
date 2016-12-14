@@ -50,6 +50,43 @@
     free_pbmsg(m);
 }
 
+-(BOOL)removeFileFID:(NSString *)fid {
+    NSError *error;
+    //make the url request
+    NSURL * url = [NSURL URLWithString:[NSString stringWithFormat:@"%s%@/%@", HTTPS_ADDRESS_PB_RM, pubsubserver_secret,fid]];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+    [request setHTTPMethod:@"POST"];
+    
+    //send the request
+    NSURLResponse * response;
+    NSData * data = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
+    if (error) {
+        NSLog(@"Error,%@", [error localizedDescription]);
+    } else {
+        //parse the return json
+        NSDictionary * d = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
+        if (error) {
+            NSLog(@"Error,%@", [error localizedDescription]);
+        } else {
+            NSNumber *status = d[@"status"];
+            if ([status isEqual:@0]) {
+                NSLog(@"SERVER QUERY FAILED?");
+            } else if ([status isEqual:@1]) {
+                return true;
+            } else {
+                NSLog(@"SERVER FAILED TO RESPOND PROPERLY");
+            }
+        }
+    }
+    return false;
+}
+
+/*NSInteger compareSound(NSArray  *a, NSArray *b, void *context) {
+    NSString * as = a[1];
+    NSString * bs = b[1];
+    return [as compare:bs];
+}*/
+
 -(NSMutableArray*)pbserverLSWithType:(NSString *)ty {
     NSDictionary *newDatasetInfo = [NSDictionary dictionaryWithObjectsAndKeys:@"mp3", @"file_type", @"1", @"start_idx", @"10", @"end_idx",nil];
     
@@ -80,7 +117,20 @@
             if ([status isEqual:@0]) {
                 NSLog(@"SERVER QUERY FAILED?");
             } else if ([status isEqual:@1]) {
-                NSMutableArray * files =  d[@"files"];
+                NSMutableArray * files =  [NSMutableArray arrayWithArray:d[@"files"]];
+                [files sortUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+                    NSArray *array1 = (NSArray *)obj1;
+                    NSArray *array2 = (NSArray *)obj2;
+                    NSString *num1String = [array1 objectAtIndex:1];
+                    NSString *num2String = [array2 objectAtIndex:1];
+                    
+                    return [num1String compare:num2String];
+                }];
+                //[files sortUsingFunction:compareSound context:nil];
+                /*NSArray *sortedArray = [files sortUsingComparator:<#^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2)cmptr#> {
+                    return 0;
+                }];*/
+                //NSArray *sortedArray = [files sortedArrayUsingSelector:@selector(compareSound:)];
                 return files;
             } else {
                 NSLog(@"SERVER FAILED TO RESPOND PROPERLY");
@@ -90,6 +140,10 @@
     return nil;
 }
 
+-(void)setLoginArray:(NSDictionary *)dictionary {
+    NSLog(@"Someone called login array");
+    loginArray = dictionary;
+}
 - (void)setupLogin {
     
     self->loginInfo=[loginArray objectForKey:@"pubsubserver"];
@@ -158,10 +212,6 @@
     return [NSString stringWithFormat:@"%ds", (int)sec];
 }
 
--(void)setLoginArray:(NSDictionary *)dictionary {
-    NSLog(@"Someone called login array");
-    loginArray = dictionary;
-}
 
 /*^(BOOL ok) {
 [self populateSounds];

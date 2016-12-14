@@ -218,11 +218,16 @@ static void state_changed_cb (GstBus *bus, GstMessage *msg, GStreamerBackend *se
     gst_bin_add_many (GST_BIN (pipeline), nicesrc, rtph264depay, avdec_h264, videoconvert, autovideosink,  NULL);
     if (!gst_element_link_filtered( nicesrc, rtph264depay, nicesrc_caps)) {
         fprintf(stderr,"Failed to link 1\n");
-        exit(1);
+        [self quit];
+        return;
+        //exit(1);
     }
     if (!gst_element_link_many(rtph264depay,avdec_h264,videoconvert,autovideosink,NULL)) {
         fprintf(stderr,"Failed to link 2\n");
-        exit(1);
+        
+        [self quit];
+        return;
+        //exit(1);
     }
     
     //g_object_set( G_OBJECT(nicesrc), "port", udp_port,NULL);

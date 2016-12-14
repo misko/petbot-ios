@@ -282,7 +282,7 @@
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if (status!=nil && [[segue identifier] isEqualToString:@"segueToLogin"]) {
         LoginViewController * lc = [segue destinationViewController];
-        [lc setStatus:status];
+        [lc setStatus:status setFlag:FALSE];
         status =nil;
         //ViewController.user = [self.users objectInListAtIndex:[self.tableView indexPathForSelectedRow].row];
     }

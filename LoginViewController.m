@@ -23,6 +23,7 @@
 @interface LoginViewController () {
     IBOutlet UILabel *status_label;
     NSString * status ;
+    BOOL success;
     AVPlayerViewController *playerViewController;
 }
 @end
@@ -33,20 +34,9 @@
 -(void)viewDidAppear:(BOOL)animated {
     //[super viewDidAppear:<#animated#>];
     if (status!=nil) {
-        [self toastStatus:false Message:status];
+        [self toastStatus:success Message:status];
         status=nil;
     }
-}
-
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    
- 
-    
-    playerViewController = [[AVPlayerViewController alloc] init];
-
-
-    
     
     NSString * username = [[NSUserDefaults standardUserDefaults] stringForKey:@"username"];
     NSString * password = [[NSUserDefaults standardUserDefaults] stringForKey:@"password"];
@@ -56,13 +46,21 @@
     if (password!=nil && ![password isEqualToString:@""]) {
         [_password_field setText:password];
     }
+    [_username_field colorBlue];
+    [_password_field colorBlue];
+}
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+ 
     
+    playerViewController = [[AVPlayerViewController alloc] init];
+
+
     [status_label setText:@""];
     [status_label setTextColor:[UIColor PBRed]];
     
     
-    [_username_field colorBlue];
-    [_password_field colorBlue];
     //[[UIButton appearance] setBackgroundColor:[UIColor PBBlue]];
     //[self toastStatus:true message:@"Hello there"];
     
@@ -261,7 +259,8 @@
 }
 */
 
--(void) setStatus:(NSString *)statusx {
+-(void) setStatus:(NSString *)statusx setFlag:(BOOL)successx {
     status = statusx;
+    success = successx;
 }
 @end

@@ -7,6 +7,7 @@
 //
 
 #import "AppDelegate.h"
+#import "tcp_utils.h"
 //http://ashishkakkad.com/2016/09/push-notifications-in-ios-10-objective-c/
 //http://api.shephertz.com/tutorial/Push-Notification-iOS/
 #import <UserNotifications/UserNotifications.h>
@@ -23,7 +24,9 @@
     // Let the device know we want to receive push notifications
     // Register for Push Notitications, if running on iOS 8
     //NSLog(@"LAUNCHED WITH OPTIONS?");
-
+    pbssl_setup();
+    
+    
     [self registerForRemoteNotifications:application];
     if (launchOptions != nil) {
         [self.window makeKeyAndVisible];

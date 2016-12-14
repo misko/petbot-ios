@@ -32,6 +32,7 @@
 
 //FILE OPS
 -(NSMutableArray*)pbserverLSWithType:(NSString *)ty;
+-(BOOL)removeFileFID:(NSString *)fid;
 
 -(NSString *)secondsToStr:(float )sec;
 -(void) uploadFile:(NSURL *)fileURL withFilename:(NSString *)filename withCallBack:(void (^)(BOOL ok))cb;

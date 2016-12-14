@@ -18,5 +18,5 @@
 @property (strong, nonatomic) IBOutlet PBButton *login_button;
 @property (strong, nonatomic) IBOutlet PBButton *forgetme_button;
 
--(void) setStatus:(NSString *)status;
+-(void) setStatus:(NSString *)status setFlag:(BOOL)success;
 @end

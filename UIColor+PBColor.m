@@ -10,7 +10,9 @@
 
 @implementation UIColor (PBColor)
 + (UIColor*)PBBlue {
-    return [UIColor colorWithRed:74.0/255.0 green:144.0/255.0 blue:226.0/255.0 alpha:1];
+    //return [UIColor colorWithRed:74.0/255.0 green:144.0/255.0 blue:226.0/255.0 alpha:1];
+    //4156d6
+    return [UIColor colorWithRed:65.0/255.0 green:86.0/255.0 blue:214.0/255.0 alpha:1];
 }
 + (UIColor*)PBRed {
     return [UIColor colorWithRed:219.0/255.0 green:93.0/255.0 blue:93.0/255.0 alpha:1];

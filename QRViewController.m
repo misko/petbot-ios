@@ -8,6 +8,7 @@
 
 #import "QRViewController.h"
 #import "WifiInfoViewController.h"
+#import "LoginViewController.h"
 #import "pb.h"
 #import "tcp_utils.h"
 
@@ -15,6 +16,7 @@
     NSMutableData * imageData;
     NSDictionary * loginArray;
     NSString * qr_string;
+    NSString * status_str;
 }
 
 @end
@@ -22,12 +24,17 @@
 @implementation QRViewController
 
 
-
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([[segue identifier] isEqualToString:@"QRToWifiInfo"]) {
         WifiInfoViewController * wivc = [segue destinationViewController];
         
         [wivc setLoginArray:loginArray];
+        //ViewController.user = [self.users objectInListAtIndex:[self.tableView indexPathForSelectedRow].row];
+    }
+    if (status_str!=nil && [[segue identifier] isEqualToString:@"segueToLogin"]) {
+        LoginViewController * lc = [segue destinationViewController];
+        [lc setStatus:status_str setFlag:TRUE];
+        status_str =nil;
         //ViewController.user = [self.users objectInListAtIndex:[self.tableView indexPathForSelectedRow].row];
     }
 }
@@ -145,6 +152,13 @@
                                    } else {
                                        // enable the button
                                        NSLog(@"CHECK RETURN FORM LISTEN  - PASS");
+                                       NSString * username = [loginArray objectForKey:@"username"];
+                                       NSString * password = [loginArray objectForKey:@"password"];
+                                       [[NSUserDefaults standardUserDefaults] setValue:username forKey:@"username"];
+                                       [[NSUserDefaults standardUserDefaults] setValue:password forKey:@"password"];
+                                       [[NSUserDefaults standardUserDefaults] synchronize];
+                                       status_str = @"Setup Complete";
+                                       [self performSegueWithIdentifier:@"segueToLogin" sender:self];
                                    }
                                    // update the UI here (and only here to the extent it depends on the json)
                                } else {
@@ -158,8 +172,11 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self updateQR];
     // Do any additional setup after loading the view.
-    
+}
+
+-(void)viewDidAppear:(BOOL)animated {
+    status_str=nil;
+    [self updateQR];
 }
 @end

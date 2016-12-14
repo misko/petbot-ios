@@ -13,6 +13,8 @@
 		CC0559181DF3B72100FA5D0D /* SwitchCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CC0559171DF3B72100FA5D0D /* SwitchCell.m */; };
 		CC05591A1DF3B72C00FA5D0D /* ButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CC0559191DF3B72C00FA5D0D /* ButtonCell.m */; };
 		CC05591C1DF3B73600FA5D0D /* ValueCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CC05591B1DF3B73600FA5D0D /* ValueCell.m */; };
+		CC06187F1DFE300C004175EA /* login_dog.jpg in Resources */ = {isa = PBXBuildFile; fileRef = CC06187E1DFE300C004175EA /* login_dog.jpg */; };
+		CC0618811DFE3525004175EA /* splash.png in Resources */ = {isa = PBXBuildFile; fileRef = CC0618801DFE3525004175EA /* splash.png */; };
 		CC23F85A1CBEDA4B00EA0E62 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = CC23F8591CBEDA4B00EA0E62 /* main.m */; };
 		CC23F85D1CBEDA4B00EA0E62 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = CC23F85C1CBEDA4B00EA0E62 /* AppDelegate.m */; };
 		CC23F8631CBEDA4B00EA0E62 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CC23F8611CBEDA4B00EA0E62 /* Main.storyboard */; };
@@ -46,7 +48,6 @@
 		CC32597E1DB2C8A800EBCDDF /* PBTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = CC32597D1DB2C8A800EBCDDF /* PBTextField.m */; };
 		CC3259811DB2CAAC00EBCDDF /* PBLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = CC3259801DB2CAAC00EBCDDF /* PBLabel.m */; };
 		CC3259841DB2D10200EBCDDF /* PBHollowButton.m in Sources */ = {isa = PBXBuildFile; fileRef = CC3259831DB2D10200EBCDDF /* PBHollowButton.m */; };
-		CC3259871DB2D68A00EBCDDF /* 8925898_l.jpg in Resources */ = {isa = PBXBuildFile; fileRef = CC3259861DB2D68A00EBCDDF /* 8925898_l.jpg */; };
 		CC3C1C141DF3D2E000A7F17B /* RecordCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CC3C1C131DF3D2E000A7F17B /* RecordCell.m */; };
 		CC3C1C171DF3E77D00A7F17B /* SoundClipCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CC3C1C161DF3E77D00A7F17B /* SoundClipCell.m */; };
 		CC4A4CBC1DED530300EFFD51 /* silence.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = CC4A4CBB1DED530300EFFD51 /* silence.mp3 */; };
@@ -132,6 +133,8 @@
 		CC05591D1DF3B74100FA5D0D /* SwitchCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwitchCell.h; sourceTree = "<group>"; };
 		CC05591E1DF3B74800FA5D0D /* ValueCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ValueCell.h; sourceTree = "<group>"; };
 		CC05591F1DF3B75000FA5D0D /* ButtonCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ButtonCell.h; sourceTree = "<group>"; };
+		CC06187E1DFE300C004175EA /* login_dog.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = login_dog.jpg; path = images/login_dog.jpg; sourceTree = "<group>"; };
+		CC0618801DFE3525004175EA /* splash.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = splash.png; sourceTree = SOURCE_ROOT; };
 		CC23F8551CBEDA4A00EA0E62 /* petbot.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = petbot.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CC23F8591CBEDA4B00EA0E62 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		CC23F85B1CBEDA4B00EA0E62 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -190,7 +193,6 @@
 		CC3259821DB2CACB00EBCDDF /* PBLabel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PBLabel.h; sourceTree = "<group>"; };
 		CC3259831DB2D10200EBCDDF /* PBHollowButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PBHollowButton.m; sourceTree = "<group>"; };
 		CC3259851DB2D12600EBCDDF /* PBHollowButton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PBHollowButton.h; sourceTree = "<group>"; };
-		CC3259861DB2D68A00EBCDDF /* 8925898_l.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = 8925898_l.jpg; path = ../../../../../Downloads/8925898_l.jpg; sourceTree = "<group>"; };
 		CC3C1C121DF3D2CF00A7F17B /* RecordCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecordCell.h; sourceTree = "<group>"; };
 		CC3C1C131DF3D2E000A7F17B /* RecordCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RecordCell.m; path = tablecells/RecordCell.m; sourceTree = "<group>"; };
 		CC3C1C151DF3E77500A7F17B /* SoundClipCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SoundClipCell.h; sourceTree = "<group>"; };
@@ -324,7 +326,7 @@
 				CC24114C1DB406C500D1CBFB /* SetupViewController.h */,
 				CC2C33C81D702611007A886B /* SetupViewController.m */,
 				CC2411471DB3F08400D1CBFB /* splash2.png */,
-				CC3259861DB2D68A00EBCDDF /* 8925898_l.jpg */,
+				CC06187E1DFE300C004175EA /* login_dog.jpg */,
 				CC2C33D91D7BEF8F007A886B /* QRViewController.h */,
 				CC2C33D71D7BEF84007A886B /* QRViewController.m */,
 				CC2C33D11D7BEDFB007A886B /* UserInfoViewController.h */,
@@ -384,6 +386,7 @@
 				CC2448C31CC6D9240036CEB3 /* VideoViewController.m */,
 				CC23F85B1CBEDA4B00EA0E62 /* AppDelegate.h */,
 				CC23F85C1CBEDA4B00EA0E62 /* AppDelegate.m */,
+				CC0618801DFE3525004175EA /* splash.png */,
 				CC23F8611CBEDA4B00EA0E62 /* Main.storyboard */,
 				CCDA221D1DF4105300D76CF9 /* SoundPickerController.m */,
 				CCDA221F1DF4106100D76CF9 /* SoundPickerController.h */,
@@ -637,13 +640,14 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CC06187F1DFE300C004175EA /* login_dog.jpg in Resources */,
 				CCDA22551DF5409500D76CF9 /* play_green.pdf in Resources */,
 				CC4A4CBC1DED530300EFFD51 /* silence.mp3 in Resources */,
 				CC23F8681CBEDA4B00EA0E62 /* LaunchScreen.storyboard in Resources */,
+				CC0618811DFE3525004175EA /* splash.png in Resources */,
 				CCDA22511DF5409500D76CF9 /* exit.pdf in Resources */,
 				CCD38ABA1D0B5954005EF60A /* TODO in Resources */,
 				CCDA224E1DF5409500D76CF9 /* video_camera.pdf in Resources */,
-				CC3259871DB2D68A00EBCDDF /* 8925898_l.jpg in Resources */,
 				CC23F8651CBEDA4B00EA0E62 /* Assets.xcassets in Resources */,
 				CCDA22541DF5409500D76CF9 /* play_grey.pdf in Resources */,
 				CC24114E1DB4075400D1CBFB /* petbot_180.png in Resources */,
@@ -1049,6 +1053,7 @@
 					"-DPBSSL",
 					"-DPBTHREADS",
 					"$(inherited)",
+					"-DTARGET_OS_IPHONE",
 				);
 				OTHER_LDFLAGS = (
 					"-lresolv",
@@ -1121,6 +1126,7 @@
 					"-DPBSSL",
 					"-DPBTHREADS",
 					"$(inherited)",
+					"-DTARGET_OS_IPHONE",
 				);
 				OTHER_LDFLAGS = (
 					"-lresolv",

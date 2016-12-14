@@ -211,6 +211,7 @@
     }
     if ([cell_name isEqualToString:@"update"]) {
         ButtonCell * bc = cell;
+        [bc.ui_button setEnabled:false];
         [bc.ui_button addTarget:self action:@selector(updateButton:) forControlEvents:UIControlEventTouchUpInside];
     }
     if ([cell_name isEqualToString:@"help"]) {
@@ -309,6 +310,36 @@
 }
 
 
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    NSArray * cell_names;
+    NSString * section_label = [sections[indexPath.section] lowercaseString];
+    
+    if ([section_label isEqualToString:@"system"]) {
+        cell_names=names_system;
+    } else if ([section_label isEqualToString:@"sound"]) {
+        cell_names=names_sound;
+    } else if ([section_label isEqualToString:@"selfie"]) {
+        cell_names=names_selfie;
+    }
+    NSString * cell_name = cell_names[indexPath.row];
+    
+    
+    if ([cell_name isEqualToString:@"update"]) {
+        [self updateButton:nil];
+    }
+    if ([cell_name isEqualToString:@"help"]) {
+        [self helpButton:nil];
+    }
+    
+    if ([cell_name isEqualToString:@"alert_sound"]) {
+        selecting_selfie_sound=false;
+        selecting_alert_sound=true;
+        [self performSegueWithIdentifier:@"toSoundPicker" sender:self];
+    }
+    
+    return;
+}
+
 /*- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell;
     
@@ -349,10 +380,12 @@
     
 }
 
+
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([[segue identifier] isEqualToString:@"toSoundPicker"]) {
         SoundPickerController * spc = [segue destinationViewController];
         [spc setSounds:sounds];
+        [spc setLoginArray:loginArray];
     }
 }
 
@@ -462,6 +495,7 @@
             [_tableview reloadData];
         });
     });
+    
     labels_selfie = [NSArray arrayWithObjects:@"Enable/Take selfies automatically",@"Frequency/Minimum time between selfies",@"Duration/Length of each selfie",@"Sensitivity/Higher values trigger with greater confidence",@"",@"Motion/Higher values trigger more often",@"", nil];
     types_selfie = [NSArray arrayWithObjects:@"SwitchCell",@"ValueCell",@"ValueCell",@"DetailCell",@"SliderCell",@"DetailCell",@"SliderCell", nil];
     names_selfie = [NSArray arrayWithObjects:@"selfie_enable",@"selfie_timeout",@"selfie_length",@"selfie_sensitivity",@"selfie_sensitivity_slider",@"motion_sensitivity",@"motion_sensitivity_slider",nil];
@@ -567,6 +601,16 @@
 
 -(IBAction)uploadTapped:(id)sender {
     NSLog(@"Upload tapped");
+    NSError *playerError;
+    
+    player = [[AVAudioPlayer alloc] initWithContentsOfURL:outputFileURL error:&playerError];
+    
+    //NSlog(@"%@",player.duration);
+    double duration=player.duration;
+    if (duration<=0.5) {
+        [self toastStatus:false Message:@"Recording too short!"];
+        return;
+    }
     if ([[rc.ui_sound_name text] isEqualToString:@""]) {
         [rc.ui_sound_name colorRed];
         [self toastStatus:false Message:@"Sound clip name cannot be blank!"];
@@ -574,18 +618,43 @@
     }
     
     [rc.ui_sound_name colorBlue];
+    
+    UIAlertView * myAlertView = [[UIAlertView alloc] initWithTitle:@"Uploading..." message:@"\n\n"
+                                            delegate:self
+                                   cancelButtonTitle:nil
+                                   otherButtonTitles:nil];
+    
+    UIActivityIndicatorView *loading = [[UIActivityIndicatorView alloc]
+                                        initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    loading.frame=CGRectMake(150, 150, 16, 16);
+    [myAlertView addSubview:loading];
+    
+    [myAlertView show];
     [self uploadFile:outputFileURL withFilename:[rc.ui_sound_name text] withCallBack:^(BOOL ok) {
-        NSLog(@"Upload done?");
-        dispatch_async(dispatch_get_main_queue(), ^{
-            sounds=nil;
-            [_tableview reloadData];
-        });
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            sounds = [self pbserverLSWithType:@"mp3"];
+        
+        if (ok) {
             dispatch_async(dispatch_get_main_queue(), ^{
+                sounds=nil;
+                
+                [myAlertView dismissWithClickedButtonIndex:0 animated:YES];
                 [_tableview reloadData];
+                
+                //refresh the sound list in a seperate thread
+                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                    sounds = [self pbserverLSWithType:@"mp3"];
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [_tableview reloadData];
+                        [self toastStatus:true Message:@"Sound upload successful!"];
+                    });
+                });
             });
-        });
+        } else {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [myAlertView dismissWithClickedButtonIndex:0 animated:YES];
+            [self toastStatus:false Message:@"Sound upload failed!"];
+            });
+            
+        }
     }];
     /*^
      */
@@ -611,7 +680,7 @@
             [record_timer invalidate];
             record_timer=nil;
         }
-        record_timer = [NSTimer scheduledTimerWithTimeInterval:0.3 target:self selector:@selector(updateProgress) userInfo:nil repeats:YES];
+        record_timer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(updateProgress) userInfo:nil repeats:YES];
 }
 
 -(void)startRecording {
@@ -626,10 +695,11 @@
     
     // Start recording
     [recorder record];
-    record_timer = [NSTimer scheduledTimerWithTimeInterval:0.3 target:self selector:@selector(updateProgress) userInfo:nil repeats:YES];
+    record_timer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(updateProgress) userInfo:nil repeats:YES];
     [rc.ui_record_button setTitle:@"Record Done" forState:UIControlStateNormal];
     
     [rc.ui_play_button setEnabled:NO];
+    [rc.ui_play_button setImage:[UIImage imageNamed:@"play_grey"] forState:UIControlStateNormal];
 }
 
 -(void)stopRecording {
@@ -646,6 +716,7 @@
     [audioSession setActive:NO error:nil];
     
     [rc.ui_play_button setEnabled:YES];
+    [rc.ui_play_button setImage:[UIImage imageNamed:@"play_green"] forState:UIControlStateNormal];
 }
 
 //audio delegates
