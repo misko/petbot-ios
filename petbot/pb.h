@@ -1,6 +1,12 @@
 #ifndef PB_HEADER
 #define PB_HEADER
+
+
+#ifdef TARGET_OS_IPHONE
 #include <agent.h>
+#else 
+#include <nice/agent.h>
+#endif
 
 #ifdef A20
 #endif
@@ -9,11 +15,10 @@
 #endif
 
 
-
-#define HTTPS_ADDRESS "https://petbot.ca:5000/"
 #define HTTPS_ADDRESS_PB_STATIC HTTPS_ADDRESS "static/"
-#define HTTPS_ADDRESS_AUTH HTTPS_ADDRESS "AUTH"
 #define HTTPS_ADDRESS_DEAUTH HTTPS_ADDRESS "DEAUTH"
+#define HTTPS_ADDRESS "https://petbot.ca:5000/"
+#define HTTPS_ADDRESS_AUTH HTTPS_ADDRESS "AUTH"
 #define HTTPS_ADDRESS_QRCODE_JSON HTTPS_ADDRESS "PB_QRCODE_JSON"
 #define HTTPS_ADDRESS_SETUP_CHECK HTTPS_ADDRESS "SETUP/CHECK"
 #define HTTPS_ADDRESS_PB_REGISTER HTTPS_ADDRESS "PB_REGISTER"
@@ -28,11 +33,11 @@
 #define HTTPS_ADDRESS_PB_SELFIE_COUNT HTTPS_ADDRESS "FILES_SELFIE_COUNT/"
 #define HTTPS_ADDRESS_PB_SELFIE_LAST HTTPS_ADDRESS "FILES_SELFIE_LAST/"
 
+#define SELFIE_TIMEOUT 3600
+ 
+#define SOUND_MAX_RECORD 10
 
 #define SELFIE_FN "/tmp/selfie.mov"
-#define SELFIE_TIMEOUT 3600
-
-#define SOUND_MAX_RECORD 10
 
 //#define PBPRINTF(fmt, args...)    fprintf(stderr, fmt, ## args)
 #define PBPRINTF(fmt, args...) fprintf(stderr, "DEBUG: %s:%d:%s(): " fmt, \
@@ -52,16 +57,32 @@ typedef struct pb_nice_io {
    GMutex negotiate_mutex;
    char * our_nice;
    char * other_nice;
-    
 } pb_nice_io;
 
 #ifndef TARGET_OS_IPHONE
 
+extern float selfie_dog_sensitivity;
+extern float selfie_cat_sensitivity;
+extern float selfie_pet_sensitivity;
+extern float selfie_mot_sensitivity;
+extern float selfie_person_sensitivity;
+extern int selfie_timeout;
+extern int selfie_length;
+extern int stddev_multiplier;
+extern long master_volume;
+extern int pb_color_fx;
+extern int pb_exposure;
+extern int pb_hflip;
+extern int pb_vflip;
+extern int pb_white_balance;
+
 extern char * pb_path;
 extern char * pb_config_path;
 extern char * pb_tmp_path;
+extern char * pb_config_file_path;
 extern int pty_master, pty_slave;
 
+void * get_next_token(char ** s) ;
 float xor_float(float f, char chewbacca);
 int cp(const char *to , const char * from);
 char * next_tok(char * str, char d);
@@ -81,6 +102,10 @@ char * executable_path();
 char * pb_readFile(char * fn);
 char * pb_writeFile(char *fn, void *d , size_t sz);
 char * pb_rewrite(char * config, char * output_fn, char ** keys, char ** values, int n) ;
+
+void pb_config_read();
+void pb_config_write();
+int set_config(char * pname, char * v_str);
 
 #endif
 #endif

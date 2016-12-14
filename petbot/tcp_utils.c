@@ -30,6 +30,52 @@
 #include <openssl/pem.h>
 #include <openssl/ssl.h>
 #include <openssl/err.h>
+
+/* we have this global to let the callback get easy access to it */ 
+static pthread_mutex_t *lockarray=NULL;
+ 
+#include <openssl/crypto.h>
+static void lock_callback(int mode, int type, char *file, int line) {
+  (void)file;
+  (void)line;
+  if(mode & CRYPTO_LOCK) {
+    pthread_mutex_lock(&(lockarray[type]));
+  }
+  else {
+    pthread_mutex_unlock(&(lockarray[type]));
+  }
+}
+ 
+static unsigned long thread_id(void) {
+  unsigned long ret;
+ 
+  ret=(unsigned long)pthread_self();
+  return ret;
+}
+ 
+static void init_locks(void) {
+  int i;
+ 
+  lockarray=(pthread_mutex_t *)OPENSSL_malloc(CRYPTO_num_locks() *
+                                            sizeof(pthread_mutex_t));
+  for(i=0; i<CRYPTO_num_locks(); i++) {
+    pthread_mutex_init(&(lockarray[i]), NULL);
+  }
+ 
+  CRYPTO_set_id_callback((unsigned long (*)())thread_id);
+  CRYPTO_set_locking_callback((void (*)())lock_callback);
+}
+ 
+static void kill_locks(void) {
+  int i;
+ 
+  CRYPTO_set_locking_callback(NULL);
+  for(i=0; i<CRYPTO_num_locks(); i++)
+    pthread_mutex_destroy(&(lockarray[i]));
+ 
+  OPENSSL_free(lockarray);
+}
+
 #endif
 
 const char * PBSOCK_STATE_STRING[] = {
@@ -67,7 +113,8 @@ const char * PBMSG_TYPES_STRING[] = {
         "KEEP_ALIVE",
         "GPIO",
         "UPDATE",
-	"SYSTEM"
+	"SYSTEM",
+	"WEBRTC"
 };
 
 #ifdef PBSSL
@@ -80,6 +127,18 @@ pbsock* connect_to_server_with_key(const char * hostname, int portno, const char
 pbsock* connect_to_server(const char * hostname, int portno);
 #endif
 
+#ifdef PBSSL 
+int pbssl_setup() {
+	init_locks();
+	return 0;
+}
+
+int pbssl_close() {
+	kill_locks();
+	return 0;
+}
+
+#endif
 
 #ifdef PBSSL
 pbsock * connect_to_server_with_key(const char * hostname, int portno, SSL_CTX* ctx, const char * key) {
@@ -197,6 +256,16 @@ pbsock * new_pbsock(int client_sock, SSL_CTX* ctx, int accept) {
 #else
 pbsock * new_pbsock(int client_sock) {
 #endif
+	struct timeval tv;
+
+	tv.tv_sec =30;
+	tv.tv_usec = 0 ;
+
+	if (setsockopt(client_sock, SOL_SOCKET, SO_RCVTIMEO, (char *)&tv, sizeof tv) == -1) {
+		perror("setsockopt error");
+		return NULL;
+	}
+
 	pbsock * pbs = (pbsock*)calloc(1,sizeof(pbsock));
 	if (pbs==NULL) {
 		PBPRINTF("TCP_UTILS: Failed to amlloc pbssock\n");
@@ -243,10 +312,18 @@ pbsock * new_pbsock(int client_sock) {
 		free_pbsock(pbs);
 		return NULL;
 	}
+	if (pthread_mutex_init(&(pbs->waiting_threads_mutex), NULL) != 0) {
+		PBPRINTF("TCP_UTILS: Failed to init pbthreads waiting threads mutex\n");
+		pthread_mutex_destroy(&(pbs->send_mutex));
+		pthread_mutex_destroy(&(pbs->recv_mutex));
+		free_pbsock(pbs);
+		return NULL;
+	}
 	if (pthread_cond_init(&(pbs->cond), NULL) != 0) {
 		PBPRINTF("TCP_UTILS: Failed to init pbthreads cond\n");
 		pthread_mutex_destroy(&(pbs->send_mutex));
 		pthread_mutex_destroy(&(pbs->recv_mutex));
+		pthread_mutex_destroy(&(pbs->waiting_threads_mutex));
 		free_pbsock(pbs);
 		return NULL;
 	}
@@ -268,16 +345,40 @@ void pbsock_set_state(pbsock * pbs, pbsock_state state) {
 }
 
 #ifdef PBTHREADS
+int increment_waiting_threads(pbsock * pbs) {
+	if (pthread_mutex_lock(&(pbs->waiting_threads_mutex))!=0) {
+		PBPRINTF("TCP_UTILS: Failed to get send lock for wait state!\n");
+		exit(1);
+	}
+	pbs->waiting_threads++;
+	pthread_mutex_unlock(&(pbs->waiting_threads_mutex));
+    return 0;
+}
+
+int decrement_waiting_threads(pbsock * pbs) {
+	if (pthread_mutex_lock(&(pbs->waiting_threads_mutex))!=0) {
+		PBPRINTF("TCP_UTILS: Failed to get send lock for wait state!\n");
+		exit(1);
+	}
+	pbs->waiting_threads--;
+	pthread_mutex_unlock(&(pbs->waiting_threads_mutex));
+    return 0;
+}
+#endif
+
+#ifdef PBTHREADS
 //TODO might miss a statechange! if state changes back to original state quickyly - do we care?
 pbsock_state pbsock_wait_state(pbsock *pbs) {
 	if (pbs->state==PBSOCK_EXIT) {
 		return PBSOCK_EXIT; //if we are trying to kill the socket dont take any more waiters
 	}
+
+	increment_waiting_threads(pbs);
+
 	if (pthread_mutex_lock(&(pbs->send_mutex))!=0) {
 		PBPRINTF("TCP_UTILS: Failed to get send lock for wait state!\n");
 		exit(1);
 	}
-	pbs->waiting_threads++;
 	pbsock_state old_state = pbs->state;
 	while (old_state==pbs->state) {
 		PBPRINTF("TCP_UTILS: THREAD WAITING ON STATE CHANGE\n");
@@ -287,10 +388,14 @@ pbsock_state pbsock_wait_state(pbsock *pbs) {
 		}
 
 	}
-	pbs->waiting_threads--;
 	pbsock_state new_state = pbs->state;
 	PBPRINTF("TCP_UTILS: THREAD DONE WAITING ON STATE CHANGE\n");
 	pthread_mutex_unlock(&(pbs->send_mutex));
+
+
+
+	decrement_waiting_threads(pbs);
+
 	pthread_cond_broadcast(&(pbs->cond));
 	return new_state;
 }
@@ -314,7 +419,7 @@ void free_pbsock(pbsock *pbs) {
 			pbs->ssl=0;
 		}
 		#endif
-		free(pbs);
+		//free(pbs);
 	} else if (pbs->keep_alive_thread!=0) {
 		PBPRINTF("TCP_UTILS: Setting state to exit\n");
 		pbsock_set_state(pbs,PBSOCK_EXIT);
@@ -323,7 +428,7 @@ void free_pbsock(pbsock *pbs) {
 		#ifdef PBSSL
 		if (pbs->ssl!=NULL) {
 			SSL_free(pbs->ssl);
-			pbs->ssl=0;
+			pbs->ssl = 0;
 		}
 		#endif
 		free(pbs);
@@ -380,11 +485,16 @@ pbmsg * recv_pbmsg(pbsock *pbs) {
 }
 
 pbmsg * recv_all_pbmsg(pbsock *pbs, int read_all) {
+	if (pbs==NULL) {
+		return NULL;
+	}
 	if (pbs->state!=PBSOCK_CONNECTED) {
 		return NULL;
 	}
-#ifdef PBTHREADS 
+#ifdef PBTHREADS
+	increment_waiting_threads(pbs);
 	if (pthread_mutex_lock(&(pbs->recv_mutex))!=0) {
+		decrement_waiting_threads(pbs);
 		PBPRINTF("TCP_UTILS: FAILED TO LOCK!\n");
 		return NULL;
 	}
@@ -394,8 +504,8 @@ pbmsg * recv_all_pbmsg(pbsock *pbs, int read_all) {
 	m=new_pbmsg();
 	int read_size=0;
 	do {
-		read_size = SSL_read (pbs->ssl, &m->pbmsg_len, 4);                 
-		read_size += SSL_read (pbs->ssl, &m->pbmsg_type, 4);                 
+		read_size = SSL_read (pbs->ssl, &m->pbmsg_len, 4);
+		read_size += SSL_read (pbs->ssl, &m->pbmsg_type, 4);
 		read_size += SSL_read (pbs->ssl, &m->pbmsg_from, 4);                 
 		if (read_size!=12) {
 			PBPRINTF("TCP_UTILS: Failed to recieve correct size... %d\n",read_size);
@@ -404,6 +514,7 @@ pbmsg * recv_all_pbmsg(pbsock *pbs, int read_all) {
 			}
 			#ifdef PBTHREADS
 			pthread_mutex_unlock(&(pbs->recv_mutex));
+			decrement_waiting_threads(pbs);
 			#endif
 			free_pbmsg(m);
 			return NULL;
@@ -418,6 +529,7 @@ pbmsg * recv_all_pbmsg(pbsock *pbs, int read_all) {
 		PBPRINTF("TCP_UTILS: Failed to malloc data for pbmsg\n");
 		#ifdef PBTHREADS
 		pthread_mutex_unlock(&(pbs->recv_mutex));
+		decrement_waiting_threads(pbs);
 		#endif
 		free_pbmsg(m);
 		return NULL;
@@ -429,17 +541,23 @@ pbmsg * recv_all_pbmsg(pbsock *pbs, int read_all) {
 			PBPRINTF("TCP_UTILS: Something failed in read of TCP socket\n");
 			#ifdef PBTHREADS
 			pthread_mutex_unlock(&(pbs->recv_mutex));
+			decrement_waiting_threads(pbs);
 			#endif
 			free_pbmsg(m);
 			return NULL;
 		}
 		read_size+=ret;
 	}
+	if ((m->pbmsg_type & PBMSG_STRING) !=0) {
+		//this is a string, make sure we terminate!
+		m->pbmsg[m->pbmsg_len-1]='\0';
+	}
 #else /// WITHOUT SSL
 	m=recv_fd_pbmsg(pbs->client_sock);
 #endif
 	#ifdef PBTHREADS
 	pthread_mutex_unlock(&(pbs->recv_mutex));
+	decrement_waiting_threads(pbs);
 	#endif
 	return m;
 }
@@ -451,8 +569,10 @@ size_t send_pbmsg(pbsock *pbs, pbmsg * m) {
 	if (pbs->state!=PBSOCK_CONNECTED) {
 		return 0;
 	}
-#ifdef PBTHREADS 
+#ifdef PBTHREADS
+	increment_waiting_threads(pbs);
 	if (pthread_mutex_lock(&(pbs->send_mutex))!=0) {
+		decrement_waiting_threads(pbs);
 		PBPRINTF("TCP_UTILS: FAILED TO LOCK!\n");
 		return 0;
 	}
@@ -469,6 +589,7 @@ size_t send_pbmsg(pbsock *pbs, pbmsg * m) {
 		}
 		#ifdef PBTHREADS
 		pthread_mutex_unlock(&(pbs->send_mutex));
+		decrement_waiting_threads(pbs);
 		#endif
 		PBPRINTF("TCP_UTILS: Failed to send_pbmsg write length\n");
 		return 0;
@@ -481,6 +602,7 @@ size_t send_pbmsg(pbsock *pbs, pbmsg * m) {
 			PBPRINTF("TCP_UTILS: Failed to send message write\n");
 			#ifdef PBTHREADS
 			pthread_mutex_unlock(&(pbs->send_mutex));
+			decrement_waiting_threads(pbs);
 			#endif
 			return 0;
 		}	
@@ -491,6 +613,7 @@ size_t send_pbmsg(pbsock *pbs, pbmsg * m) {
 #endif
 	#ifdef PBTHREADS
 	pthread_mutex_unlock(&(pbs->send_mutex));
+	decrement_waiting_threads(pbs);
 	#endif
 	return ret;
 }
