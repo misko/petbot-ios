@@ -32,7 +32,6 @@
 
 
 -(void)viewDidAppear:(BOOL)animated {
-    //[super viewDidAppear:<#animated#>];
     if (status!=nil) {
         [self toastStatus:success Message:status];
         status=nil;
@@ -50,23 +49,14 @@
     [_password_field colorBlue];
 }
 
+
+
 - (void)viewDidLoad {
     [super viewDidLoad];
- 
-    
     playerViewController = [[AVPlayerViewController alloc] init];
-
 
     [status_label setText:@""];
     [status_label setTextColor:[UIColor PBRed]];
-    
-    
-    //[[UIButton appearance] setBackgroundColor:[UIColor PBBlue]];
-    //[self toastStatus:true message:@"Hello there"];
-    
-
-    // Do any additional setup after loading the view.
-
 }
 - (IBAction)forgetMePressed:(id)sender {
     //only do if able to deauth properly1!!!
@@ -135,35 +125,8 @@
     }
 }
 
--(void)DownloadVideo {
-    //download the file in a seperate thread.
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        NSLog(@"Downloading Started");
-        NSString *urlToDownload = @"https://petbot.ca:5000/static/selfie.mov";
-        NSURL  *url = [NSURL URLWithString:urlToDownload];
-        NSData *urlData = [NSData dataWithContentsOfURL:url];
-        if ( urlData )
-        {
-            NSArray       *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-            NSString  *documentsDirectory = [paths objectAtIndex:0];
-            
-            NSString  *filePath = [NSString stringWithFormat:@"%@/%@", documentsDirectory,@"selfie.mov"];
-            
-            //saving is done on main thread
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [urlData writeToFile:filePath atomically:YES];
-                NSLog(@"File Saved !");
-            });
-        }
-        
-    });
-}
-
 - (IBAction)loginPressed:(id)sender {
     [_login_button setEnabled:FALSE];
-    //return;
-    //TODO should be ASYNC!!
-    
     //build an info object and convert to json
     NSString *uniqueIdentifier = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
     NSString *deviceToken = [[NSUserDefaults standardUserDefaults] objectForKey:@"deviceToken"];
@@ -177,42 +140,30 @@
     NSData* jsonData = [NSJSONSerialization dataWithJSONObject:newDatasetInfo options:0 error:&error];
     
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
-    //NSString * url = [NSString stringWithFormat:@"%s", HTTPS_ADDRESS_QRCODE_JSON];
     [request setURL:[NSURL URLWithString:[NSString stringWithFormat:@"%s", HTTPS_ADDRESS_AUTH]]];
     [request setHTTPMethod:@"POST"];
     [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
     [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
     [request setHTTPBody:jsonData];
-    
-    // print json:
-    NSLog(@"JSON summary: %@", [[NSString alloc] initWithData:jsonData
-                                                     encoding:NSUTF8StringEncoding]);
 
-    
-    //NSOperationQueue *queue = [[NSOperationQueue alloc] init];
-    //[NSURLConnection sendAsynchronousRequest:request queue:queue completionHandler:^(NSURLResponse *response, NSData *data, NSError *error)
-     [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error)
-    {
-        
+     [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
         [_login_button setEnabled:TRUE];
         if (error) {
             NSLog(@"Error,%@", [error localizedDescription]);
             [self toastStatus:false Message:@"Failed to connect to PB server"];
-            [status_label setText:@"Failed to connect"];
-        }
-        else
-        {
-            NSLog(@"%@", [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
+            [status_label setText:[error localizedDescription]];
+        } else {
             loginArray = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
-            NSLog(@"Statuses: %@", loginArray[@"status"]);
             NSNumber *status = loginArray[@"status"];
             if ([status isEqual:@0]) {
-                fprintf(stderr,"Not logged in!");
-                [status_label setText:@"Username/Password wrong"];
-                [_username_field colorRed];
-                [_password_field colorRed];
+                if ([loginArray objectForKey:@"err_msg"]!=nil) {
+                    [status_label setText:@"Username or password invalid"];
+                    [_username_field colorRed];
+                    [_password_field colorRed];
+                } else {
+                    [status_label setText:@"Server error :("];
+                }
             } else if ([status isEqual:@1]) {
-                fprintf(stderr,"Logged in!");
                 [[NSUserDefaults standardUserDefaults] setValue:_username_field.text forKey:@"username"];
                 [[NSUserDefaults standardUserDefaults] setValue:_password_field.text forKey:@"password"];
                 [[NSUserDefaults standardUserDefaults] synchronize];
@@ -220,10 +171,6 @@
                 [self performSegueWithIdentifier:@"streamSegue" sender:self];
             } else {
                 [self toastStatus:false Message:@"Failed to connect to PB server"];
-            }
-            for (NSArray *aDay in loginArray){
-                //Do something
-                NSLog(@"Array: %@", aDay);
             }
         }
     }];
@@ -244,20 +191,7 @@
 
 - (IBAction)backToTheStart:(UIStoryboardSegue *)segue {
     
-    // grab a reference
-    //ViewController *viewController2 = segue.sourceViewController;
-    
-    // access public properties from ViewController2 here
 }
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 -(void) setStatus:(NSString *)statusx setFlag:(BOOL)successx {
     status = statusx;

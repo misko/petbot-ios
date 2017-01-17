@@ -26,13 +26,6 @@
 #define IO_SIZE          0x00300000
 #define SID_MMAP_START   ((SID_BASE_ADDRESS >> 12) << 12)
  
-typedef struct DeviceSID {
-  uint32_t key0;
-  uint32_t key1;
-  uint32_t key2;
-  uint32_t key3;
-} DeviceSID;
-
 #include <grp.h>
 
 #include "pb.h"
@@ -47,6 +40,11 @@ char * pb_config_file_path = NULL;
 char * pb_tmp_path = NULL;
 
 char * root_mount_point = "/";
+
+char * stun_addr = "159.203.252.147";
+int stun_port = 3478;
+char * stun_user = "misko";
+char * stun_passwd = "misko";
 
 float selfie_dog_sensitivity = 0.8;
 float selfie_cat_sensitivity = 0.8;
@@ -383,7 +381,6 @@ char *randstring(int length) {
     char *string = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789,.-#'?!";
     size_t stringLen = strlen(string);        
     char *randomString = NULL;
-
     srand(time(NULL) * length + ++mySeed);
 
     if (length < 1) {
