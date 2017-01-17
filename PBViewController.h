@@ -25,6 +25,7 @@
 -(void)toastPinColor:(UIColor*)c Message:(NSString*)msg;
 -(void)setLoginArray:(NSDictionary *)dictionary;
 -(void)setSounds:(NSArray *)snds;
+-(bool)updatesAllowed ;
 -(NSMutableDictionary *)parseConfig:(NSString*)str;
 
 //PBS ops
