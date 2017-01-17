@@ -47,7 +47,11 @@
 #include <unistd.h>
 #include <gst/gst.h>
 #include <gst/video/video.h>
+#ifdef TARGET_OS_IPHONE
 #include <agent.h>
+#else
+#include <nice/agent.h>
+#endif
 
 #include "pb.h"
 
@@ -85,9 +89,9 @@ static gboolean pipein_remote_info_cb (GIOChannel *source, GIOCondition cond,
 NiceAgent * init_ice(pb_nice_io * pbnio);
 
 //gchar * stun_addr = "stun.stunprotocol.org";
-gchar * stun_addr = "159.203.252.147";
+//gchar * stun_addr = "159.203.252.147";
 //gchar * stun_addr = "petbot.ca";
-guint stun_port = 3478;
+//guint stun_port = 3478;
 
 //guint pipe_to_parent, pipe_from_parent;
 
@@ -390,7 +394,7 @@ NiceAgent * init_ice(pb_nice_io * pbnio) {
   if (pbnio->stream_id == 0)
     g_error("Failed to add stream");
 
-  gboolean ret = nice_agent_set_relay_info(pbnio->agent,pbnio->stream_id,1,stun_addr, stun_port, "misko", "misko",NICE_RELAY_TYPE_TURN_UDP);
+  gboolean ret = nice_agent_set_relay_info(pbnio->agent,pbnio->stream_id,1,stun_addr, stun_port, stun_user, stun_passwd,NICE_RELAY_TYPE_TURN_UDP);
   if (ret==FALSE) {
     PBPRINTF("Failed to set the TURN RELAY!\n");
   }
@@ -593,7 +597,7 @@ str_local_data (NiceAgent *agent, guint _stream_id, guint component_id)
   gchar ipaddr[INET6_ADDRSTRLEN];
   GSList *cands = NULL, *item;
 
-  char * buffer = (char*)malloc(2048*sizeof(char));
+  char * buffer = (char*)malloc(16*1024*sizeof(char));
   if (buffer==NULL) {
     PBPRINTF("failed to ammlloc buffer\n");
     exit(1);

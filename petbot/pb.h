@@ -43,6 +43,14 @@
 #define PBPRINTF(fmt, args...) fprintf(stderr, "DEBUG: %s:%d:%s(): " fmt, \
     __FILE__, __LINE__, __func__, ##args)
 
+typedef struct DeviceSID {
+  uint32_t key0;
+  uint32_t key1;
+  uint32_t key2;
+  uint32_t key3;
+} DeviceSID;
+
+
 typedef struct pb_nice_io {
    NiceAgent *agent;
    guint stream_id;
@@ -59,7 +67,13 @@ typedef struct pb_nice_io {
    char * other_nice;
 } pb_nice_io;
 
+extern char * stun_addr;
+extern int stun_port;
+extern char * stun_user;
+extern char * stun_passwd;
+
 #ifndef TARGET_OS_IPHONE
+
 
 extern float selfie_dog_sensitivity;
 extern float selfie_cat_sensitivity;
@@ -82,6 +96,7 @@ extern char * pb_tmp_path;
 extern char * pb_config_file_path;
 extern int pty_master, pty_slave;
 
+char *randstring(int length);
 void * get_next_token(char ** s) ;
 float xor_float(float f, char chewbacca);
 int cp(const char *to , const char * from);
@@ -107,5 +122,6 @@ void pb_config_read();
 void pb_config_write();
 int set_config(char * pname, char * v_str);
 
+DeviceSID * getSID();
 #endif
 #endif

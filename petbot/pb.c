@@ -1,3 +1,11 @@
+
+char * stun_addr = "159.203.252.147";
+int stun_port = 3478;
+char * stun_user = "misko";
+char * stun_passwd = "misko";
+
+#ifndef TARGET_OS_IPHONE
+
 #include <unistd.h>
 #include <string.h>
 #include <time.h>
@@ -20,7 +28,6 @@
 #include <fcntl.h>
 #include <unistd.h>
 
-
 #define IO_BASE_ADDRESS  0x01c00000
 #define SID_BASE_ADDRESS 0x01c23800
 #define IO_SIZE          0x00300000
@@ -41,10 +48,7 @@ char * pb_tmp_path = NULL;
 
 char * root_mount_point = "/";
 
-char * stun_addr = "159.203.252.147";
-int stun_port = 3478;
-char * stun_user = "misko";
-char * stun_passwd = "misko";
+
 
 float selfie_dog_sensitivity = 0.8;
 float selfie_cat_sensitivity = 0.8;
@@ -761,3 +765,5 @@ char * pb_rewrite(char * config, char * output_fn, char ** keys, char ** values,
 	free(config_contents);
 	return output_fn;
 }
+
+#endif
