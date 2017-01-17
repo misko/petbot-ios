@@ -38,21 +38,18 @@ GST_DEBUG_CATEGORY_STATIC (debug_category);
  * Interface methods
  */
 
--(id) init:(id) uiDelegate videoView:(UIView *)video_view serverInfo:(NSDictionary *)loginInfo vvc:(VideoViewController *)vvcx
+-(id) init:(id) uiDelegate videoView:(UIView *)video_view vvc:(VideoViewController *)vvcx
 {
     main_loop=nil;
     launched=0;
     self->vvc = vvcx;
-   // pubsubserver_server = "127.0.0.1"; // TODO UNCOMMENT FOR LIVE!
-    if (self = [super init])
-    {
+    if (self = [super init]) {
         
         self->ui_delegate = uiDelegate;
         self->ui_video_view = video_view;
         
-        GST_DEBUG_CATEGORY_INIT (debug_category, "tutorial-3", 0, "iOS tutorial 3");
-        gst_debug_set_threshold_for_name("tutorial-3", GST_LEVEL_DEBUG);
-        
+        GST_DEBUG_CATEGORY_INIT (debug_category, "gst-petbot ios", 0, "gst-petbot ios");
+        gst_debug_set_threshold_for_name("gst-petbot ios", GST_LEVEL_DEBUG);
         
         /* Start the bus monitoring task */
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
