@@ -213,10 +213,10 @@
         ButtonCell * bc = cell;
         if ([self updatesAllowed]) {
             [bc.ui_button setEnabled:true];
+            //[bc.ui_button addTarget:self action:@selector(updateButton:) forControlEvents:UIControlEventTouchUpInside];
         } else {
             [bc.ui_button setEnabled:false];
         }
-        [bc.ui_button addTarget:self action:@selector(updateButton:) forControlEvents:UIControlEventTouchUpInside];
     }
     if ([cell_name isEqualToString:@"help"]) {
         ButtonCell * bc = cell;
