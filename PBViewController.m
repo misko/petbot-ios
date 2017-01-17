@@ -81,14 +81,21 @@
     return false;
 }
 
-/*NSInteger compareSound(NSArray  *a, NSArray *b, void *context) {
-    NSString * as = a[1];
-    NSString * bs = b[1];
-    return [as compare:bs];
-}*/
+
+-(bool)updatesAllowed {
+    NSString * x = [loginArray objectForKey:@"updates_allowed"];
+    if (x!=nil) {
+        if (![x isEqualToString:@""] ) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    return false;
+}
 
 -(NSMutableArray*)pbserverLSWithType:(NSString *)ty {
-    NSDictionary *newDatasetInfo = [NSDictionary dictionaryWithObjectsAndKeys:@"mp3", @"file_type", @"1", @"start_idx", @"10", @"end_idx",nil];
+    NSDictionary *newDatasetInfo = [NSDictionary dictionaryWithObjectsAndKeys:@"mp3", @"file_type", @"1", @"start_idx", @"50", @"end_idx",nil];
     
     //make the json payload
     NSError *error;
@@ -141,19 +148,14 @@
 }
 
 -(void)setLoginArray:(NSDictionary *)dictionary {
-    NSLog(@"Someone called login array");
     loginArray = dictionary;
 }
 - (void)setupLogin {
-    
     self->loginInfo=[loginArray objectForKey:@"pubsubserver"];
     
-    //TODO check for errors here?
-    //self->loginInfo=loginInfo;
     pubsubserver_port = [[self->loginInfo objectForKey:@"port"] intValue];
     pubsubserver_secret = [self->loginInfo objectForKey:@"secret"];
     pubsubserver_server = [self->loginInfo objectForKey:@"server"];
-    NSLog(@"server in load is %@ %@",pubsubserver_server,[self->loginInfo objectForKey:@"server"]);
     pubsubserver_username = [self->loginInfo objectForKey:@"username"];
 }
 
@@ -172,7 +174,7 @@
                               kCRToastImageKey : status ? [UIImage imageNamed:@"white_checkmark.png"] : [UIImage imageNamed:@"alert_icon.png"],
                               kCRToastForceUserInteractionKey : @NO
                               };
-    
+    [CRToastManager dismissAllNotifications:true];
     [CRToastManager showNotificationWithOptions:options
                                 completionBlock:^{
                                     NSLog(@"Completed");
@@ -193,6 +195,7 @@
                               kCRToastForceUserInteractionKey : @YES
                               };
     
+    [CRToastManager dismissAllNotifications:true];
     [CRToastManager showNotificationWithOptions:options
                                 completionBlock:^{
                                     NSLog(@"Completed");
