@@ -211,7 +211,11 @@
     }
     if ([cell_name isEqualToString:@"update"]) {
         ButtonCell * bc = cell;
-        [bc.ui_button setEnabled:false];
+        if ([self updatesAllowed]) {
+            [bc.ui_button setEnabled:true];
+        } else {
+            [bc.ui_button setEnabled:false];
+        }
         [bc.ui_button addTarget:self action:@selector(updateButton:) forControlEvents:UIControlEventTouchUpInside];
     }
     if ([cell_name isEqualToString:@"help"]) {
@@ -425,7 +429,17 @@
 }
 
 -(IBAction)updateButton:(id)sender {
-    NSLog(@"GOING TO UPDATE!");
+        [self send_msg:"UPDATE updates@updates.petbot.ca:/" type:(PBMSG_UPDATE | PBMSG_STRING | PBMSG_REQUEST)];
+        UIAlertController *controller = [UIAlertController alertControllerWithTitle:@"Updating..."
+                                                                            message:@"Do not unplug! please wait!"
+                                                                     preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *alertAction = [UIAlertAction actionWithTitle:@"Cancel"
+                                                              style:UIAlertActionStyleDestructive
+                                                            handler:^(UIAlertAction *action) {
+                                                                [self send_msg:"STOP" type:(PBMSG_UPDATE | PBMSG_STRING | PBMSG_REQUEST)];
+                                                            }];
+        [controller addAction:alertAction];
+        [self presentViewController:controller animated:YES completion:nil];
 }
 
 -(IBAction)helpButton:(id)sender {
