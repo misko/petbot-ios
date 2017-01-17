@@ -17,6 +17,7 @@
 
 -(void) setLoginArray:(NSDictionary *)dictionary;
 
+- (IBAction)troubleshoot:(id)sender;
 
 
 @end

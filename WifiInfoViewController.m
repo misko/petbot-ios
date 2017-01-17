@@ -40,6 +40,10 @@
     loginArray = dictionary;
 }
 
+- (IBAction)troubleshoot:(id)sender {
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://petbot.com/help"]];
+}
+
 
 - (UIInterfaceOrientationMask)supportedInterfaceOrientations {
     return UIInterfaceOrientationMaskPortrait + UIInterfaceOrientationMaskPortraitUpsideDown;
