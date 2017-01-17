@@ -18,7 +18,6 @@
     int media_width;
     int media_height;
     int bb_streamer_id;
-    NSString * petbot_state; //connecting, ice_request, ice_negotiate, streaming, logoff
     int ice_thread_pipes_to_child[2];
     int ice_thread_pipes_from_child[2];
     IBOutlet UIActivityIndicatorView *activityIndicator;
@@ -26,6 +25,8 @@
     UIVisualEffectView *blurEffectView;
     pb_nice_io * pbnio;
     NSString * status ;
+    bool bye_pressed;
+    bool petbot_found;
 }
 @end
 
@@ -61,25 +62,11 @@
     [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
     
     if(size.width > size.height) {
+        
     } else {
+        
     }
 }
-/*-(void)soundList {
-    dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
-    dispatch_async(queue, ^{
-        // the slow stuff to be done in the background
-        NSMutableArray * files = [self pbserverLSWithType:@"mp3"];
-        for (NSMutableArray * file in files) {
-            NSString * filename = [file objectAtIndex:1];
-            NSString * filekey = [file objectAtIndex:0];
-            NSLog(@"FILENAME %@",filename);
-            NSString * url = [NSString stringWithFormat:@"%s%@/%@",HTTPS_ADDRESS_PB_DL,pubsubserver_secret,filekey];
-            NSLog(@"PLAY URL %@",url);
-            [self playSoundFromURL:url];
-            //NSLog(@"FILE %@ has %@\n",[file objectAtIndex:0] , [file objectAtIndex:1]);
-        }
-    });
-}*/
 
 -(void)playSoundFromURL:(NSString *)url_string {
     
@@ -133,6 +120,7 @@
 
 - (IBAction)byePressed:(id)sender {
     NSLog(@"BYE PRESSED");
+    bye_pressed=true;
     if (pbs!=nil) {
         free_pbsock(pbs);
         pbs=nil;
@@ -238,45 +226,81 @@
 
 
 -(void) listenForEvents {
-    pbmsg * m = recv_pbmsg(pbs);
-    if (m==NULL) {
-        NSLog(@"CONNECTION CLOSED UNEXPECTEDLY");
-        if (pbs!=nil) {
-            free_pbsock(pbs);
-            pbs=nil;
-            [gst_backend quit];
-        }
-        return;
-    }
-    if ((m->pbmsg_type ^  (PBMSG_SUCCESS | PBMSG_RESPONSE | PBMSG_ICE | PBMSG_CLIENT | PBMSG_STRING))==0) {
-        
-        [self gstreamerSetUIMessage:@"Negotiating with your PetBot..."];
-        fprintf(stderr,"GOT A ICE RESPONSE BACK!\n");
-        [self ice_negotiate:m];
-    } else if ((m->pbmsg_type ^  (PBMSG_CLIENT | PBMSG_VIDEO | PBMSG_RESPONSE | PBMSG_STRING | PBMSG_SUCCESS))==0) {
-        NSLog(@"ENABLE SELFIE BUTTON!");
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [selfie_button setEnabled:TRUE];
-        });
-    } else if ((m->pbmsg_type & PBMSG_DISCONNECTED) !=0) {
-        if (m->pbmsg_from==bb_streamer_id) {
-            fprintf(stderr,"The other side exited!\n");
+    while (true) {
+        pbmsg * m = recv_pbmsg(pbs);
+        if (m==NULL) {
+            if (!bye_pressed) {
+                status = @"PetBot connection closed";
+            }
             if (pbs!=nil) {
                 free_pbsock(pbs);
                 pbs=nil;
                 [gst_backend quit];
             }
             return;
-            //g_main_loop_quit(main_loop);
-        } else {
-            fprintf(stderr,"SOMEONE ELSE DISCONNETED %d vs %d\n",bb_streamer_id,m->pbmsg_from);
         }
-    } else {
-        fprintf(stderr,"WTF\n");
+        
+        if ( (m->pbmsg_type ^ (PBMSG_CLIENT | PBMSG_STRING))==0 && strncmp(m->pbmsg,"UPTIME",strlen("UPTIME"))==0) {
+            if (petbot_found==false) {
+                NSString *msg = [NSString stringWithUTF8String:m->pbmsg];
+                NSArray * a = [msg componentsSeparatedByString:@" "];
+                if ([a count]>=3) {
+                    int uptime = [a[1] intValue];
+                    if (uptime>20) {
+                        petbot_found=true;
+                        //semd ICE request
+                        pbmsg * ice_request_m = make_ice_request(ice_thread_pipes_from_child,ice_thread_pipes_to_child);
+                        send_pbmsg(pbs, ice_request_m);
+                        [self setConnectingText:[NSString stringWithFormat:@"Negotiating with your PetBot..."] ];
+                    } else {
+                        [self setConnectingText:[NSString stringWithFormat:@"Found your PetBot..."] ];
+                    }
+                }
+            }
+        } else if ((m->pbmsg_type ^  (PBMSG_SUCCESS | PBMSG_RESPONSE | PBMSG_ICE | PBMSG_CLIENT | PBMSG_STRING))==0) {
+            //[self gstreamerSetUIMessage:@"Negotiating with your PetBot..."];
+            if (bb_streamer_id==0) {
+                bb_streamer_id = m->pbmsg_from;
+                fprintf(stderr,"BBSTREAMER ID %d\n",bb_streamer_id);
+                recvd_ice_response(m,pbnio);
+                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                    [gst_backend app_functionPBNIO:pbnio];
+                });
+                fprintf(stderr,"LAUNCHED APP FUNCTION\n");
+            } else {
+                NSLog(@"OH OHHH...someone else connected");
+                status = @"Someone else connected :(";
+                
+                if (pbs!=nil) {
+                    free_pbsock(pbs);
+                    pbs=nil;
+                    [gst_backend quit];
+                }
+                return;
+            }
+        } else if ((m->pbmsg_type ^  (PBMSG_CLIENT | PBMSG_VIDEO | PBMSG_RESPONSE | PBMSG_STRING | PBMSG_SUCCESS))==0) {
+            NSLog(@"ENABLE SELFIE BUTTON!");
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [selfie_button setEnabled:TRUE];
+            });
+        } else if ((m->pbmsg_type & PBMSG_DISCONNECTED) !=0) {
+            if (m->pbmsg_from==bb_streamer_id) {
+                fprintf(stderr,"The other side exited!\n");
+                status = @"PetBot disconnected";
+                if (pbs!=nil) {
+                    free_pbsock(pbs);
+                    pbs=nil;
+                    [gst_backend quit];
+                }
+                return;
+                //g_main_loop_quit(main_loop);
+            } else {
+                fprintf(stderr,"SOMEONE ELSE DISCONNETED %d vs %d\n",bb_streamer_id,m->pbmsg_from);
+            }
+        } else {
+            fprintf(stderr,"WTF\n");
+        }
     }
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        [self listenForEvents];
-    });
 }
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
@@ -294,87 +318,95 @@
     }
 }
 
--(void) connect:(int)retries {
-    fprintf(stderr, "pbstate: Connecting...");
-#ifdef PBSSL
-    SSL_CTX* ctx;
-    OpenSSL_add_ssl_algorithms();
-    SSL_load_error_strings();
-    ctx = SSL_CTX_new (SSLv23_client_method());
-    NSLog(@"Connecting to server ... %@ %s %@",pubsubserver_server,[[loginInfo objectForKey:@"server"] UTF8String],[loginInfo objectForKey:@"server"]);
-    pbs = connect_to_server_with_key([pubsubserver_server UTF8String],pubsubserver_port,ctx,[pubsubserver_secret UTF8String]);
-#else
-    pbs = connect_to_server_with_key(pbhost,port,key);
-#endif
-    if (pbs==NULL) {
-        if (retries >=0 ) {
-            NSLog(@"RETRY RETRY");
-            sleep(1);
-            return [self connect:retries-1];
+-(void) lookForPetBot:(int)attempt {
+    if (petbot_found==false) {
+        //look for PetBot
+        if (attempt==0) {
+            [self setConnectingText:[NSString stringWithFormat:@"Looking for your PetBot..."] ];
+        } else {
+            [self setConnectingText:[NSString stringWithFormat:@"Looking for your PetBot... (x%d)",attempt] ];
         }
-        //TODO error handling!!!!
+        [self send_msg:"UPTIME" type:(PBMSG_STRING)];
+        //schedule a retry
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW,
+                                     5 * NSEC_PER_SEC),
+                       dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),
+                       ^{
+                           [self lookForPetBot:attempt+1];
+                       });
+    }
+    
+}
+
+-(void) connect:(int)maxRetries {
+    
+    int retries=0;
+    while (pbs==NULL && retries<=maxRetries) {
+        if (retries>0) {
+            sleep(1);
+        }
+        if (retries==0) {
+            [self setConnectingText:[NSString stringWithFormat:@"Connecting to PetBot server..." ]];
+        } else {
+            [self setConnectingText:[NSString stringWithFormat:@"Connecting to PetBot server... (x%d)", retries+1] ];
+        }
+    #ifdef PBSSL
+        SSL_CTX* ctx;
+        OpenSSL_add_ssl_algorithms();
+        SSL_load_error_strings();
+        ctx = SSL_CTX_new (SSLv23_client_method());
+        NSLog(@"Connecting to server ... %@ %s %@",pubsubserver_server,[[loginInfo objectForKey:@"server"] UTF8String],[loginInfo objectForKey:@"server"]);
+        pbs = connect_to_server_with_key([pubsubserver_server UTF8String],pubsubserver_port,ctx,[pubsubserver_secret UTF8String]);
+    #else
+        pbs = connect_to_server_with_key(pbhost,port,key);
+    #endif
+        retries++;
+    }
+    if (pbs==NULL) {
+        //failed to connect!
         dispatch_async(dispatch_get_main_queue(), ^{
             status = @"Failed to connect to PB server, try again soon";
             [self performSegueWithIdentifier:@"segueToLogin" sender:self];
-            
         });
         return;
     }
     
-    //start up the listener
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        [self listenForEvents];
-    });
     
+    //Ask for version first!
+    [self lookForPetBot:0];
+    
+    //setup basic ICE
     int ret = pipe(ice_thread_pipes_to_child);
     assert(ret==0);
     ret= pipe(ice_thread_pipes_from_child);
     assert(ret==0);
-    //start_nice_thread(0,ice_thread_pipes_from_child,ice_thread_pipes_to_child);
     
-    //int * params = (int*)x;
-    //get our string from the child thread
     pbnio =  new_pbnio();
-    //init_ice(1, from_child[1], to_child[0]);
     pbnio->pipe_to_child=ice_thread_pipes_to_child[1];
     pbnio->pipe_to_parent=ice_thread_pipes_from_child[1];
     pbnio->pipe_from_parent=ice_thread_pipes_to_child[0];
     pbnio->pipe_from_child=ice_thread_pipes_from_child[0];
     pbnio->controlling=0;
     init_ice(pbnio);
-    //pbnio->other_nice = m->pbmsg;
     
-    //int to_parent = ice_thread_pipes_from_child[1];
-    //int from_parent = ice_thread_pipes_to_child[0];
-    //init_ice(controlling, to_parent, from_parent);
-    //start_nice_client(pbs);
-    
-    petbot_state = @"pbstate: ice_request";
-    
+    //start up the listener
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        [self ice_request];
+        [self listenForEvents];
     });
+    
+    
+    
+    
 }
 
--(void) ice_request {
+-(void)makeAndSendICE {
+    //semd ICE request
     pbmsg * ice_request_m = make_ice_request(ice_thread_pipes_from_child,ice_thread_pipes_to_child);
-    fprintf(stderr,"make the ice request!\n");
     send_pbmsg(pbs, ice_request_m);
-    fprintf(stderr,"made the ice request\n");
 }
 
--(void) ice_negotiate:(pbmsg *)m {
-    bb_streamer_id = m->pbmsg_from;
-    fprintf(stderr,"BBSTREAMER ID %d\n",bb_streamer_id);
-    //recvd_ice_response(m,ice_thread_pipes_from_child,ice_thread_pipes_to_child);
-    recvd_ice_response(m,pbnio);
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        [gst_backend app_functionPBNIO:pbnio];
-    });
-    fprintf(stderr,"LAUNCHED APP FUNCTION\n");
-}
 - (IBAction)abort_pressed:(id)sender {
-    NSLog(@"ABORT PRESSED");
+    [self setConnectingText:@"Aborting!"];
     if (pbs!=nil) {
         free_pbsock(pbs);
         pbs=nil;
@@ -395,8 +427,6 @@
         NSLog(@"Error,%@", [error localizedDescription]);
     } else {
         //parse the return json
-
-        NSLog(@"WAIT SFSPCA %@", [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
         NSDictionary * d = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
         if (error) {
             NSLog(@"Error,%@", [error localizedDescription]);
@@ -407,13 +437,9 @@
             } else {
                 NSDictionary * pet =  d[@"pet"];
                 
-                
-                
-                NSLog(@"STORY IS %@",pet[@"story"]);
                 NSData *data = [NSData dataWithContentsOfURL : [NSURL URLWithString:pet[@"img"]]];
                 
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [pet_story setText:@"WTF"];
                     // Your code to run on the main queue/thread
                     [pet_story setText:pet[@"story"]];
                     [pet_name setText:[NSString stringWithFormat:@"Location: San Francisco, Name: %@", pet[@"name"]]];
@@ -421,32 +447,45 @@
                     pet_img.layer.cornerRadius=4.0f;
                     pet_img.layer.masksToBounds = YES;
                 });
-                for (NSArray *aDay in pet){
-                    //Do something
-                    NSLog(@"P Array: %@", aDay);
-                }
             }
         }
     }
 }
 
 
+
+
+
 /*
  * Methods from UIViewController
  */
+
+-(void)setConnectingText:(NSString *)s {
+    if ([NSThread isMainThread]) {
+        [connecting_message setText:s];
+    } else {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [connecting_message setText:s];
+        });
+    }
+}
 
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    petbot_found=false;
+    bye_pressed=false;
+    [self setConnectingText:@"Connecting..."];
     
     [pet_name setText:@""];
     [pet_story setText:@""];
+    
+    
+    //do blur, and go to black for old style
     if (!UIAccessibilityIsReduceTransparencyEnabled()) {
         main_view.backgroundColor = [UIColor clearColor];
-        
         UIBlurEffect *blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleDark];
-        //UIBlurEffect *blurEffect = [UIBlurEffect effectWithStyle:UIBlurEffectStyleExtraLight];
         blurEffectView = [[UIVisualEffectView alloc] initWithEffect:blurEffect];
         blurEffectView.frame = main_view.bounds;
         blurEffectView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
@@ -456,39 +495,36 @@
         main_view.backgroundColor = [UIColor blackColor];
     }
     
-    
     [self setupLogin];
     
     /* Make these constant for now, later tutorials will change them */
     media_width = 640;
     media_height = 480;
-    petbot_state = @"connecting";
     bb_streamer_id=0;
     
+    //set up gstreamer
+    gst_backend = [[GStreamerBackend alloc] init:self videoView:video_view vvc:self];
     
-    //[self soundList];
-    [self gstreamerSetUIMessage:@"Trying to connect to PetBot..."];
-    //activityIndicator.transform = CGAffineTransformMakeScale(2, 2);
-    
-    
-    gst_backend = [[GStreamerBackend alloc] init:self videoView:video_view serverInfo:[loginArray objectForKey:@"pubsubserver"] vvc:self];
     /* Start the bus monitoring task */
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^{
         [self connect:3];
     });
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         [self waitSFSPCA];
     });
     
-    //play sound locally
-    AVAudioSession *session = [AVAudioSession sharedInstance];
-    [session setCategory:AVAudioSessionCategoryPlayback error:nil];
-    NSString * mp3URL = [[NSBundle mainBundle] pathForResource:@"silence" ofType:@"mp3"];
-    NSData *audioData = [NSData dataWithContentsOfFile:mp3URL];
-    //NSData *audioData = [NSData dataWithContentsOfURL:mp3URL];
-    NSError* error;
-    player = [[AVAudioPlayer alloc] initWithData:audioData error:&error];
-    [player play];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        //play sound locally
+        AVAudioSession *session = [AVAudioSession sharedInstance];
+        [session setCategory:AVAudioSessionCategoryPlayback error:nil];
+        NSString * mp3URL = [[NSBundle mainBundle] pathForResource:@"silence" ofType:@"mp3"];
+        NSData *audioData = [NSData dataWithContentsOfFile:mp3URL];
+        //NSData *audioData = [NSData dataWithContentsOfURL:mp3URL];
+        NSError* error;
+        player = [[AVAudioPlayer alloc] initWithData:audioData error:&error];
+        [player play];
+    });
+    
 }
 
 - (IBAction)showMenu:(id)sender {

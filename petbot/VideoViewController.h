@@ -16,6 +16,7 @@
     IBOutlet PBButton *selfie_button;
     IBOutlet UILabel *pet_name;
     IBOutlet UIView *pet_view;
+    IBOutlet UILabel *connecting_message;
 }
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *selfieLandScapeVertical;
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *selfiePortraitHorizontal;
