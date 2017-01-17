@@ -56,6 +56,7 @@
 		CC56F8851DB30159009013DD /* PBNotifierCircle.m in Sources */ = {isa = PBXBuildFile; fileRef = CC56F8841DB30159009013DD /* PBNotifierCircle.m */; };
 		CC56F8881DB30292009013DD /* PBNotifierView.m in Sources */ = {isa = PBXBuildFile; fileRef = CC56F8871DB30292009013DD /* PBNotifierView.m */; };
 		CC5C0B7B1D6A9F9400CC4CEF /* GStreamer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC5C0B7A1D6A9F9400CC4CEF /* GStreamer.framework */; };
+		CC6661861E2DAF1F00638C1A /* pb.c in Sources */ = {isa = PBXBuildFile; fileRef = CC6661851E2DAF1F00638C1A /* pb.c */; };
 		CC6FFEB81DC324D9003969CA /* NotificationService.m in Sources */ = {isa = PBXBuildFile; fileRef = CC6FFEB71DC324D9003969CA /* NotificationService.m */; };
 		CC6FFEBC1DC324D9003969CA /* selfie.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = CC6FFEB41DC324D8003969CA /* selfie.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		CC6FFEC21DC420E2003969CA /* SelfieViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CC6FFEC11DC420E2003969CA /* SelfieViewController.m */; };
@@ -207,6 +208,7 @@
 		CC56F8871DB30292009013DD /* PBNotifierView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PBNotifierView.m; path = petbot/PBNotifierView.m; sourceTree = "<group>"; };
 		CC56F8891DB302BB009013DD /* PBNotifierView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PBNotifierView.h; sourceTree = "<group>"; };
 		CC5C0B7A1D6A9F9400CC4CEF /* GStreamer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GStreamer.framework; path = ../../../../../Library/Developer/GStreamer/iPhone.sdk/GStreamer.framework; sourceTree = "<group>"; };
+		CC6661851E2DAF1F00638C1A /* pb.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pb.c; sourceTree = "<group>"; };
 		CC6FFEAF1DC2FA0E003969CA /* petbot.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = petbot.entitlements; sourceTree = "<group>"; };
 		CC6FFEB41DC324D8003969CA /* selfie.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = selfie.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		CC6FFEB61DC324D9003969CA /* NotificationService.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NotificationService.h; sourceTree = "<group>"; };
@@ -377,6 +379,7 @@
 				CC2448B91CC6D7CE0036CEB3 /* notes */,
 				CC23F88D1CC5FCE100EA0E62 /* tcp_utils.c */,
 				CC23F88E1CC5FCE100EA0E62 /* tcp_utils.h */,
+				CC6661851E2DAF1F00638C1A /* pb.c */,
 				CCED8B821DB072C200E96B91 /* pb.h */,
 				CC2448BB1CC6D9240036CEB3 /* EaglUIVIew.h */,
 				CC2448BC1CC6D9240036CEB3 /* EaglUIVIew.m */,
@@ -846,6 +849,7 @@
 				CC3259781DB2C3D500EBCDDF /* UIColor+PBColor.m in Sources */,
 				CC2448C71CC6D9240036CEB3 /* VideoViewController.m in Sources */,
 				CC2448C51CC6D9240036CEB3 /* gst_ios_init.m in Sources */,
+				CC6661861E2DAF1F00638C1A /* pb.c in Sources */,
 				CC56F8821DB3001E009013DD /* PBNotifierLabel.m in Sources */,
 				CC2C33D31D7BEE05007A886B /* UserInfoViewController.m in Sources */,
 				CC0559181DF3B72100FA5D0D /* SwitchCell.m in Sources */,
