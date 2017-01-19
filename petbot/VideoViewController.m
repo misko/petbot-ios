@@ -372,6 +372,8 @@
     }
     
     
+    set_stun([ns_stun_server UTF8String], [ns_stun_port UTF8String], [ns_stun_username UTF8String], [ns_stun_password UTF8String]);
+    
     //Ask for version first!
     [self lookForPetBot:0];
     
@@ -432,7 +434,7 @@
             NSLog(@"Error,%@", [error localizedDescription]);
         } else {
             NSNumber *status = d[@"status"];
-            if ([status isEqual:@0]) {
+            if (![status isEqual:@1]) {
                 NSLog(@"SERVER QUERY FAILED?");
             } else {
                 NSDictionary * pet =  d[@"pet"];

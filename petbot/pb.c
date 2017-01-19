@@ -1,8 +1,9 @@
 
-char * stun_addr = "159.203.252.147";
+char * stun_addr = "stun.petbot.ca";
 int stun_port = 3478;
 char * stun_user = "misko";
 char * stun_passwd = "misko";
+
 
 #ifndef TARGET_OS_IPHONE
 

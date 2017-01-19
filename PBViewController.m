@@ -157,6 +157,14 @@
     pubsubserver_secret = [self->loginInfo objectForKey:@"secret"];
     pubsubserver_server = [self->loginInfo objectForKey:@"server"];
     pubsubserver_username = [self->loginInfo objectForKey:@"username"];
+    
+    
+    self->turnInfo=[loginArray objectForKey:@"turn"][0];
+    
+    ns_stun_server = [self->turnInfo objectForKey:@"server"];
+    ns_stun_port = [[self->turnInfo objectForKey:@"port"] stringValue];
+    ns_stun_username = [self->turnInfo objectForKey:@"username"];
+    ns_stun_password = [self->turnInfo objectForKey:@"password"];
 }
 
 -(void)toastStatus:(bool)status Message:(NSString*)msg {

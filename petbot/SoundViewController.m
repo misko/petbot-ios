@@ -202,9 +202,10 @@
     }
     if ([cell_name isEqualToString:@"led_enable"]) {
         SwitchCell * sc = cell;
-        if ([config objectForKey:@"led"]!=nil) {
-            [sc.ui_switch setOn:[[config objectForKey:@"led"] intValue]==1];
+        if ([config objectForKey:@"pb_led_enable"]!=nil) {
+            [sc.ui_switch setOn:[[config objectForKey:@"pb_led_enable"] intValue]==1];
             [sc.ui_switch setEnabled:true];
+            [sc.ui_switch addTarget:self action:@selector(setLED:) forControlEvents:UIControlEventValueChanged];
         } else {
             [sc.ui_switch setEnabled:false];
         }
@@ -213,7 +214,7 @@
         ButtonCell * bc = cell;
         if ([self updatesAllowed]) {
             [bc.ui_button setEnabled:true];
-            //[bc.ui_button addTarget:self action:@selector(updateButton:) forControlEvents:UIControlEventTouchUpInside];
+            [bc.ui_button addTarget:self action:@selector(updateButton:) forControlEvents:UIControlEventTouchUpInside];
         } else {
             [bc.ui_button setEnabled:false];
         }
@@ -329,7 +330,9 @@
     
     
     if ([cell_name isEqualToString:@"update"]) {
-        [self updateButton:nil];
+        if ([self updatesAllowed]) {
+            [self updateButton:nil];
+        }
     }
     if ([cell_name isEqualToString:@"help"]) {
         [self helpButton:nil];
@@ -428,10 +431,20 @@
     [self performSegueWithIdentifier:@"toSoundPicker" sender:self];
 }
 
+-(IBAction)setLED:(id)sender {
+    NSString *  set_led_string;
+    if([sender isOn]){
+        set_led_string = [NSString stringWithFormat:@"pb_led_enable\t1"];
+    } else {
+        set_led_string = [NSString stringWithFormat:@"pb_led_enable\t0"];
+    }
+    [self send_msg:[set_led_string UTF8String] type:(PBMSG_CONFIG_SET | PBMSG_STRING | PBMSG_REQUEST)];
+}
+
 -(IBAction)updateButton:(id)sender {
         [self send_msg:"UPDATE updates@updates.petbot.ca:/" type:(PBMSG_UPDATE | PBMSG_STRING | PBMSG_REQUEST)];
         UIAlertController *controller = [UIAlertController alertControllerWithTitle:@"Updating..."
-                                                                            message:@"Do not unplug! please wait!"
+                                                                            message:@"Do not unplug! Please wait until your petbot speaks \"PetBot operational\". Signing in again during this update will stop the update"
                                                                      preferredStyle:UIAlertControllerStyleAlert];
         UIAlertAction *alertAction = [UIAlertAction actionWithTitle:@"Cancel"
                                                               style:UIAlertActionStyleDestructive
@@ -518,7 +531,7 @@
     types_sound = [NSArray arrayWithObjects:@"DetailCell",@"SliderCell",@"ButtonCell",@"ButtonCell",@"RecordCell", nil];
     names_sound = [NSArray arrayWithObjects:@"volume",@"volume_slider",@"selfie_sound",@"alert_sound",@"record", nil];
     
-    labels_system = [NSArray arrayWithObjects:@"LED enable",@"Update/Retrieve the latest PetBot firmeware",@"Version",@"Help/Our online manual and troubleshooting", nil];
+    labels_system = [NSArray arrayWithObjects:@"LED enable",@"Update/Retrieve the latest PetBot firmware",@"Version",@"Help/Our online manual and troubleshooting", nil];
     types_system = [NSArray arrayWithObjects:@"SwitchCell",@"ButtonCell",@"DetailRightCell",@"ButtonCell", nil];
     names_system = [NSArray arrayWithObjects:@"led_enable",@"update",@"version",@"help", nil];
     

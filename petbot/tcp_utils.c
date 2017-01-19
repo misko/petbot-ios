@@ -117,6 +117,61 @@ const char * PBMSG_TYPES_STRING[] = {
 	"WEBRTC"
 };
 
+static int getaddrinfo_compat(
+                              const char * hostname,
+                              const char * servname,
+                              const struct addrinfo * hints,
+                              struct addrinfo ** res
+                              ) {
+    int    err;
+    int    numericPort;
+    
+    // If we're given a service name and it's a numeric string, set `numericPort` to that,
+    // otherwise it ends up as 0.
+    
+    numericPort = servname != NULL ? atoi(servname) : 0;
+    
+    // Call `getaddrinfo` with our input parameters.
+    
+    err = getaddrinfo(hostname, servname, hints, res);
+    
+    // Post-process the results of `getaddrinfo` to work around   <rdar://problem/26365575>.
+    
+    if ( (err == 0) && (numericPort != 0) ) {
+        for (const struct addrinfo * addr = *res; addr != NULL; addr = addr->ai_next) {
+            in_port_t *    portPtr;
+            
+            switch (addr->ai_family) {
+                case AF_INET: {
+                    portPtr = &((struct sockaddr_in *) addr->ai_addr)->sin_port;
+                } break;
+                case AF_INET6: {
+                    portPtr = &((struct sockaddr_in6 *) addr->ai_addr)->sin6_port;
+                } break;  
+                default: {  
+                    portPtr = NULL;  
+                } break;  
+            }  
+            if ( (portPtr != NULL) && (*portPtr == 0) ) {  
+                *portPtr = htons(numericPort);  
+            }  
+        }  
+    }  
+    return err;  
+}
+
+
+void set_stun(char * stun_addr_x, char * stun_port_x, char * stun_user_x, char * stun_password_x) {
+    stun_addr =hostname_to_ip_str(stun_addr,stun_port);
+    stun_port = atoi(stun_port_x);
+    if (stun_user_x!=NULL) {
+        stun_user = strdup(stun_user_x);
+    }
+    if (stun_password_x!=NULL) {
+        stun_passwd = stun_password_x;
+    }
+}
+
 #ifdef PBSSL
 pbsock * new_pbsock(int client_sock, SSL_CTX* ctx, int accept);
 pbsock* connect_to_server_with_key(const char * hostname, int portno, SSL_CTX*ctx, const char * key);
@@ -157,40 +212,122 @@ pbsock * connect_to_server_with_key(const char * hostname, int portno, const cha
 	return pbs;
 }
 
+    char * hostname_to_ip_str(char * hostname, int portno) {
+        
+        // connect to www.example.com port 80 (http)
+        
+        struct addrinfo hints, *res;
+        int sockfd;
+        
+        // first, load up address structs with getaddrinfo():
+        
+        memset(&hints, 0, sizeof hints);
+        hints.ai_family = AF_UNSPEC;  // use IPv4 or IPv6, whichever
+        hints.ai_socktype = SOCK_STREAM;
+        
+        // we could put "80" instead on "http" on the next line:
+        char port_buffer[1024];
+        sprintf(port_buffer,"%d",portno);
+        getaddrinfo_compat(hostname, port_buffer, &hints, &res);
+        
+        // make a socket:
+        sockfd = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
+        
+        
+        if (connect(sockfd, res->ai_addr, res->ai_addrlen)<0) {
+            fprintf(stderr,"Failed to connect to",hostname);
+        }
+        
+        socklen_t len;
+        struct sockaddr_storage addr;
+        char * ipstr = (char*)malloc(sizeof(char)*INET6_ADDRSTRLEN);
+        if (ipstr==NULL) {
+            fprintf(stderr,"FAILED TO MALLOC STRING!");
+            exit(1);
+        }
+        int port;
+        size_t llen = sizeof addr;
+        getpeername(sockfd, (struct sockaddr*)&addr, &llen);
+        
+        // deal with both IPv4 and IPv6:
+        if (addr.ss_family == AF_INET) {
+            struct sockaddr_in *s = (struct sockaddr_in *)&addr;
+            port = ntohs(s->sin_port);
+            inet_ntop(AF_INET, &s->sin_addr, ipstr, INET6_ADDRSTRLEN);
+        } else { // AF_INET6
+            struct sockaddr_in6 *s = (struct sockaddr_in6 *)&addr;
+            port = ntohs(s->sin6_port);
+            inet_ntop(AF_INET6, &s->sin6_addr, ipstr, INET6_ADDRSTRLEN);
+        }
+        
+        printf("Peer IP address: %s\n", ipstr);
+        printf("Peer port      : %d\n", port);
+        close(sockfd);
+        return ipstr;
+    }
+    
 #ifdef PBSSL
 pbsock* connect_to_server(const char * hostname, int portno, SSL_CTX* ctx) {
 #else
 pbsock* connect_to_server(const char * hostname, int portno) {
 #endif
-    /* socket: create the socket */
+    
+    // connect to www.example.com port 80 (http)
+    
+    struct addrinfo hints, *res;
+    int sockfd;
+    
+    // first, load up address structs with getaddrinfo():
+    
+    memset(&hints, 0, sizeof hints);
+    hints.ai_family = AF_UNSPEC;  // use IPv4 or IPv6, whichever
+    hints.ai_socktype = SOCK_STREAM;
+    
+    // we could put "80" instead on "http" on the next line:
+    char port_buffer[1024];
+    sprintf(port_buffer,"%d",portno);
+    getaddrinfo_compat(hostname, port_buffer, &hints, &res);
+    
+    // make a socket:
+    sockfd = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
+    
+    if (connect(sockfd, res->ai_addr, res->ai_addrlen)<0) {
+        PBPRINTF("TCP_UTILS: Failed to initiate connection on socket: %s\n", strerror(errno));
+        return NULL;
+    }
+    
+    /*
+    // connect it to the address and port we passed in to getaddrinfo():
+    
+    // socket: create the socket
     int sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd < 0)  {
 		PBPRINTF("TCP_UTILS: Failed to open socket: %s\n", strerror(errno));
 		return NULL;
     } 
 
-    /* gethostbyname: get the server's DNS entry */
+    // gethostbyname: get the server's DNS entry
     struct hostent *server;
     assert(hostname!=NULL);
-    server = gethostbyname(hostname);
+    server = gethostbyname2(hostname,AF_INET6);
     if (server == NULL) {
         PBPRINTF("TCP_UTILS: ERROR, no such host as %s\n", hostname);
 	return NULL;
     }
     struct sockaddr_in serveraddr;
 
-    /* build the server's Internet address */
+    // build the server's Internet address
     bzero((char *) &serveraddr, sizeof(serveraddr));
-    serveraddr.sin_family = AF_INET;
+    serveraddr.sin_family = AF_INET6;
     bcopy((char *)server->h_addr, 
 	  (char *)&serveraddr.sin_addr.s_addr, server->h_length);
     serveraddr.sin_port = htons(portno);
 
-    /* connect: create a connection with the server */
+    // connect: create a connection with the server
     if (connect(sockfd, (const struct sockaddr*)&serveraddr, sizeof(serveraddr)) < 0)  {
 		PBPRINTF("TCP_UTILS: Failed to initiate connection on socket: %s\n", strerror(errno));
 		return NULL;
-    }
+    }*/
 #ifdef PBSSL
     pbsock * pbs =  new_pbsock(sockfd,ctx,0);
 #else

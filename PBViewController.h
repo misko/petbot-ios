@@ -13,10 +13,17 @@
     NSArray * sounds;
     NSDictionary * loginArray;
     NSDictionary * loginInfo;
+    NSDictionary * turnInfo;
     NSString * pubsubserver_secret;
     NSString * pubsubserver_server;
     NSString * pubsubserver_username;
     NSString * pubsubserver_protocol;
+    
+    NSString * ns_stun_server;
+    NSString * ns_stun_port;
+    NSString * ns_stun_username;
+    NSString * ns_stun_password;
+    
     int pubsubserver_port;
     pbsock * pbs;
 }
