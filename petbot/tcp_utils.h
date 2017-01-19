@@ -87,6 +87,7 @@ typedef struct pbsock {
 #endif
 	int client_sock;
 	pbsock_state state;
+	char * key;
 } pbsock;
 
 #if defined __cplusplus
@@ -101,15 +102,16 @@ void pbsock_set_state(pbsock * pbs, pbsock_state);
 pbsock_state pbsock_get_state(pbsock *pbs);
 #ifdef PBTHREADS
 void *keep_alive_handler(void * v );
-pbsock_state pbsock_wait_state(pbsock * pbs);
+//pbsock_state pbsock_wait_state(pbsock * pbs);
 
 int increment_waiting_threads(pbsock * pbs);
 int decrement_waiting_threads(pbsock * pbs);
 
 #endif
+    
 void set_stun(char * stun_addr_x, char * stun_port_x, char * stun_user_x, char * stun_password_x);
 char * hostname_to_ip_str(char * hostname, int portno);
-    
+
 #ifdef PBSSL
 int pbssl_setup();
 int pbssl_close();
