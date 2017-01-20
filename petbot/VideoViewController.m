@@ -219,8 +219,10 @@
     [self send_msg:"adjust_exp 1" type:(PBMSG_VIDEO | PBMSG_REQUEST | PBMSG_STRING)];
 }
 
-- (IBAction)longPress:(id)sender {
-    [self send_msg:"iterate 1" type:(PBMSG_VIDEO | PBMSG_REQUEST | PBMSG_STRING)];
+- (IBAction)longPress:(UILongPressGestureRecognizer*)sender {
+    if (sender.state == UIGestureRecognizerStateBegan) {
+        [self send_msg:"hflip" type:(PBMSG_VIDEO | PBMSG_REQUEST | PBMSG_STRING)];
+    }
 }
 
 
