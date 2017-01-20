@@ -135,6 +135,9 @@
     NSString * cell_name = cell_names[indexPath.row];
     
     cellIdentifier = cell_types[indexPath.row];
+    if ([cellIdentifier isEqualToString:@"SwitchCell"]) {
+        
+    }
     cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:cellIdentifier];
@@ -531,7 +534,7 @@
     types_sound = [NSArray arrayWithObjects:@"DetailCell",@"SliderCell",@"ButtonCell",@"ButtonCell",@"RecordCell", nil];
     names_sound = [NSArray arrayWithObjects:@"volume",@"volume_slider",@"selfie_sound",@"alert_sound",@"record", nil];
     
-    labels_system = [NSArray arrayWithObjects:@"LED enable",@"Update/Retrieve the latest PetBot firmware",@"Version",@"Help/Our online manual and troubleshooting", nil];
+    labels_system = [NSArray arrayWithObjects:@"LED enable/",@"Update/Retrieve the latest PetBot firmware",@"Version",@"Help/Our online manual and troubleshooting", nil];
     types_system = [NSArray arrayWithObjects:@"SwitchCell",@"ButtonCell",@"DetailRightCell",@"ButtonCell", nil];
     names_system = [NSArray arrayWithObjects:@"led_enable",@"update",@"version",@"help", nil];
     
