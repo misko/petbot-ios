@@ -9,6 +9,9 @@
 #import <UIKit/UIKit.h>
 #include "tcp_utils.h"
 
+#import <CocoaLumberjack/CocoaLumberjack.h>
+static const DDLogLevel ddLogLevel = DDLogLevelWarning;
+
 @interface PBViewController : UIViewController {
     NSArray * sounds;
     NSDictionary * loginArray;

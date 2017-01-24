@@ -37,6 +37,8 @@
         status=nil;
     }
     
+    [status_label setText:@""];
+    
     NSString * username = [[NSUserDefaults standardUserDefaults] stringForKey:@"username"];
     NSString * password = [[NSUserDefaults standardUserDefaults] stringForKey:@"password"];
     if (username!=nil && ![username isEqualToString:@""]){
@@ -57,6 +59,10 @@
 
     [status_label setText:@""];
     [status_label setTextColor:[UIColor PBRed]];
+    
+    NSString * appVersionString = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
+    [_versionLabel setText:appVersionString];
+    [_versionLabel setTextColor:[UIColor PBRed]];
 }
 - (IBAction)forgetMePressed:(id)sender {
     //only do if able to deauth properly1!!!
@@ -92,7 +98,7 @@
          if (error) {
              NSLog(@"Error,%@", [error localizedDescription]);
              [self toastStatus:false Message:@"Failed to connect to PB server"];
-             [status_label setText:@"Failed to connect"];
+             [status_label setText:[error localizedDescription]];
          } else {
              NSLog(@"%@", [[NSString alloc] initWithData:data encoding:NSASCIIStringEncoding]);
              NSDictionary * response = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];

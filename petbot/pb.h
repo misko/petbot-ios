@@ -2,8 +2,12 @@
 #define PB_HEADER
 
 
+#define RELEASE 1
+
 #ifdef TARGET_OS_IPHONE
 #include <agent.h>
+//#import <CocoaLumberjack/CocoaLumberjack.h>
+//static const DDLogLevel ddLogLevel = DDLogLevelWarning;
 #else 
 #include <nice/agent.h>
 #endif
@@ -40,8 +44,12 @@
 #define SELFIE_FN "/tmp/selfie.mov"
 
 //#define PBPRINTF(fmt, args...)    fprintf(stderr, fmt, ## args)
+#ifndef RELEASE
 #define PBPRINTF(fmt, args...) fprintf(stderr, "DEBUG: %s:%d:%s(): " fmt, \
-    __FILE__, __LINE__, __func__, ##args)
+__FILE__, __LINE__, __func__, ##args)
+#else 
+#define PBPRINTF(fmt, args...) do {} while (0)
+#endif
 
 typedef struct DeviceSID {
   uint32_t key0;
@@ -65,6 +73,7 @@ typedef struct pb_nice_io {
    GMutex negotiate_mutex;
    char * our_nice;
    char * other_nice;
+    char * error;
 } pb_nice_io;
 
 extern char * stun_addr;

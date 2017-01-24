@@ -53,6 +53,7 @@
 #include <nice/agent.h>
 #endif
 
+
 #include "pb.h"
 
 //sem_t negotiation_done;
@@ -369,8 +370,10 @@ NiceAgent * init_ice(pb_nice_io * pbnio) {
   pbnio->agent = nice_agent_new(NULL,
       NICE_COMPATIBILITY_RFC5245);
   if (pbnio->agent == NULL) {
-    g_error("Failed to create agent");
+    //g_error("Failed to create agent");
     PBPRINTF("FAILED TO CREATE NICE AGENT!\n");
+    pbnio->error="FAILED TO CREATE NICE AGENT";
+    return NULL;
   }
   
 
@@ -391,8 +394,11 @@ NiceAgent * init_ice(pb_nice_io * pbnio) {
 
   // Create a new stream with one component
   pbnio->stream_id = nice_agent_add_stream(pbnio->agent, 1);
-  if (pbnio->stream_id == 0)
-    g_error("Failed to add stream");
+  if (pbnio->stream_id == 0) {
+     //g_error("Failed to add stream");
+      pbnio->error="FAILED TO ADD NICE STREAM";
+      return NULL;
+  }
 
   gboolean ret = nice_agent_set_relay_info(pbnio->agent,pbnio->stream_id,1,stun_addr, stun_port, stun_user, stun_passwd,NICE_RELAY_TYPE_TURN_UDP);
   if (ret==FALSE) {
@@ -405,13 +411,18 @@ NiceAgent * init_ice(pb_nice_io * pbnio) {
   //ret = nice_agent_attach_recv(agent, stream_id, 1, NULL, NULL, NULL);
   if (ret==FALSE) {
      PBPRINTF("Failed to attach the component to the NICE agent\n");
+      pbnio->error="FAILED TO ADD NICE COMPONENT";
+      return NULL;
   }
 
   // Start gathering local candidates
   if (!nice_agent_gather_candidates(pbnio->agent, pbnio->stream_id)) {
-    g_error("Failed to start candidate gathering");
+    //g_error("Failed to start candidate gathering");
     PBPRINTF("Failed to start candidate gathering\n");
+      pbnio->error="FAILED TO START CAND GATHERING";
+      return NULL;
   }
+    
 
   //g_debug("waiting for candidate-gathering-done signal...");
 

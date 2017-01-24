@@ -6,6 +6,9 @@ target 'petbot' do
   # use_frameworks!
 
   # Pods for petbot
+  pod 'CocoaLumberjack'
+  pod 'Antenna'
+  pod 'DDAntennaLogger'
   pod 'CRToast', '~> 0.0.7'
 
   target 'petbotTests' do

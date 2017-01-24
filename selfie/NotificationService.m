@@ -23,8 +23,8 @@
     
     // Modify the notification content here...
     //self.bestAttemptContent.title = [NSString stringWithFormat:@"%@ [modified]", self.bestAttemptContent.title];
-    self.bestAttemptContent.title = [NSString stringWithFormat:@"From: Your Pet!", self.bestAttemptContent.title];
-    self.bestAttemptContent.body = [NSString stringWithFormat:@"Meow! Miss you!", self.bestAttemptContent.body];
+    //self.bestAttemptContent.title = [NSString stringWithFormat:@"From: Your Pet!", self.bestAttemptContent.title];
+    //self.bestAttemptContent.body = [NSString stringWithFormat:@"Meow! Miss you!", self.bestAttemptContent.body];
     
     //self.contentHandler(self.bestAttemptContent);
     

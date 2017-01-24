@@ -341,7 +341,7 @@
 }
 
 -(void) connect:(int)maxRetries {
-    
+    DDLogWarn(@"START CONNECT");
     int retries=0;
     while (pbs==NULL && retries<=maxRetries) {
         if (retries>0) {
@@ -374,6 +374,7 @@
     }
     
     
+    DDLogWarn(@"SET STUN");
     set_stun([ns_stun_server UTF8String], [ns_stun_port UTF8String], [ns_stun_username UTF8String], [ns_stun_password UTF8String]);
     
     //Ask for version first!
@@ -391,8 +392,23 @@
     pbnio->pipe_from_parent=ice_thread_pipes_to_child[0];
     pbnio->pipe_from_child=ice_thread_pipes_from_child[0];
     pbnio->controlling=0;
-    init_ice(pbnio);
     
+    init_ice(pbnio);
+    if (pbnio->error!=NULL) {
+        //something went wrong
+        NSString * s = [NSString stringWithFormat:@"ICE NEGOTATION FAILED : %@" ,[ NSString stringWithUTF8String:pbnio->error]];
+        DDLogWarn(@"%@" , s);
+        status = s;
+        
+        if (pbs!=nil) {
+            free_pbsock(pbs);
+            pbs=nil;
+            [gst_backend quit];
+        }
+        return;
+    } else {
+        DDLogWarn(@"ICE NEGOTIATION SUCCESS");
+    }
     //start up the listener
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         [self listenForEvents];

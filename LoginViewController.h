@@ -17,6 +17,7 @@
 @property (strong, nonatomic) IBOutlet PBTextField *password_field;
 @property (strong, nonatomic) IBOutlet PBButton *login_button;
 @property (strong, nonatomic) IBOutlet PBButton *forgetme_button;
+@property (strong, nonatomic) IBOutlet UILabel *versionLabel;
 
 -(void) setStatus:(NSString *)status setFlag:(BOOL)success;
 @end

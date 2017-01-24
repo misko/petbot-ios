@@ -12,6 +12,13 @@
 //http://api.shephertz.com/tutorial/Push-Notification-iOS/
 #import <UserNotifications/UserNotifications.h>
 #import "SelfieViewController.h"
+
+
+#import <Antenna.h>
+#import <DDAntennaLogger.h>
+#import <DDLog.h>
+
+
 @interface AppDelegate ()
 
 @end
@@ -43,6 +50,16 @@
         }
         NSLog(@"LAUNCHED WITH OPTIONS?");
     }
+    
+    
+    NSURL *logUrl = [NSURL URLWithString:@"http://159.203.252.147:3205/log/"];
+    [[Antenna sharedLogger] addChannelWithURL:logUrl method:@"POST"];
+    [[Antenna sharedLogger] startLoggingApplicationLifecycleNotifications];
+    
+    DDAntennaLogger *logger = [[DDAntennaLogger alloc] initWithAntenna:[Antenna sharedLogger]];
+    [DDLog addLogger:logger];
+    [DDLog addLogger:[DDTTYLogger sharedInstance]]; // To see them in the Xcode debugger
+    
     return YES;
 }
 
