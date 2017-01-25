@@ -13,6 +13,7 @@
 #import "LoginViewController.h"
 #import "SelfieViewController.h"
 #import "VideoViewController.h"
+#import "UserInfoViewController.h"
 #import "pb.h"
 
 @import AVFoundation;
@@ -25,6 +26,7 @@
     NSString * status ;
     BOOL success;
     AVPlayerViewController *playerViewController;
+    bool long_press;
 }
 @end
 
@@ -51,7 +53,17 @@
     [_password_field colorBlue];
 }
 
+-(void)pressSetup:(id)sender {
+    long_press=false;
+    [self performSegueWithIdentifier:@"mainToUserInfo" sender:self];
+}
 
+- (void)longPressSetup:(UILongPressGestureRecognizer*)gesture {
+    if ( gesture.state == UIGestureRecognizerStateEnded ) {
+        long_press=true;
+        [self performSegueWithIdentifier:@"mainToUserInfo" sender:self];
+    }
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -63,6 +75,11 @@
     NSString * appVersionString = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
     [_versionLabel setText:appVersionString];
     [_versionLabel setTextColor:[UIColor PBRed]];
+    
+    UITapGestureRecognizer *tapPress = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(pressSetup:)];
+    UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressSetup:)];
+    [self.setup_button addGestureRecognizer:longPress];
+    [self.setup_button addGestureRecognizer:tapPress];
 }
 - (IBAction)forgetMePressed:(id)sender {
     //only do if able to deauth properly1!!!
@@ -128,6 +145,9 @@
         VideoViewController * vvc = [segue destinationViewController];
         [vvc setLoginArray:loginArray];
         //ViewController.user = [self.users objectInListAtIndex:[self.tableView indexPathForSelectedRow].row];
+    } else if ([[segue identifier] isEqualToString:@"mainToUserInfo"]) {
+        UserInfoViewController * uivc = [segue destinationViewController];
+        [uivc setDebugMode:long_press];
     }
 }
 

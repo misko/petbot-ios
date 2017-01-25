@@ -10,7 +10,11 @@
 #import "SoundPickerController.h"
 #import "SoundClipCell.h"
 
+
+
 @interface SoundPickerController () {
+    NSString * fid;
+    NSString * name;
 }
 
 @end
@@ -61,10 +65,17 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     NSLog(@"SELECTED!");
     SoundClipCell  * scc = [tableView cellForRowAtIndexPath:indexPath];
-    [[NSUserDefaults standardUserDefaults] setValue:scc->fid forKey:@"alert_sound_fid"];
-    [[NSUserDefaults standardUserDefaults] setValue:scc->fn forKey:@"alert_sound_fn"];
-    [[NSUserDefaults standardUserDefaults] synchronize];
+    fid=scc->fid;
+    name=scc->fn;
+    
     [self performSegueWithIdentifier:@"segueToSettings" sender:self];
+}
+
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if ([[segue identifier] isEqualToString:@"segueToSettings"]) {
+        SoundViewController * svc = [segue destinationViewController];
+        [svc setSoundFID:fid name:name];
+    }
 }
 
 

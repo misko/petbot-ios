@@ -8,9 +8,13 @@
 
 #import <UIKit/UIKit.h>
 #import "PBViewController.h"
+#import "SoundViewController.h"
+
 
 @interface SoundPickerController : PBViewController <UITableViewDelegate, UITableViewDataSource>
 @property (strong, nonatomic) IBOutlet UIButton *doneButton;
 @property (strong, nonatomic) IBOutlet UITableView *tableView;
+
+-(void)setCallBack:(void (^)(NSString * fid))cb;
 
 @end

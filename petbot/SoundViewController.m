@@ -16,7 +16,6 @@
 #import "ButtonCell.h"
 #import "SliderCell.h"
 #import "SoundViewController.h"
-#import "SoundPickerController.h"
 #import "PBButton.h"
 #include "tcp_utils.h"
 #include "nice_utils.h"
@@ -168,9 +167,20 @@
             [sc.ui_slider setEnabled:false];
         }
     }
-    if ([cell_name isEqualToString:@"selfie_sound"]) {
+    if ([cell_name isEqualToString:@"device_mute"]) {
+        SwitchCell * sc = cell;
+        [sc.ui_switch setEnabled:true];
+        [sc.ui_switch addTarget:self action:@selector(setMute:) forControlEvents:UIControlEventValueChanged];
+        NSString * device_mute_str =  [[NSUserDefaults standardUserDefaults] stringForKey:@"device_mute"];
+        if (device_mute_str==nil || [device_mute_str isEqualToString:@""] || [device_mute_str isEqualToString:@"OFF"]) {
+            [sc.ui_switch setOn:false];
+        } else {
+            [sc.ui_switch setOn:true];
+        }
+    }
+    if ([cell_name isEqualToString:@"selfie_sound_url"]) {
         ButtonCell * bc = cell;
-        if (sounds!=nil && [config objectForKey:@"selfie_sound"]!=nil) {
+        if (sounds!=nil && [config objectForKey:@"selfie_sound_url"]!=nil) {
             [bc.ui_button addTarget:self action:@selector(selfieSoundSelect:) forControlEvents:UIControlEventTouchUpInside];
             [bc.ui_button setEnabled:true];
         } else {
@@ -347,6 +357,12 @@
         [self performSegueWithIdentifier:@"toSoundPicker" sender:self];
     }
     
+    if ([cell_name isEqualToString:@"selfie_sound"]) {
+        selecting_selfie_sound=true;
+        selecting_alert_sound=false;
+        [self performSegueWithIdentifier:@"toSoundPicker" sender:self];
+    }
+    
     return;
 }
 
@@ -432,6 +448,17 @@
     selecting_selfie_sound=false;
     selecting_alert_sound=true;
     [self performSegueWithIdentifier:@"toSoundPicker" sender:self];
+}
+
+
+-(IBAction)setMute:(id)sender {
+    if([sender isOn]){
+        [[NSUserDefaults standardUserDefaults] setValue:@"ON" forKey:@"device_mute"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    } else {
+        [[NSUserDefaults standardUserDefaults] setValue:@"OFF" forKey:@"device_mute"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    }
 }
 
 -(IBAction)setLED:(id)sender {
@@ -530,9 +557,9 @@
     types_selfie = [NSArray arrayWithObjects:@"SwitchCell",@"ValueCell",@"ValueCell",@"DetailCell",@"SliderCell",@"DetailCell",@"SliderCell", nil];
     names_selfie = [NSArray arrayWithObjects:@"selfie_enable",@"selfie_timeout",@"selfie_length",@"selfie_sensitivity",@"selfie_sensitivity_slider",@"motion_sensitivity",@"motion_sensitivity_slider",nil];
     
-    labels_sound = [NSArray arrayWithObjects:@"Volume/Loudness on PetBot",@"",@"Selfie Sound/Played when a selfie is triggered",@"Alert Sound/Played when you press sound alert",@"Record/Upload your voice to your petbot!",nil];
-    types_sound = [NSArray arrayWithObjects:@"DetailCell",@"SliderCell",@"ButtonCell",@"ButtonCell",@"RecordCell", nil];
-    names_sound = [NSArray arrayWithObjects:@"volume",@"volume_slider",@"selfie_sound",@"alert_sound",@"record", nil];
+    labels_sound = [NSArray arrayWithObjects:@"Volume/Loudness on PetBot",@"",@"Device-mute/Mute sound playback on phone",@"Selfie Sound/Played when a selfie is triggered",@"Alert Sound/Played when you press sound alert",@"Record/Upload your voice to your petbot!",nil];
+    types_sound = [NSArray arrayWithObjects:@"DetailCell",@"SliderCell",@"SwitchCell",@"ButtonCell",@"ButtonCell",@"RecordCell", nil];
+    names_sound = [NSArray arrayWithObjects:@"volume",@"volume_slider",@"device_mute",@"selfie_sound",@"alert_sound",@"record", nil];
     
     labels_system = [NSArray arrayWithObjects:@"LED enable/",@"Update/Retrieve the latest PetBot firmware",@"Version",@"Help/Our online manual and troubleshooting", nil];
     types_system = [NSArray arrayWithObjects:@"SwitchCell",@"ButtonCell",@"DetailRightCell",@"ButtonCell", nil];
@@ -798,5 +825,19 @@
     [rc.ui_play_button setEnabled:YES];
 }
 
+-(void)setSoundFID:(NSString *)fid name:(NSString *)name {
+    if (selecting_alert_sound) {
+        [[NSUserDefaults standardUserDefaults] setValue:fid forKey:@"alert_sound_fid"];
+        [[NSUserDefaults standardUserDefaults] setValue:name forKey:@"alert_sound_fn"];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    } else {
+        //selfie_sound_url
+        NSLog(@"SET SELFIE SOUND URL!");
+        NSString * url = [NSString stringWithFormat:@"%s%@/%@",HTTPS_ADDRESS_PB_DL,pubsubserver_secret,fid];
+        NSLog(@"%@",url);
+        NSString * set_selfie_sensitivity = [NSString stringWithFormat:@"selfie_sound_url\t%@",url];
+        [self send_msg:[set_selfie_sensitivity UTF8String] type:(PBMSG_CONFIG_SET | PBMSG_STRING | PBMSG_REQUEST)];
+    }
+}
 
 @end

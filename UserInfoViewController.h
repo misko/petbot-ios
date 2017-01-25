@@ -12,6 +12,7 @@
 #import "PBTextField.h"
 
 @interface UserInfoViewController : PBViewController <NSURLConnectionDataDelegate>
+
 @property (strong, nonatomic) IBOutlet PBTextField *usernameTextField;
 @property (strong, nonatomic) IBOutlet PBTextField *emailTextField;
 @property (strong, nonatomic) IBOutlet PBTextField *passwordTextField;
@@ -26,5 +27,6 @@
 - (IBAction)username_changed:(id)sender;
 
 - (IBAction)email_change:(id)sender;
+-(void)setDebugMode:(bool)x;
 
 @end

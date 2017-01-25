@@ -13,6 +13,8 @@
 #include "nice_utils.h"
 #include "pb.h"
 
+#import "UIColor+PBColor.h"
+
 @interface VideoViewController () {
     GStreamerBackend *gst_backend;
     int media_width;
@@ -27,6 +29,7 @@
     NSString * status ;
     bool bye_pressed;
     bool petbot_found;
+    int waiting_selfies;
 }
 @end
 
@@ -113,7 +116,12 @@
                 NSString * pb_sound_str = [NSString stringWithFormat:@"PLAYURL %@",url];
                 
                 [self send_msg:[pb_sound_str UTF8String] type:(PBMSG_SOUND | PBMSG_REQUEST | PBMSG_STRING)];
+            
+            NSString * device_mute_str =  [[NSUserDefaults standardUserDefaults] stringForKey:@"device_mute"];
+            if (device_mute_str==nil || [device_mute_str isEqualToString:@""] || [device_mute_str isEqualToString:@"OFF"]) {
                 [self playSoundFromURL:url];
+            } else {
+            }
         }
     );
 }
@@ -129,6 +137,73 @@
 }
 
 
+-(void)checkSelfie:(bool)activate {
+    @synchronized(self) {
+    NSString * selfieurl=nil;
+    NSString * rmurl = nil;
+    
+    NSURL * url = [NSURL URLWithString:[NSString stringWithFormat:@"%s%@", HTTPS_ADDRESS_PB_SELFIE_LAST, pubsubserver_secret]];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+    
+    //send the request
+    NSURLResponse * response;
+    NSError * error;
+    NSData * data = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
+    if (error) {
+        waiting_selfies=0;
+    } else {
+        NSDictionary * d = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
+        if (error) {
+            waiting_selfies=0;
+        } else {
+            NSNumber *status = d[@"status"];
+            if ([status isEqual:@0]) {
+                waiting_selfies=0;
+            } else if ([status isEqual:@1]) {
+                waiting_selfies = [[d objectForKey:@"count"] longValue];
+                selfieurl =  d[@"selfie_url"];
+                rmurl = d[@"rm_url"];
+            } else {
+                NSLog(@"Failed to get selfie status");
+            }
+        }
+    }
+    
+    //run the corresponding event
+    if (waiting_selfies>0) {
+        if (activate) {
+            waiting_selfies--;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+                [appDelegate showSelfieWithURL:selfieurl RMURL:rmurl from:self];
+                if (waiting_selfies==0) {
+                    [selfie_button setEnabled:true];
+                }
+            });
+        }
+    } else {
+        if (activate) {
+            [self send_msg:"selfie" type:( PBMSG_VIDEO | PBMSG_REQUEST | PBMSG_STRING)];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [selfie_button setEnabled:FALSE];
+            });
+        }
+    }
+    
+    //set the final state as it should
+    dispatch_async(dispatch_get_main_queue(), ^{
+    if (waiting_selfies>0) {
+        [selfie_button setHidden:true];
+        [selfie_play_button setHidden:false];
+        [selfie_play_button setTitle:[NSString stringWithFormat:@"%d",waiting_selfies] forState:UIControlStateNormal];
+    } else {
+        [selfie_button setHidden:false];
+        [selfie_play_button setHidden:true];
+    }
+    });
+    
+    }
+}
 
 - (IBAction)selfiePressed:(id)sender {
     //first lets check if there is selfies waiting
@@ -137,47 +212,7 @@
     AudioServicesPlaySystemSound(kSystemSoundID_Vibrate);
     dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
     dispatch_async(queue, ^{
-        NSURL * url = [NSURL URLWithString:[NSString stringWithFormat:@"%s%@", HTTPS_ADDRESS_PB_SELFIE_LAST, pubsubserver_secret]];
-        NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
-        
-        //send the request
-        NSURLResponse * response;
-        NSError * error;
-        NSData * data = [NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
-        if (error) {
-            NSLog(@"Error,%@", [error localizedDescription]);
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [selfie_button setEnabled:TRUE];
-            });
-        } else {
-            NSDictionary * d = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
-            if (error) {
-                NSLog(@"Error,%@", [error localizedDescription]);
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [selfie_button setEnabled:TRUE];
-                });
-            } else {
-                NSNumber *status = d[@"status"];
-                if ([status isEqual:@0]) {
-                    //lets get a new selfie!
-                    //dont enable button until selfie is done????
-                    [self send_msg:"selfie" type:( PBMSG_VIDEO | PBMSG_REQUEST | PBMSG_STRING)];
-                } else if ([status isEqual:@1]) {
-                    long selfies = [[d objectForKey:@"count"] longValue];
-                    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:(selfies-1)];
-                    NSString * selfieurl =  d[@"selfie_url"];
-                    NSString * rmurl = d[@"rm_url"];
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-                        [appDelegate showSelfieWithURL:selfieurl RMURL:rmurl from:self];
-                        [selfie_button setEnabled:TRUE];
-                    });
-                } else {
-                    NSLog(@"Failed to get selfie status");
-                }
-            }
-        }
+        [self checkSelfie:true];
     });
     
 }
@@ -282,9 +317,28 @@
             }
         } else if ((m->pbmsg_type ^  (PBMSG_CLIENT | PBMSG_VIDEO | PBMSG_RESPONSE | PBMSG_STRING | PBMSG_SUCCESS))==0) {
             NSLog(@"ENABLE SELFIE BUTTON!");
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [selfie_button setEnabled:TRUE];
-            });
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW,
+                                         10 * NSEC_PER_SEC),
+                           dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),
+                           ^{
+                               [self checkSelfie:false];
+                           });
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW,
+                                         30 * NSEC_PER_SEC),
+                           dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),
+                           ^{
+                               [self checkSelfie:false];
+                           });
+            
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW,
+                                         60 * NSEC_PER_SEC),
+                           dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),
+                           ^{
+                               [self checkSelfie:false];
+                           });
+            //dispatch_async(dispatch_get_main_queue(), ^{
+             //   [selfie_button setEnabled:TRUE];
+            //});
         } else if ((m->pbmsg_type & PBMSG_DISCONNECTED) !=0) {
             if (m->pbmsg_from==bb_streamer_id) {
                 fprintf(stderr,"The other side exited!\n");
@@ -403,8 +457,8 @@
         if (pbs!=nil) {
             free_pbsock(pbs);
             pbs=nil;
-            [gst_backend quit];
         }
+        [gst_backend quit];
         return;
     } else {
         DDLogWarn(@"ICE NEGOTIATION SUCCESS");
@@ -501,6 +555,10 @@
     [pet_name setText:@""];
     [pet_story setText:@""];
     
+    [selfie_play_button setBackgroundColor:[UIColor PBRed]];
+    
+    waiting_selfies=0;
+    
     
     //do blur, and go to black for old style
     if (!UIAccessibilityIsReduceTransparencyEnabled()) {
@@ -543,6 +601,11 @@
         NSError* error;
         player = [[AVAudioPlayer alloc] initWithData:audioData error:&error];
         [player play];
+    });
+    
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [self checkSelfie:false];
     });
     
 }

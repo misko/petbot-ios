@@ -13,6 +13,7 @@
     IBOutlet UIImageView *pet_img;
     IBOutlet UIView *main_view;
  
+    IBOutlet PBButton *selfie_play_button;
     IBOutlet PBButton *selfie_button;
     IBOutlet UILabel *pet_name;
     IBOutlet UIView *pet_view;

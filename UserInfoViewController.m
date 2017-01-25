@@ -17,12 +17,16 @@
     NSString * password_err;
     NSString * email_err;
     BOOL usernameHasChanged;
+    bool debug_mode;
 }
 
 @end
 
 @implementation UserInfoViewController
 
+-(void)setDebugMode:(bool)x {
+    debug_mode=x;
+}
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([[segue identifier] isEqualToString:@"userInfoToWifiInfo"]) {
@@ -140,7 +144,11 @@
     [_status_label setTextColor:[UIColor PBRed]];
     [_status_label setText:@""];
     //[_continueButton setEnabled:FALSE];
-    [_notifier setBackgroundColor:[UIColor PBBlue]];
+    if (debug_mode==true) {
+        [_notifier setBackgroundColor:[UIColor PBRed]];
+    } else {
+        [_notifier setBackgroundColor:[UIColor PBBlue]];
+    }
     //[self toastPinColor:[UIColor PBBlue] Message:@"(1) STEP ONE"];
     
     // Do any additional setup after loading the view.

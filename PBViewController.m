@@ -12,6 +12,8 @@
 #import <CRToast/CRToast.h>
 
 @interface PBViewController () {
+    NSString * selected_sound_fid;
+    NSString * selected_sound_name;
 }
 
 @end
