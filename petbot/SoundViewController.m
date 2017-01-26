@@ -232,6 +232,10 @@
             [bc.ui_button setEnabled:false];
         }
     }
+    if ([cell_name isEqualToString:@"reboot"]) {
+        ButtonCell * bc = cell;
+        [bc.ui_button addTarget:self action:@selector(rebootButton:) forControlEvents:UIControlEventTouchUpInside];
+    }
     if ([cell_name isEqualToString:@"help"]) {
         ButtonCell * bc = cell;
         [bc.ui_button addTarget:self action:@selector(helpButton:) forControlEvents:UIControlEventTouchUpInside];
@@ -346,6 +350,9 @@
         if ([self updatesAllowed]) {
             [self updateButton:nil];
         }
+    }
+    if ([cell_name isEqualToString:@"reboot"]) {
+        [self rebootButton:nil];
     }
     if ([cell_name isEqualToString:@"help"]) {
         [self helpButton:nil];
@@ -471,6 +478,10 @@
     [self send_msg:[set_led_string UTF8String] type:(PBMSG_CONFIG_SET | PBMSG_STRING | PBMSG_REQUEST)];
 }
 
+-(IBAction)rebootButton:(id)sender {
+    [self send_msg:"QUIT" type:(PBMSG_STRING)];
+}
+
 -(IBAction)updateButton:(id)sender {
         [self send_msg:"UPDATE updates@updates.petbot.ca:/" type:(PBMSG_UPDATE | PBMSG_STRING | PBMSG_REQUEST)];
         UIAlertController *controller = [UIAlertController alertControllerWithTitle:@"Updating..."
@@ -561,9 +572,9 @@
     types_sound = [NSArray arrayWithObjects:@"DetailCell",@"SliderCell",@"SwitchCell",@"ButtonCell",@"ButtonCell",@"RecordCell", nil];
     names_sound = [NSArray arrayWithObjects:@"volume",@"volume_slider",@"device_mute",@"selfie_sound",@"alert_sound",@"record", nil];
     
-    labels_system = [NSArray arrayWithObjects:@"LED enable/",@"Update/Retrieve the latest PetBot firmware",@"Version",@"Help/Our online manual and troubleshooting", nil];
-    types_system = [NSArray arrayWithObjects:@"SwitchCell",@"ButtonCell",@"DetailRightCell",@"ButtonCell", nil];
-    names_system = [NSArray arrayWithObjects:@"led_enable",@"update",@"version",@"help", nil];
+    labels_system = [NSArray arrayWithObjects:@"LED enable/",@"Update/Retrieve the latest PetBot firmware",@"Reboot your petbot/",@"Version",@"Help/Our online manual and troubleshooting", nil];
+    types_system = [NSArray arrayWithObjects:@"SwitchCell",@"ButtonCell",@"ButtonCell",@"DetailRightCell",@"ButtonCell", nil];
+    names_system = [NSArray arrayWithObjects:@"led_enable",@"update",@"reboot",@"version",@"help", nil];
     
     sections = [NSArray arrayWithObjects:@"System",@"Sound",@"Selfie", nil];
 }

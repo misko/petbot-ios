@@ -317,6 +317,7 @@
             }
         } else if ((m->pbmsg_type ^  (PBMSG_CLIENT | PBMSG_VIDEO | PBMSG_RESPONSE | PBMSG_STRING | PBMSG_SUCCESS))==0) {
             NSLog(@"ENABLE SELFIE BUTTON!");
+            [selfie_button setEnabled:true];
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW,
                                          10 * NSEC_PER_SEC),
                            dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),
