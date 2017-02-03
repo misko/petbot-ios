@@ -29,17 +29,20 @@ static const DDLogLevel ddLogLevel = DDLogLevelWarning;
     
     int pubsubserver_port;
     pbsock * pbs;
+    bool debug_mode;
 }
 -(void)setupLogin;
 -(void)toastStatus:(bool)status Message:(NSString*)msg;
 -(void)toastPinColor:(UIColor*)c Message:(NSString*)msg;
 -(void)setLoginArray:(NSDictionary *)dictionary;
+-(void)setDebug:(bool)d;
 -(void)setSounds:(NSArray *)snds;
 -(bool)updatesAllowed ;
 -(NSMutableDictionary *)parseConfig:(NSString*)str;
 
 //PBS ops
 -(void)send_msg:(const char*)msg type:(int)ty;
+-(void)send_msg_log:(const char*)msg;
 
 //FILE OPS
 -(NSMutableArray*)pbserverLSWithType:(NSString *)ty;

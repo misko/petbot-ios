@@ -9,6 +9,7 @@
 
 #import <UIKit/UIKit.h>
 #import "PBViewController.h"
+#import "VideoViewController.h"
 #import "SelfieView.h"
 #import "PBButton.h"
 
@@ -17,6 +18,7 @@
 - (IBAction)deletePressed:(id)sender;
 @property (strong, nonatomic) NSString *selfieURL;
 @property (strong, nonatomic) NSString *selfieRMURL;
+@property (strong, nonatomic) VideoViewController *vvc;
 
 
 @end

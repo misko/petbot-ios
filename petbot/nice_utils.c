@@ -37,6 +37,8 @@
  *   simple-example 0 $(host -4 -t A stun.stunprotocol.org | awk '{ print $4 }')
  *   simple-example 1 $(host -4 -t A stun.stunprotocol.org | awk '{ print $4 }')
  */
+
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -65,6 +67,9 @@
 //static GIOChannel* gpipe;
 //guint stream_id;
 //NiceAgent *agent;
+
+static gboolean force_relay = FALSE;
+static gboolean no_candidates = FALSE;
 
 static const gchar *candidate_type_name[] = {"host", "srflx", "prflx", "relay"};
 
@@ -353,8 +358,8 @@ NiceAgent * init_ice(pb_nice_io * pbnio) {
   //pipe_to_parent = to_parent;
   //pipe_from_parent = from_parent;
   if (pbnio->controlling != 0 && pbnio->controlling != 1) {
-    PBPRINTF( "controlling must be 1 or 0\n");
-    exit(1);
+    pbnio->error="CONTROLLING FAILED";
+    return NULL;
   }
 
   PBPRINTF("Using stun server '[%s]:%u'\n", stun_addr, stun_port);
@@ -368,6 +373,7 @@ NiceAgent * init_ice(pb_nice_io * pbnio) {
 
   // Create the nice agent
   pbnio->agent = nice_agent_new(NULL,
+       //                         NICE_COMPATIBILITY_GOOGLE);
       NICE_COMPATIBILITY_RFC5245);
   if (pbnio->agent == NULL) {
     //g_error("Failed to create agent");
@@ -475,7 +481,12 @@ pipein_remote_info_cb (GIOChannel *source, GIOCondition cond,
   if (rval == EXIT_SUCCESS) {
    ret = FALSE;
   } else {
-   PBPRINTF("SOMETHING WENT WRONG IN PARSING REMOTE LIBNIC STRING!\n");
+      PBPRINTF("SOMETHING WENT WRONG IN PARSING REMOTE LIBNIC STRING!\n");
+      pbnio->error = "NICE PARSING ERROR";
+      g_mutex_lock(&(pbnio->negotiate_mutex));
+      pbnio->negotiation_done = TRUE;
+      g_cond_signal(&(pbnio->negotiate_cond));
+      g_mutex_unlock(&(pbnio->negotiate_mutex));
   }
   return ret; //ret==FALSE -> stop listening?
 }
@@ -496,14 +507,21 @@ cb_component_state_changed(NiceAgent *agent, guint _stream_id,
 
     // Get current selected candidate pair and print IP address used
     if (nice_agent_get_selected_pair (agent, _stream_id, component_id,
-                &local, &remote)) {
-      gchar ipaddr[INET6_ADDRSTRLEN];
+                                      &local, &remote)) {
+        gchar ipaddr_a[INET6_ADDRSTRLEN];
+        gchar ipaddr_b[INET6_ADDRSTRLEN];
 
-      nice_address_to_string(&local->addr, ipaddr);
-      printf("\nNegotiation complete: ([%s]:%d,",
-          ipaddr, nice_address_get_port(&local->addr));
-      nice_address_to_string(&remote->addr, ipaddr);
-      printf(" [%s]:%d)\n", ipaddr, nice_address_get_port(&remote->addr));
+        nice_address_to_string(&local->addr, ipaddr_a);
+        nice_address_to_string(&remote->addr, ipaddr_b);
+        char * ip_str_buffer = (char*)malloc(sizeof(char)*2056);
+        if (ip_str_buffer==NULL) {
+            PBPRINTF("FILAED TO MALLOC\n");
+            exit(1);
+        }
+        ip_str_buffer[0]='\0';
+        sprintf(ip_str_buffer,"[%s]:%d<->[%s]:%d",ipaddr_a,nice_address_get_port(&local->addr),ipaddr_b,nice_address_get_port(&remote->addr));
+        pbnio->ice_pair=ip_str_buffer;
+        PBPRINTF("NEGOTIATION COMPLETE: %s\n",ip_str_buffer);
     }
 
     g_mutex_lock(&(pbnio->negotiate_mutex));
@@ -515,6 +533,8 @@ cb_component_state_changed(NiceAgent *agent, guint _stream_id,
   } else if (state == NICE_COMPONENT_STATE_FAILED) {
     //sem_post(&negotiation_done);
     PBPRINTF("Something failed a ICE negotiation crapped out!\n");
+    pbnio->error = "NICE NEGOTIATION FAILED";
+      
     g_mutex_lock(&(pbnio->negotiate_mutex));
     pbnio->negotiation_done = TRUE;
     g_cond_signal(&(pbnio->negotiate_cond));
@@ -522,11 +542,11 @@ cb_component_state_changed(NiceAgent *agent, guint _stream_id,
     //g_main_loop_quit (gloop);
     agent=NULL;
   } else if (state==NICE_COMPONENT_STATE_CONNECTING) {
-      fprintf(stderr,"NICE CONNECTING\n");
+      PBPRINTF("NICE CONNECTING\n");
   } else if (state==NICE_COMPONENT_STATE_DISCONNECTED) {
-    fprintf(stderr,"NICE DISCONNECTED\n");
+    PBPRINTF("NICE DISCONNECTED\n");
   } else if (state==NICE_COMPONENT_STATE_GATHERING) {
-      fprintf(stderr,"NICE GATHER\n");
+      PBPRINTF("NICE GATHER\n");
   } else {
       PBPRINTF("WEIRD STATE CHANGE??? WTF\n");
   }
@@ -601,7 +621,7 @@ parse_candidate(char *scand, guint _stream_id)
 char * 
 str_local_data (NiceAgent *agent, guint _stream_id, guint component_id)
 {
-  fprintf(stderr,"LOCAL DATA\n");
+  PBPRINTF("LOCAL DATA\n");
   //int result = EXIT_FAILURE;
   gchar *local_ufrag = NULL;
   gchar *local_password = NULL;
@@ -632,12 +652,25 @@ str_local_data (NiceAgent *agent, guint _stream_id, guint component_id)
     nice_address_to_string(&c->addr, ipaddr);
 
     // (foundation),(prio),(addr),(port),(type)
-    ret+= sprintf(buffer+ret," %s,%u,%s,%u,%s",
-        c->foundation,
-        c->priority,
-        ipaddr,
-        nice_address_get_port(&c->addr),
-        candidate_type_name[c->type]);
+      if (force_relay) {
+          if (c->type==NICE_CANDIDATE_TYPE_RELAYED) {
+              ret+= sprintf(buffer+ret," %s,%u,%s,%u,%s",
+                            c->foundation,
+                            c->priority,
+                            ipaddr,
+                            nice_address_get_port(&c->addr),
+                            candidate_type_name[c->type]);
+          }
+      } else if (no_candidates==TRUE) {
+          
+      } else {
+          ret+= sprintf(buffer+ret," %s,%u,%s,%u,%s",
+                        c->foundation,
+                        c->priority,
+                        ipaddr,
+                        nice_address_get_port(&c->addr),
+                        candidate_type_name[c->type]);
+      }
   }
   //result = EXIT_SUCCESS;
 
@@ -684,7 +717,16 @@ parse_remote_data(NiceAgent *agent, guint _stream_id,
         PBPRINTF("failed to parse candidate: %s", line_argv[i]);
         goto end;
       }
-      remote_candidates = g_slist_prepend(remote_candidates, c);
+        
+        if (force_relay==TRUE) {
+            if (c->type==NICE_CANDIDATE_TYPE_RELAYED ) {
+                remote_candidates = g_slist_prepend(remote_candidates, c);
+            }
+        } else if (no_candidates==TRUE) {
+            
+        } else {
+            remote_candidates = g_slist_prepend(remote_candidates, c);
+        }
     }
   }
   if (ufrag == NULL || passwd == NULL || remote_candidates == NULL) {

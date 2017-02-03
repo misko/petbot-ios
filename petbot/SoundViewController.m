@@ -274,9 +274,10 @@
     }
     if ([cell_name isEqualToString:@"selfie_enable"]) {
         SwitchCell * sc = cell;
-        if ([config objectForKey:@"selfie_enable"]!=nil) {
+        if ([config objectForKey:@"pb_selfie_enable"]!=nil) {
+            [sc.ui_switch setOn:[[config objectForKey:@"pb_selfie_enable"] intValue]==1];
             [sc.ui_switch setEnabled:true];
-            [sc.ui_switch setOn:[[config objectForKey:@"selfie_enable"] intValue]==1];
+            [sc.ui_switch addTarget:self action:@selector(setSelfie:) forControlEvents:UIControlEventValueChanged];
         } else {
             [sc.ui_switch setEnabled:false];
         }
@@ -300,8 +301,9 @@
         } else {
             [sc.ui_slider setEnabled:false];
         }
-        
-        [sc.ui_slider setEnabled:false];// mot is messed up in basic firmware
+        if ([[config objectForKey:@"version"] isEqualToString:@"1412431"]) {
+           [sc.ui_slider setEnabled:false];// mot is messed up in basic firmware
+        }
     }
     
     /*if ([cellIdentifier isEqualToString:@"SwitchCell"]) {
@@ -467,6 +469,17 @@
         [[NSUserDefaults standardUserDefaults] synchronize];
     }
 }
+
+-(IBAction)setSelfie:(id)sender {
+    NSString *  set_selfie_string;
+    if([sender isOn]){
+        set_selfie_string = [NSString stringWithFormat:@"pb_selfie_enable\t1"];
+    } else {
+        set_selfie_string = [NSString stringWithFormat:@"pb_selfie_enable\t0"];
+    }
+    [self send_msg:[set_selfie_string UTF8String] type:(PBMSG_CONFIG_SET | PBMSG_STRING | PBMSG_REQUEST)];
+}
+
 
 -(IBAction)setLED:(id)sender {
     NSString *  set_led_string;

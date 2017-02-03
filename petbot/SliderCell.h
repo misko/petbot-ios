@@ -9,5 +9,6 @@
 
 @interface SliderCell : UITableViewCell {
 }
+@property (strong, nonatomic) IBOutlet UILabel *sliderLabel;
 @property (strong, nonatomic) IBOutlet UISlider *ui_slider;
 @end

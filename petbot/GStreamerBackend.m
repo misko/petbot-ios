@@ -32,6 +32,8 @@ GST_DEBUG_CATEGORY_STATIC (debug_category);
     UIView *ui_video_view; /* UIView that holds the video */
     int launched;
     VideoViewController * vvc;
+    guint64 * jitter_stats;
+    GstElement *nicesrc, *rtph264depay, *avdec_h264, *videoconvert, *autovideosink,*rtpjitterbuffer;
 }
 
 /*
@@ -40,6 +42,17 @@ GST_DEBUG_CATEGORY_STATIC (debug_category);
 
 -(id) init:(id) uiDelegate videoView:(UIView *)video_view vvc:(VideoViewController *)vvcx
 {
+    nicesrc=NULL;
+    rtph264depay=NULL;
+    avdec_h264=NULL;
+    videoconvert=NULL;
+    autovideosink=NULL;
+    rtpjitterbuffer=NULL;
+    jitter_stats=(guint64*)malloc(sizeof(guint64)*3);
+    if (jitter_stats==NULL) {
+        PBPRINTF("ERROR MALLOC!");
+        exit(1);
+    }
     main_loop=nil;
     launched=0;
     self->vvc = vvcx;
@@ -88,7 +101,12 @@ GST_DEBUG_CATEGORY_STATIC (debug_category);
 }
 
 -(void) quit {
-    
+    nicesrc=NULL;
+    rtph264depay=NULL;
+    avdec_h264=NULL;
+    videoconvert=NULL;
+    autovideosink=NULL;
+    rtpjitterbuffer=NULL;
     //gst_element_set_state (pipeline, GST_STATE_NULL);
     if (main_loop!=nil) {
         g_main_loop_quit(main_loop);
@@ -177,11 +195,40 @@ static void state_changed_cb (GstBus *bus, GstMessage *msg, GStreamerBackend *se
     }
 }
 
+-(guint64*)get_jitter_stats {
+    if (rtpjitterbuffer!=NULL) {
+        GstStructure * stats;
+        g_object_get (rtpjitterbuffer, "stats", &stats, NULL);
+        //guint64 rtx_count, rtx_success_count, rtx_rtt, percent;
+        //guint64 num_pushed,num_lost,num_late;
+        //gdouble rtx_per_packet;
+        /*gst_structure_get_uint64 (stats, "rtx-count", &rtx_count);
+        gst_structure_get_uint64 (stats, "rtx-success-count", &rtx_success_count);
+        gst_structure_get_double (stats, "rtx-per-packet", &rtx_per_packet);
+        gst_structure_get_uint64 (stats, "rtx-rtt", &rtx_rtt);*/
+        gst_structure_get_uint64 (stats, "num-pushed", jitter_stats);
+        gst_structure_get_uint64 (stats, "num-lost", jitter_stats+1);
+        gst_structure_get_uint64 (stats, "num-late", jitter_stats+2);
+        
+        //NSLog(@"PUSHED %ld %ld %ld\n",num_pushed,num_lost,num_late);
+        //NSLog(@"PUSHED %ld %ld %e\n",rtx_count,rtx_success_count,rtx_per_packet);
+        return jitter_stats;
+    }
+    return nil;
+}
+
+-(uint) get_frames_rendered {
+    guint frames_redendered = 0;
+    if (autovideosink!=NULL) {
+        g_object_get(autovideosink,"frames-rendered",&frames_redendered,NULL);
+        [self get_jitter_stats];
+    }
+    return frames_redendered;
+}
+
 /* Main method for the bus monitoring code */
 -(void) app_functionPBNIO:(pb_nice_io *)pbnio
 {
-
-
     GstBus *bus;
     GSource *bus_source;
 
@@ -189,7 +236,6 @@ static void state_changed_cb (GstBus *bus, GstMessage *msg, GStreamerBackend *se
 
     
     /* Build pipeline */
-    GstElement *nicesrc, *rtph264depay, *avdec_h264, *videoconvert, *autovideosink;
     nicesrc = gst_element_factory_make ("nicesrc", "nicesrc");
     fprintf(stderr,"nicesrc %p\n",nicesrc);
     rtph264depay = gst_element_factory_make ("rtph264depay", "rtph264depay");
@@ -198,7 +244,11 @@ static void state_changed_cb (GstBus *bus, GstMessage *msg, GStreamerBackend *se
     fprintf(stderr,"avdec_h264 %p\n",avdec_h264);
     videoconvert = gst_element_factory_make ("videoconvert", "videoconvert");
     fprintf(stderr,"videoconvert %p\n",videoconvert);
-    autovideosink = gst_element_factory_make ("autovideosink", "autovideosink");
+    rtpjitterbuffer = gst_element_factory_make("rtpjitterbuffer", "rtpjitterbuffer");
+    fprintf(stderr,"rtpjitterbuffer %p\n",rtpjitterbuffer);
+    autovideosink = gst_element_factory_make ("fpsdisplaysink", "fpsdisplaysink");
+    
+    g_object_set (autovideosink, "text-overlay", FALSE, NULL);
     fprintf(stderr,"autovideosink %p\n",autovideosink);
     
     g_object_set (nicesrc, "agent", pbnio->agent, NULL);
@@ -212,14 +262,14 @@ static void state_changed_cb (GstBus *bus, GstMessage *msg, GStreamerBackend *se
     pipeline = gst_pipeline_new ("send-pipeline");
     
     /* Build the pipeline */
-    gst_bin_add_many (GST_BIN (pipeline), nicesrc, rtph264depay, avdec_h264, videoconvert, autovideosink,  NULL);
-    if (!gst_element_link_filtered( nicesrc, rtph264depay, nicesrc_caps)) {
+    gst_bin_add_many (GST_BIN (pipeline), nicesrc, rtpjitterbuffer, rtph264depay, avdec_h264, videoconvert, autovideosink,  NULL);
+    if (!gst_element_link_filtered( nicesrc, rtpjitterbuffer, nicesrc_caps)) {
         fprintf(stderr,"Failed to link 1\n");
         [self quit];
         return;
         //exit(1);
     }
-    if (!gst_element_link_many(rtph264depay,avdec_h264,videoconvert,autovideosink,NULL)) {
+    if (!gst_element_link_many(rtpjitterbuffer, rtph264depay,avdec_h264,videoconvert,autovideosink,NULL)) {
         fprintf(stderr,"Failed to link 2\n");
         
         [self quit];

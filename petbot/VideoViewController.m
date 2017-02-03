@@ -8,6 +8,7 @@
 #import "GStreamerBackend.h"
 #import "LoginViewController.h"
 #import "SoundViewController.h"
+#import "SelfieViewController.h"
 #import "AppDelegate.h"
 #include "tcp_utils.h"
 #include "nice_utils.h"
@@ -30,6 +31,7 @@
     bool bye_pressed;
     bool petbot_found;
     int waiting_selfies;
+    int seconds;
 }
 @end
 
@@ -175,7 +177,8 @@
             waiting_selfies--;
             dispatch_async(dispatch_get_main_queue(), ^{
                 AppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-                [appDelegate showSelfieWithURL:selfieurl RMURL:rmurl from:self];
+                //[appDelegate showSelfieWithURL:selfieurl RMURL:rmurl from:self];
+                [self showSelfieWithURL:selfieurl RMURL:rmurl from:self];
                 if (waiting_selfies==0) {
                     [selfie_button setEnabled:true];
                 }
@@ -262,6 +265,26 @@
 
 
 
+
+
+-(void) update_fps {
+    uint frames_rendered = [gst_backend get_frames_rendered];
+    guint64* jitter_stats = [gst_backend get_jitter_stats];
+    if (jitter_stats!=NULL) {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [fps_label setText:[NSString stringWithFormat:@"F %u, %lu/%lu/%lu, %d",frames_rendered,jitter_stats[0],jitter_stats[1],jitter_stats[2],seconds++]];
+    });
+    }
+    if (pbs!=nil) {
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW,
+                                 1 * NSEC_PER_SEC),
+                   dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),
+                   ^{
+                       [self update_fps];
+                   });
+    }
+}
+
 -(void) listenForEvents {
     while (true) {
         pbmsg * m = recv_pbmsg(pbs);
@@ -300,6 +323,33 @@
                 bb_streamer_id = m->pbmsg_from;
                 fprintf(stderr,"BBSTREAMER ID %d\n",bb_streamer_id);
                 recvd_ice_response(m,pbnio);
+                if (pbnio->error!=NULL) {
+                    
+                    //something went wrong
+                    NSString * s = [NSString stringWithFormat:@"ICE NEGOTATION FAILED : %@" ,[ NSString stringWithUTF8String:pbnio->error]];
+                    [self send_msg_log:[s UTF8String]];
+                    DDLogWarn(@"%@" , s);
+                    status = s;
+                    
+                    if (pbs!=nil) {
+                        free_pbsock(pbs);
+                        pbs=nil;
+                    }
+                    [gst_backend quit];
+                    return;
+                } else {
+                    DDLogWarn(@"ICE NEGOTIATION SUCCESS");
+                }
+                if (pbnio->ice_pair!=NULL) {
+                    NSString * s = [NSString stringWithFormat:@"ICE PAIR %s",pbnio->ice_pair];
+                    [self send_msg_log:[s UTF8String]];
+                    if (debug_mode) {
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            [message_label setText:s];
+                        });
+                    }
+                    DDLogWarn(@"%@",s);
+                }
                 dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                     [gst_backend app_functionPBNIO:pbnio];
                 });
@@ -317,7 +367,9 @@
             }
         } else if ((m->pbmsg_type ^  (PBMSG_CLIENT | PBMSG_VIDEO | PBMSG_RESPONSE | PBMSG_STRING | PBMSG_SUCCESS))==0) {
             NSLog(@"ENABLE SELFIE BUTTON!");
-            [selfie_button setEnabled:true];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [selfie_button setEnabled:true];
+            });
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW,
                                          10 * NSEC_PER_SEC),
                            dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0),
@@ -342,7 +394,7 @@
             //});
         } else if ((m->pbmsg_type & PBMSG_DISCONNECTED) !=0) {
             if (m->pbmsg_from==bb_streamer_id) {
-                fprintf(stderr,"The other side exited!\n");
+                PBPRINTF("The other side exited!\n");
                 status = @"PetBot disconnected";
                 if (pbs!=nil) {
                     free_pbsock(pbs);
@@ -352,10 +404,10 @@
                 return;
                 //g_main_loop_quit(main_loop);
             } else {
-                fprintf(stderr,"SOMEONE ELSE DISCONNETED %d vs %d\n",bb_streamer_id,m->pbmsg_from);
+                PBPRINTF("SOMEONE ELSE DISCONNETED %d vs %d\n",bb_streamer_id,m->pbmsg_from);
             }
         } else {
-            fprintf(stderr,"WTF\n");
+            PBPRINTF("WTF\n");
         }
     }
 }
@@ -429,6 +481,10 @@
     }
     
     
+    if (debug_mode) {
+        [self update_fps];
+    }
+    
     DDLogWarn(@"SET STUN");
     set_stun([ns_stun_server UTF8String], [ns_stun_port UTF8String], [ns_stun_username UTF8String], [ns_stun_password UTF8String]);
     
@@ -451,7 +507,7 @@
     init_ice(pbnio);
     if (pbnio->error!=NULL) {
         //something went wrong
-        NSString * s = [NSString stringWithFormat:@"ICE NEGOTATION FAILED : %@" ,[ NSString stringWithUTF8String:pbnio->error]];
+        NSString * s = [NSString stringWithFormat:@"ICE INITIALIZE FAILED : %@" ,[ NSString stringWithUTF8String:pbnio->error]];
         DDLogWarn(@"%@" , s);
         status = s;
         
@@ -462,7 +518,7 @@
         [gst_backend quit];
         return;
     } else {
-        DDLogWarn(@"ICE NEGOTIATION SUCCESS");
+        DDLogWarn(@"ICE INITIALIZE SUCCESS");
     }
     //start up the listener
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
@@ -546,13 +602,38 @@
 }
 
 
+-(void)showSelfieWithURL:(NSString *)selfieURL RMURL:(NSString*)rmURL from:(UIViewController *)from_vc {
+    UIStoryboard * storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    SelfieViewController *VC = [storyboard instantiateViewControllerWithIdentifier:@"SelfieView"];
+    VC.selfieRMURL=rmURL;
+    VC.selfieURL=selfieURL;
+    VC.vvc = self;
+    VC.modalPresentationStyle = UIModalPresentationOverCurrentContext;
+    //[self.window.rootViewController presentViewController: VC animated:YES completion:nil];
+    //[from_vc presentViewController: VC animated:YES completion:nil];
+    [from_vc presentViewController: VC animated:YES completion:^{
+        NSLog(@"DONE SELFIED CONTROL!");
+    }];
+}
+
+-(void)viewDidAppear:(BOOL)animated {
+    NSLog(@"APPEARED!");
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    if (debug_mode==FALSE) {
+        [message_label setHidden:TRUE];
+        [fps_label setHidden:TRUE];
+        seconds=0;
+    }
     petbot_found=false;
     bye_pressed=false;
     [self setConnectingText:@"Connecting..."];
     
+    [message_label setText:@""];
+    [fps_label setText:@""];
     [pet_name setText:@""];
     [pet_story setText:@""];
     
@@ -650,16 +731,16 @@
 
 -(void) gstreamerInitialized
 {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        message_label.text = @"Ready";
-    });
+    //dispatch_async(dispatch_get_main_queue(), ^{
+    //    message_label.text = @"Ready";
+    //});
 }
 
 -(void) gstreamerSetUIMessage:(NSString *)message
 {
-    dispatch_async(dispatch_get_main_queue(), ^{
-        message_label.text = message;
-    });
+    //dispatch_async(dispatch_get_main_queue(), ^{
+    //    message_label.text = message;
+    //});
 }
 
 

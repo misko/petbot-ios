@@ -17,6 +17,7 @@
     IBOutlet PBButton *selfie_button;
     IBOutlet UILabel *pet_name;
     IBOutlet UIView *pet_view;
+    IBOutlet UILabel *fps_label;
     IBOutlet UILabel *connecting_message;
 }
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *selfieLandScapeVertical;
@@ -42,4 +43,5 @@
 - (IBAction)swipeDown:(id)sender;
 - (IBAction)swipeUp:(id)sender;
 - (IBAction)longPress:(id)sender;
+-(void)checkSelfie:(bool)activate;
 @end

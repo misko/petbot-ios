@@ -38,7 +38,7 @@
         [self toastStatus:success Message:status];
         status=nil;
     }
-    
+    [_login_button setEnabled:TRUE];
     [status_label setText:@""];
     
     NSString * username = [[NSUserDefaults standardUserDefaults] stringForKey:@"username"];
@@ -65,8 +65,25 @@
     }
 }
 
+-(void)pressLogin:(id)sender {
+    [_login_button setEnabled:FALSE];
+    debug_mode=false;
+    NSLog(@"LOGIN PRESS");
+    [self login];
+}
+
+- (void)longPressLogin:(UILongPressGestureRecognizer*)gesture {
+    [_login_button setEnabled:FALSE];
+    debug_mode=true;
+     if ( gesture.state == UIGestureRecognizerStateEnded ) {
+    NSLog(@"LOGIN TAP");
+    [self login];
+     }
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [_login_button setEnabled:TRUE];
     playerViewController = [[AVPlayerViewController alloc] init];
 
     [status_label setText:@""];
@@ -80,6 +97,11 @@
     UILongPressGestureRecognizer *longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressSetup:)];
     [self.setup_button addGestureRecognizer:longPress];
     [self.setup_button addGestureRecognizer:tapPress];
+    
+    UITapGestureRecognizer *tapPressLogin = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(pressLogin:)];
+    UILongPressGestureRecognizer *longPressLogin = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressLogin:)];
+    [self.login_button addGestureRecognizer:longPressLogin];
+    [self.login_button addGestureRecognizer:tapPressLogin];
 }
 - (IBAction)forgetMePressed:(id)sender {
     //only do if able to deauth properly1!!!
@@ -144,6 +166,7 @@
     if ([[segue identifier] isEqualToString:@"streamSegue"]) {
         VideoViewController * vvc = [segue destinationViewController];
         [vvc setLoginArray:loginArray];
+        [vvc setDebug:debug_mode];
         //ViewController.user = [self.users objectInListAtIndex:[self.tableView indexPathForSelectedRow].row];
     } else if ([[segue identifier] isEqualToString:@"mainToUserInfo"]) {
         UserInfoViewController * uivc = [segue destinationViewController];
@@ -151,8 +174,8 @@
     }
 }
 
-- (IBAction)loginPressed:(id)sender {
-    [_login_button setEnabled:FALSE];
+- (void)login {
+    //[_login_button setEnabled:FALSE];
     //build an info object and convert to json
     NSString *uniqueIdentifier = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
     NSString *deviceToken = [[NSUserDefaults standardUserDefaults] objectForKey:@"deviceToken"];
@@ -173,11 +196,12 @@
     [request setHTTPBody:jsonData];
 
      [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
-        [_login_button setEnabled:TRUE];
+        
         if (error) {
             NSLog(@"Error,%@", [error localizedDescription]);
             [self toastStatus:false Message:@"Failed to connect to PB server"];
             [status_label setText:[error localizedDescription]];
+            [_login_button setEnabled:TRUE];
         } else {
             loginArray = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
             NSNumber *status = loginArray[@"status"];
@@ -189,6 +213,7 @@
                 } else {
                     [status_label setText:@"Server error :("];
                 }
+                [_login_button setEnabled:TRUE];
             } else if ([status isEqual:@1]) {
                 [[NSUserDefaults standardUserDefaults] setValue:_username_field.text forKey:@"username"];
                 [[NSUserDefaults standardUserDefaults] setValue:_password_field.text forKey:@"password"];
@@ -197,6 +222,7 @@
                 [self performSegueWithIdentifier:@"streamSegue" sender:self];
             } else {
                 [self toastStatus:false Message:@"Failed to connect to PB server"];
+                [_login_button setEnabled:TRUE];
             }
         }
     }];

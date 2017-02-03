@@ -13,4 +13,6 @@
 
 -(void) app_functionPBNIO:(pb_nice_io*)pbnio;
 -(void) quit;
+-(uint) get_frames_rendered;
+-(guint64*)get_jitter_stats;
 @end

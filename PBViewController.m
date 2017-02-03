@@ -45,6 +45,15 @@
 }
 
 
+-(void)send_msg_log:(const char*)msg {
+    char * log_message = (char*)malloc((strlen(msg)+20)*sizeof(char));
+    log_message[0]='\0';
+    sprintf(log_message,"LOG %s",msg);
+    pbmsg * m = new_pbmsg_from_str_wtype(log_message, PBMSG_STRING);
+    send_pbmsg(pbs, m);
+    free_pbmsg(m);
+    free(log_message);
+}
 
 
 -(void)send_msg:(const char*)msg type:(int)ty {
@@ -150,6 +159,9 @@
     return nil;
 }
 
+-(void)setDebug:(bool)d {
+    debug_mode=d;
+}
 -(void)setLoginArray:(NSDictionary *)dictionary {
     loginArray = dictionary;
 }

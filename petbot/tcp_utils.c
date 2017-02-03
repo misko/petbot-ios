@@ -163,8 +163,8 @@ static int getaddrinfo_compat(
 
 
 void set_stun(char * stun_addr_x, char * stun_port_x, char * stun_user_x, char * stun_password_x) {
-    stun_addr =hostname_to_ip_str(stun_addr,stun_port);
     stun_port = atoi(stun_port_x);
+    stun_addr = hostname_to_ip_str(stun_addr_x,atoi(stun_port_x));
     if (stun_user_x!=NULL) {
         stun_user = strdup(stun_user_x);
     }

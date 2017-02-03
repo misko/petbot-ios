@@ -54,7 +54,9 @@
     
     activityViewController.completionHandler = ^(NSString *activityType, BOOL completed) {
         if (completed) {
-            [self dismissViewControllerAnimated:YES completion:nil];
+            [self dismissViewControllerAnimated:YES completion:^{
+
+            }];
         }
     };
     
@@ -98,7 +100,12 @@ NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
             });
         } else {
             dispatch_async(dispatch_get_main_queue(), ^{
-            [self dismissViewControllerAnimated:YES completion:nil];
+                [self toastStatus:FALSE Message:@"Failed to download selfie"];
+                [self dismissViewControllerAnimated:YES completion:^{
+                    if (_vvc!=nil) {
+                        [_vvc checkSelfie:false];
+                    }
+                }];
             });
         }
         
@@ -226,7 +233,11 @@ NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
 
 
 - (IBAction)deletePressed:(id)sender {
-    [self dismissViewControllerAnimated:YES completion:nil];
+    [self dismissViewControllerAnimated:YES completion:^{
+        if (_vvc!=nil) {
+            [_vvc checkSelfie:false];
+        }
+    }];
 }
 
 - (void)appDidBecomeActive:(NSNotification *)notification {

@@ -16,11 +16,17 @@
     if (self) {
         // Initialization code
     }
+    
     return self;
+}
+
+- (IBAction)sliderChange:(UISlider*)sender {
+    [_sliderLabel setText:[NSString stringWithFormat:@"%.0f\%",100*[_ui_slider value]]];
 }
 
 -(void)layoutSubviews{
     [super layoutSubviews];
+    [_ui_slider addTarget:self action:@selector(sliderChange:) forControlEvents:UIControlEventValueChanged];
 }
 
 /*

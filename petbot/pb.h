@@ -74,6 +74,7 @@ typedef struct pb_nice_io {
    char * our_nice;
    char * other_nice;
     char * error;
+    char * ice_pair;
 } pb_nice_io;
 
 extern char * stun_addr;

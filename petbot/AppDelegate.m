@@ -137,6 +137,7 @@
     SelfieViewController *VC = [storyboard instantiateViewControllerWithIdentifier:@"SelfieView"];
     VC.selfieRMURL=rmURL;
     VC.selfieURL=selfieURL;
+    VC.vvc = nil;
     VC.modalPresentationStyle = UIModalPresentationOverCurrentContext;
     //[self.window.rootViewController presentViewController: VC animated:YES completion:nil];
     //[from_vc presentViewController: VC animated:YES completion:nil];
