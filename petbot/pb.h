@@ -18,6 +18,7 @@
 #ifdef OSX
 #endif
 
+#include <gst/gst.h>
 
 #define HTTPS_ADDRESS_PB_STATIC HTTPS_ADDRESS "static/"
 #define HTTPS_ADDRESS_DEAUTH HTTPS_ADDRESS "DEAUTH"
@@ -43,6 +44,10 @@
 
 #define SELFIE_FN "/tmp/selfie.mov"
 
+#define NICE_MODE_OLD	0
+#define NICE_MODE_SDP	1
+#define NICE_MODE_WEBRTC	2
+
 //#define PBPRINTF(fmt, args...)    fprintf(stderr, fmt, ## args)
 #ifndef RELEASE
 #define PBPRINTF(fmt, args...) fprintf(stderr, "DEBUG: %s:%d:%s(): " fmt, \
@@ -58,9 +63,16 @@ typedef struct DeviceSID {
   uint32_t key3;
 } DeviceSID;
 
+typedef struct pb_log {
+  char * log;
+  size_t log_len;
+  size_t log_used;
+} pb_log;
 
 typedef struct pb_nice_io {
    NiceAgent *agent;
+   GstElement * rx_pipeline;
+   GstElement * tx_pipeline;
    guint stream_id;
    GIOChannel * gpipe;
    guint pipe_to_parent;
@@ -73,17 +85,34 @@ typedef struct pb_nice_io {
    GMutex negotiate_mutex;
    char * our_nice;
    char * other_nice;
-    char * error;
-    char * ice_pair;
+   char * error;
+   char * ice_pair;
+   int mode;
+   char * webrtc_fingerprint;
 } pb_nice_io;
 
-extern char * stun_addr;
-extern int stun_port;
-extern char * stun_user;
-extern char * stun_passwd;
+typedef struct stun_server {
+    char addrv4[256];
+    char addrv6[256];
+    char hostname[256];
+    int port;
+    char user[256];
+    char passwd[256];
+    unsigned long resolved;
+    struct stun_server * next;
+} stun_server;
 
+extern stun_server stun_servers;
+gchar * get_substring (const gchar *regex, const gchar *string);
 #ifndef TARGET_OS_IPHONE
 
+extern char * selfie_sound_url;
+
+extern int cedar_stream_bitrate;
+extern int cedar_selfie_bitrate;
+extern int cedar_max_bitrate;
+extern int cedar_min_bitrate;
+extern int cedar_inc_bitrate;
 
 extern float selfie_dog_sensitivity;
 extern float selfie_cat_sensitivity;
@@ -99,6 +128,11 @@ extern int pb_exposure;
 extern int pb_hflip;
 extern int pb_vflip;
 extern int pb_white_balance;
+
+extern int pb_led_enable;
+extern int pb_selfie_enable;
+
+extern int nice_upnp_enable;
 
 extern char * pb_path;
 extern char * pb_config_path;
@@ -130,7 +164,8 @@ char * pb_rewrite(char * config, char * output_fn, char ** keys, char ** values,
 
 void pb_config_read();
 void pb_config_write();
-int set_config(char * pname, char * v_str);
+char * set_config(char * pname, char * v_str);
+char * get_config(char * pname);
 
 DeviceSID * getSID();
 #endif

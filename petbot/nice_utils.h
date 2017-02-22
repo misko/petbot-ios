@@ -7,9 +7,9 @@
 //extern guint stream_id;
 //extern NiceAgent *agent;
 
+int add_relays(NiceAgent * agent, int stream_id);
 char * our_nice_string(int controlling);
 void start_nice(pbsock * pbs);
-
 char * start_nice_server_get_nice(int * to_child, int * from_child);
 //int start_nice_server_with_nice(int *to_child, ent * from_child, pbmsg * ice_request, char * our_nice);
 int start_nice_server_with_nice(pb_nice_io * pbnio);

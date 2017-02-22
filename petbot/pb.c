@@ -1,9 +1,27 @@
+#include "pb.h"
+//stun_server stun_servers = {.addrv4="159.203.252.147", .addrv6="", .resolved=0, .hostname = "stun.petbot.ca", .port=3478, .user="misko", .passwd="misko",.next=NULL};
+stun_server stun_servers = {.addrv4="", .addrv6="", .resolved=0, .hostname = "", .port=3478, .user="misko", .passwd="misko",.next=NULL};
 
-char * stun_addr = "stun.petbot.ca";
-int stun_port = 3478;
-char * stun_user = "misko";
-char * stun_passwd = "misko";
 
+gchar * get_substring (const gchar *regex, const gchar *string) {
+    GRegex *gregex;
+    GMatchInfo *match_info = NULL;
+    gchar *ret = NULL;
+    
+    gregex = g_regex_new (regex,
+                          G_REGEX_MULTILINE | G_REGEX_NEWLINE_CRLF, 0, NULL);
+    g_assert (gregex);
+    
+    g_regex_match (gregex, string, 0, &match_info);
+    
+    if (g_match_info_get_match_count (match_info) == 2)
+        ret = g_match_info_fetch (match_info, 1);
+    
+    g_match_info_free (match_info);
+    g_regex_unref (gregex);
+    
+    return ret;
+}
 
 #ifndef TARGET_OS_IPHONE
 
@@ -33,10 +51,11 @@ char * stun_passwd = "misko";
 #define SID_BASE_ADDRESS 0x01c23800
 #define IO_SIZE          0x00300000
 #define SID_MMAP_START   ((SID_BASE_ADDRESS >> 12) << 12)
+
+#define SAFECMP(x,y) strncmp(x,y,strlen(y))
  
 #include <grp.h>
 
-#include "pb.h"
 #include "config.h"
 
 //#define PATH_MAX        4096
@@ -49,7 +68,7 @@ char * pb_tmp_path = NULL;
 
 char * root_mount_point = "/";
 
-
+char * selfie_sound_url = "";
 
 float selfie_dog_sensitivity = 0.8;
 float selfie_cat_sensitivity = 0.8;
@@ -58,6 +77,17 @@ float selfie_person_sensitivity = 0.3;
 float selfie_mot_sensitivity = 0.8;
 int selfie_timeout = 60*60*4; //2000;
 int selfie_length = 25;
+
+int pb_led_enable = 1;
+int pb_selfie_enable = 1;
+
+int nice_upnp_enable = 1;
+
+int cedar_stream_bitrate = 300000;
+int cedar_selfie_bitrate = 1024*1024;
+int cedar_max_bitrate = 1024*1024;
+int cedar_min_bitrate = 100000;
+int cedar_inc_bitrate = 1024;
 
 int pb_color_fx = 0;
 int pb_exposure = 0;
@@ -197,9 +227,14 @@ void pbchown (const char *file_path,const char *user_name, const char *group_nam
   }
 }
 
+
+
 void pbtouch(char *fn ) {
+	PBPRINTF("TOCUHING %p\n",fn);
 	FILE * fptr = fopen(fn,"w");
-	fclose(fptr);
+	if (fptr!=NULL) {
+		fclose(fptr);
+	}
 }
 
 /*struct process_guard_helper_s {
@@ -537,39 +572,104 @@ char * executable_path() {
 	return dest;
 }
 
-char * get_config(char * key) {
+char * config(char * key, char * v_str) {
+	PBPRINTF("CALLING CONFIG WITH %s %s\n",key,key);
+	PBPRINTF("CALLING CONFIG WITH %s %s\n",key,v_str);
 	char * r = (char*)malloc(sizeof(char)*128);
 	if (r==NULL) {
 		PBPRINTF("FAILED TO MALLOC in get config!\n");
 		exit(1);
 	}
 	r[0]='\0';
-	if (strncmp(key,"selfie_dog_sensitivity",strlen("selfie_dog_sensitivity"))==0) {
+	if (SAFECMP(key,"selfie_dog_sensitivity")==0) {
+		if (v_str!=NULL) 
+			selfie_dog_sensitivity = atof(v_str);
 		sprintf(r,"%0.4f",selfie_dog_sensitivity);
-	} else if (strncmp(key,"selfie_cat_sensitivity",strlen("selfie_cat_sensitivity"))==0) {
+	} else if (SAFECMP(key,"selfie_cat_sensitivity")==0) {
+		if (v_str!=NULL) 
+			selfie_cat_sensitivity = atof(v_str);
 		sprintf(r,"%0.4f",selfie_cat_sensitivity);
-	} else if (strncmp(key,"selfie_pet_sensitivity",strlen("selfie_pet_sensitivity"))==0) {
+	} else if (SAFECMP(key,"selfie_pet_sensitivity")==0) {
+		if (v_str!=NULL) 
+			selfie_pet_sensitivity = atof(v_str);
 		sprintf(r,"%0.4f",selfie_pet_sensitivity);
-	} else if (strncmp(key,"selfie_mot_sensitivity",strlen("selfie_mot_sensitivity"))==0) {
+	} else if (SAFECMP(key,"selfie_mot_sensitivity")==0) {
+		if (v_str!=NULL) 
+			selfie_mot_sensitivity = atof(v_str);
 		sprintf(r,"%0.4f",selfie_mot_sensitivity);
-	} else if (strncmp(key,"stddev_multiplier",strlen("stddev_multiplier"))==0) {
+	} else if (SAFECMP(key,"selfie_sound_url")==0) {
+		free(r);
+		if (v_str!=NULL) 
+			selfie_sound_url=strdup(v_str);
+		r = strdup(selfie_sound_url);
+	} else if (SAFECMP(key,"stddev_multiplier")==0) {
+		if (v_str!=NULL) 
+			stddev_multiplier = atoi(v_str);
 		sprintf(r,"%d",stddev_multiplier);
-	} else if (strncmp(key,"selfie_timeout",strlen("selfie_timeout"))==0) {
+	} else if (SAFECMP(key,"selfie_timeout")==0) {
+		if (v_str!=NULL) 
+			selfie_timeout = atoi(v_str);
 		sprintf(r,"%d",selfie_timeout);
-	} else if (strncmp(key,"selfie_length",strlen("selfie_length"))==0) {
+	} else if (SAFECMP(key,"selfie_length")==0) {
+		if (v_str!=NULL) 
+			selfie_length = atoi(v_str);
 		sprintf(r,"%d",selfie_length);
-	} else if (strncmp(key,"master_volume",strlen("master_volume"))==0) {
+	} else if (SAFECMP(key,"master_volume")==0) {
+		if (v_str!=NULL) 
+			master_volume = atoi(v_str);
 		sprintf(r,"%ld",master_volume);
-	} else if (strncmp(key,"pb_color_fx",strlen("pb_color_fx"))==0) {
+	} else if (SAFECMP(key,"pb_color_fx")==0) {
+		if (v_str!=NULL) 
+			pb_color_fx = atoi(v_str);
 		sprintf(r,"%d",pb_color_fx);
-	} else if (strncmp(key,"pb_exposure",strlen("pb_exposure"))==0) {
+	} else if (SAFECMP(key,"pb_exposure")==0) {
+		if (v_str!=NULL) 
+			pb_exposure = atoi(v_str);
 		sprintf(r,"%d",pb_exposure);
-	} else if (strncmp(key,"pb_hflip",strlen("pb_hflip"))==0) {
+	} else if (SAFECMP(key,"pb_hflip")==0) {
+		if (v_str!=NULL) 
+			pb_hflip = atoi(v_str);
 		sprintf(r,"%d",pb_hflip);
-	} else if (strncmp(key,"pb_vflip",strlen("pb_vflip"))==0) {
+	} else if (SAFECMP(key,"pb_vflip")==0) {
+		if (v_str!=NULL) 
+			pb_vflip = atoi(v_str);
 		sprintf(r,"%d",pb_vflip);
-	} else if (strncmp(key,"pb_white_balance",strlen("pb_white_balance"))==0) {
+	} else if (SAFECMP(key,"pb_white_balance")==0) {
+		if (v_str!=NULL) 
+			pb_white_balance = atoi(v_str);
 		sprintf(r,"%d",pb_white_balance);
+	} else if (SAFECMP(key,"pb_selfie_enable")==0) {
+		if (v_str!=NULL) 
+			pb_selfie_enable = atoi(v_str);
+		sprintf(r,"%d",pb_selfie_enable);
+	} else if (SAFECMP(key,"pb_led_enable")==0) {
+		if (v_str!=NULL) 
+			pb_led_enable = atoi(v_str);
+		sprintf(r,"%d",pb_led_enable);
+	} else if (SAFECMP(key,"nice_upnp_enable")==0) {
+		if (v_str!=NULL) 
+			nice_upnp_enable = atoi(v_str);
+		sprintf(r,"%d",nice_upnp_enable);
+	} else if (SAFECMP(key,"cedar_stream_bitrate")==0) {
+		if (v_str!=NULL) 
+			cedar_stream_bitrate = atoi(v_str);
+		sprintf(r,"%d",cedar_stream_bitrate);
+	} else if (SAFECMP(key,"cedar_selfie_bitrate")==0) {
+		if (v_str!=NULL) 
+			cedar_selfie_bitrate = atoi(v_str);
+		sprintf(r,"%d",cedar_selfie_bitrate);
+	} else if (SAFECMP(key,"cedar_max_bitrate")==0) {
+		if (v_str!=NULL) 
+			cedar_max_bitrate = atoi(v_str);
+		sprintf(r,"%d",cedar_max_bitrate);
+	} else if (SAFECMP(key,"cedar_min_bitrate")==0) {
+		if (v_str!=NULL) 
+			cedar_min_bitrate = atoi(v_str);
+		sprintf(r,"%d",cedar_min_bitrate);
+	} else if (SAFECMP(key,"cedar_inc_bitrate")==0) {
+		if (v_str!=NULL) 
+			cedar_inc_bitrate = atoi(v_str);
+		sprintf(r,"%d",cedar_inc_bitrate);
 	} else {
 		free(r);
 		return NULL;
@@ -577,37 +677,12 @@ char * get_config(char * key) {
 	return r;
 }
 
-int set_config(char * key, char * v_str) {
-	if (strncmp(key,"selfie_dog_sensitivity",strlen("selfie_dog_sensitivity"))==0) {
-		selfie_dog_sensitivity = atof(v_str);
-	} else if (strncmp(key,"selfie_cat_sensitivity",strlen("selfie_cat_sensitivity"))==0) {
-		selfie_cat_sensitivity = atof(v_str);
-	} else if (strncmp(key,"selfie_pet_sensitivity",strlen("selfie_pet_sensitivity"))==0) {
-		selfie_pet_sensitivity = atof(v_str);
-	} else if (strncmp(key,"selfie_mot_sensitivity",strlen("selfie_mot_sensitivity"))==0) {
-		selfie_mot_sensitivity = atof(v_str);
-	} else if (strncmp(key,"stddev_multiplier",strlen("stddev_multiplier"))==0) {
-		stddev_multiplier = atoi(v_str);
-	} else if (strncmp(key,"selfie_timeout",strlen("selfie_timeout"))==0) {
-		selfie_timeout = atoi(v_str);
-	} else if (strncmp(key,"selfie_length",strlen("selfie_length"))==0) {
-		selfie_length = atoi(v_str);
-	} else if (strncmp(key,"master_volume",strlen("master_volume"))==0) {
-		master_volume = atoi(v_str);
-	} else if (strncmp(key,"pb_color_fx",strlen("pb_color_fx"))==0) {
-		pb_color_fx = atoi(v_str);
-	} else if (strncmp(key,"pb_exposure",strlen("pb_exposure"))==0) {
-		pb_exposure = atoi(v_str);
-	} else if (strncmp(key,"pb_hflip",strlen("pb_hflip"))==0) {
-		pb_hflip = atoi(v_str);
-	} else if (strncmp(key,"pb_vflip",strlen("pb_vflip"))==0) {
-		pb_vflip = atoi(v_str);
-	} else if (strncmp(key,"pb_white_balance",strlen("pb_white_balance"))==0) {
-		pb_white_balance = atoi(v_str);
-	} else {
-		return -1;
-	} 
-	return 0;
+char * get_config(char * key) {
+	return config(key,NULL);
+}
+
+char * set_config(char * key, char * v_str) {
+	return config(key,v_str);
 }
 
 void pb_config_read() {
@@ -668,6 +743,10 @@ void pb_config_write() {
 	offset+=sprintf(buffer+offset, "selfie_length\t%s\n", s);
 	free(s);
 
+	s=get_config("selfie_sound_url");
+	offset+=sprintf(buffer+offset, "selfie_sound_url\t%s\n", s);
+	free(s);
+
 	s=get_config("master_volume");
 	offset+=sprintf(buffer+offset, "master_volume\t%s\n", s);
 	free(s);
@@ -685,6 +764,33 @@ void pb_config_write() {
 	free(s);
 	s=get_config("pb_white_balance");
 	offset+=sprintf(buffer+offset, "pb_white_balance\t%s\n", s);
+	free(s);
+
+	s=get_config("pb_selfie_enable");
+	offset+=sprintf(buffer+offset, "pb_selfie_enable\t%s\n", s);
+	free(s);
+	s=get_config("pb_led_enable");
+	offset+=sprintf(buffer+offset, "pb_led_enable\t%s\n", s);
+	free(s);
+
+	s=get_config("nice_upnp_enable");
+	offset+=sprintf(buffer+offset, "nice_upnp_enable\t%s\n", s);
+	free(s);
+
+	s=get_config("cedar_stream_bitrate");
+	offset+=sprintf(buffer+offset, "cedar_stream_bitrate\t%s\n", s);
+	free(s);
+	s=get_config("cedar_selfie_bitrate");
+	offset+=sprintf(buffer+offset, "cedar_selfie_bitrate\t%s\n", s);
+	free(s);
+	s=get_config("cedar_max_bitrate");
+	offset+=sprintf(buffer+offset, "cedar_max_bitrate\t%s\n", s);
+	free(s);
+	s=get_config("cedar_min_bitrate");
+	offset+=sprintf(buffer+offset, "cedar_min_bitrate\t%s\n", s);
+	free(s);
+	s=get_config("cedar_inc_bitrate");
+	offset+=sprintf(buffer+offset, "cedar_inc_bitrate\t%s\n", s);
 	free(s);
 
 	offset+=sprintf(buffer+offset, "VERSION\t%s\n", version);
@@ -765,6 +871,34 @@ char * pb_rewrite(char * config, char * output_fn, char ** keys, char ** values,
 	pb_writeFile(output_fn,config_contents,strlen(config_contents));
 	free(config_contents);
 	return output_fn;
+}
+
+
+pb_log * pb_log_new(size_t sz) {
+	pb_log * pl = (pb_log * )malloc(sizeof(pb_log));
+	if (pl==NULL) {
+		PBPRINTF("FAILED TO ALLOCATE NEW LOG :(\n");
+		return NULL;
+	}
+	memset(pl,0,sizeof(pb_log));
+	char * log = (char*)malloc(sizeof(char)*sz);
+	if (log==NULL) {
+		free(pl);
+		return NULL;
+	}
+	log[0]='\0';
+	pl->log=log;
+	pl->log_used=0;
+	pl->log_len=sz;
+	return pl;
+}
+
+gboolean pb_log_add(pb_log* pl, char * s) {
+
+}
+
+gboolean pb_log_pop(pb_log* pl, size_t sz) {
+
 }
 
 #endif

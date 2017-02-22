@@ -22,10 +22,10 @@ static const DDLogLevel ddLogLevel = DDLogLevelWarning;
     NSString * pubsubserver_username;
     NSString * pubsubserver_protocol;
     
-    NSString * ns_stun_server;
-    NSString * ns_stun_port;
-    NSString * ns_stun_username;
-    NSString * ns_stun_password;
+    //NSString * ns_stun_server;
+    //NSString * ns_stun_port;
+    //NSString * ns_stun_username;
+    //NSString * ns_stun_password;
     
     int pubsubserver_port;
     pbsock * pbs;
@@ -37,7 +37,7 @@ static const DDLogLevel ddLogLevel = DDLogLevelWarning;
 -(void)setLoginArray:(NSDictionary *)dictionary;
 -(void)setDebug:(bool)d;
 -(void)setSounds:(NSArray *)snds;
--(bool)updatesAllowed ;
+-(NSString*)updatesAllowed ;
 -(NSMutableDictionary *)parseConfig:(NSString*)str;
 
 //PBS ops

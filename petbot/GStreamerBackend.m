@@ -86,30 +86,45 @@ GST_DEBUG_CATEGORY_STATIC (debug_category);
         //g_main_context_unref (context);
         
         
+
+        [self->vvc toLogin];
+    });
+    fprintf(stderr,"Glib loop started\n");
+}
+
+-(void) quit {
+    @synchronized(self) {
+    /*PBPRINTF("CALLING QUIT\n");
+    if (pipeline!=NULL) {
+        PBPRINTF("CALLING QUIT x1\n");
+        gst_element_set_state (pipeline, GST_STATE_NULL);
+        pipeline=NULL;
+    }
+    if (main_loop!=nil) {
+        PBPRINTF("CALLING QUIT x2\n");
+        nicesrc=NULL;
+        rtph264depay=NULL;
+        avdec_h264=NULL;
+        videoconvert=NULL;
+        autovideosink=NULL;
+        rtpjitterbuffer=NULL;
+        g_main_loop_quit(main_loop);
+        g_main_loop_unref (main_loop);
+        main_loop=NULL;
+    }
+    PBPRINTF("CALLING QUITx 4\n");*/
+    if (main_loop!=NULL) {
+        g_main_loop_quit(main_loop);
         g_main_loop_unref (main_loop);
         main_loop = NULL;
         
         if (launched==1) {
             gst_element_set_state (pipeline, GST_STATE_NULL);
             gst_object_unref (pipeline);
+            pipeline=NULL;
         }
-        [self->vvc toLogin];
-        fprintf(stderr,"EXIT MAIN LOOP\n");
-        GST_DEBUG ("Exited main loop");
-    });
-    fprintf(stderr,"Glib loop started\n");
-}
-
--(void) quit {
-    nicesrc=NULL;
-    rtph264depay=NULL;
-    avdec_h264=NULL;
-    videoconvert=NULL;
-    autovideosink=NULL;
-    rtpjitterbuffer=NULL;
-    //gst_element_set_state (pipeline, GST_STATE_NULL);
-    if (main_loop!=nil) {
-        g_main_loop_quit(main_loop);
+        fprintf(stderr,"EXIT MAIN LOOP xxx\n");
+    }
     }
 }
 
@@ -196,7 +211,9 @@ static void state_changed_cb (GstBus *bus, GstMessage *msg, GStreamerBackend *se
 }
 
 -(guint64*)get_jitter_stats {
-    if (rtpjitterbuffer!=NULL) {
+    
+    @synchronized(self) {
+    if (main_loop!=NULL && rtpjitterbuffer!=NULL) {
         GstStructure * stats;
         g_object_get (rtpjitterbuffer, "stats", &stats, NULL);
         //guint64 rtx_count, rtx_success_count, rtx_rtt, percent;
@@ -215,6 +232,7 @@ static void state_changed_cb (GstBus *bus, GstMessage *msg, GStreamerBackend *se
         return jitter_stats;
     }
     return nil;
+    }
 }
 
 -(uint) get_frames_rendered {
@@ -280,17 +298,6 @@ static void state_changed_cb (GstBus *bus, GstMessage *msg, GStreamerBackend *se
     //g_object_set( G_OBJECT(nicesrc), "port", udp_port,NULL);
     g_object_set( G_OBJECT(autovideosink), "sync",FALSE,NULL);
     
-    
-    /*pipeline = gst_parse_launch("videotestsrc ! warptv ! videoconvert ! autovideosink", &error);
-    if (error) {
-        gchar *message = g_strdup_printf("Unable to build pipeline: %s", error->message);
-        g_clear_error (&error);
-        [self setUIMessage:message];
-        g_free (message);
-        return;
-    }*/
-
-    /* Set the pipeline to READY, so it can already accept a window handle */
     //gst_element_set_state(pipeline, GST_STATE_READY);
     if(gst_element_set_state(pipeline, GST_STATE_PLAYING) == GST_STATE_CHANGE_FAILURE) {
         [self setUIMessage:"Failed to set pipeline to playing"];

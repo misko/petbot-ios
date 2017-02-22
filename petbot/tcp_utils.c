@@ -161,16 +161,90 @@ static int getaddrinfo_compat(
     return err;
 }
 
+void set_stun_server(stun_server * s, char * stun_addr_x, char * stun_port_x, char * stun_user_x, char * stun_password_x) {
+    s->addrv4[0]='\0';
+    s->addrv6[0]='\0';
+    if (stun_addr_x!=NULL) {
+        strcpy(s->hostname,stun_addr_x);
+        GResolver * r = g_resolver_get_default ();
+        GList * resolved_addresses = g_resolver_lookup_by_name(r,stun_addr_x,NULL,NULL);
+        GList *l;
+        for (l = resolved_addresses; l != NULL; l = l->next) {
+            GInetAddress *address = G_INET_ADDRESS (l->data);
+            if (address!=NULL) {
+                s->resolved=(unsigned long)time(NULL);
+                GSocketFamily f = g_inet_address_get_family(address);
+                if (f==G_SOCKET_FAMILY_IPV6) {
+                    PBPRINTF("GLIB ADDY V6 %s\n",g_inet_address_to_string(address));
+                    strcpy(s->addrv6,g_inet_address_to_string(address));
+                } else if (f==G_SOCKET_FAMILY_IPV4) {
+                    PBPRINTF("GLIB ADDY V4 %s\n",g_inet_address_to_string(address));
+                    strcpy(s->addrv4,g_inet_address_to_string(address));
+                } else {
+                    PBPRINTF("GLIB ADDY WTF ?%s\n",g_inet_address_to_string(address));
+                }
+            }
+        }
+        //char * stun_addr = hostname_to_ip_str2(stun_addr_x,atoi(stun_port_x));
+        
+        /*char * stun_addr = hostname_to_ip_str(stun_addr_x,atoi(stun_port_x));
+        if (stun_addr!=NULL){
+            PBPRINTF("STUN ADDR %s\n",stun_addr);
+        }*/
+        //strcpy(s->addr,stun_addr);
+    }
+    PBPRINTF("WTF1 %s\n",stun_port_x);
+    s->port = atoi(stun_port_x);
+    s->user[0]='\0';
+    if (stun_user_x!=NULL) {
+        strcpy(s->user,stun_user_x);
+    }
+    PBPRINTF("WTF1 %s\n",stun_password_x);
+    s->passwd[0]='\0';
+    if (stun_password_x!=NULL) {
+        strcpy(s->passwd,stun_password_x);
+    }
+    PBPRINTF("WTF2\n");
+}
+
+
+void clear_stun_servers() {
+    PBPRINTF("CLEAR STUN SERVERS\n");
+    stun_server * c = stun_servers.next;
+    while (c!=NULL) {
+        stun_server * n = c->next;
+        c->next=NULL;
+        PBPRINTF("CLEAR STUN SERVERS free %p\n",c);
+        free(c);
+        c=n;
+    }
+    stun_servers.next=NULL;
+    PBPRINTF("CLEAR STUN SERVERS - done\n");
+}
+
+void add_stun_server(char * stun_addr_x, char * stun_port_x, char * stun_user_x, char * stun_password_x) {
+    stun_server * c = &stun_servers;
+    while (c->next!=NULL) {
+        if (strcmp(c->hostname,stun_addr_x)==0) {
+            break;
+        }
+        c=c->next;
+    }
+    if (strcmp(c->hostname,stun_addr_x)!=0) {
+        c->next = (stun_server*)malloc(sizeof(stun_server));
+        if (c->next==NULL) {
+            PBPRINTF("FAILED MALLOC");
+            exit(1);
+        }
+        c=c->next;
+        c->next=NULL;
+    }
+    set_stun_server(c,stun_addr_x,stun_port_x,stun_user_x,stun_password_x);
+}
+
 
 void set_stun(char * stun_addr_x, char * stun_port_x, char * stun_user_x, char * stun_password_x) {
-    stun_port = atoi(stun_port_x);
-    stun_addr = hostname_to_ip_str(stun_addr_x,atoi(stun_port_x));
-    if (stun_user_x!=NULL) {
-        stun_user = strdup(stun_user_x);
-    }
-    if (stun_password_x!=NULL) {
-        stun_passwd = stun_password_x;
-    }
+    set_stun_server(&stun_servers,stun_addr_x,stun_port_x,stun_user_x,stun_password_x);
 }
 
 #ifdef PBSSL
@@ -213,8 +287,60 @@ pbsock * connect_to_server_with_key(const char * hostname, int portno, SSL_CTX* 
         return pbs;
     }
     
+    
+    char * hostname_to_ip_str2(char* hostname, int portno) {
+        struct addrinfo * _addrinfo;
+        struct addrinfo * _res;
+        char _address[INET6_ADDRSTRLEN];
+        _address[0]='\0';
+        int errcode = 0;
+    
+        
+        errcode = getaddrinfo(hostname, NULL, NULL, &_addrinfo);
+        if(errcode != 0) {
+            printf("getaddrinfo: %s\n", gai_strerror(errcode));
+            return EXIT_FAILURE;
+        }
+        
+        char * ipstr = (char*)malloc(sizeof(char)*INET6_ADDRSTRLEN);
+        if (ipstr==NULL) {
+            fprintf(stderr,"FAILED TO MALLOC STRING!");
+            exit(1);
+        }
+        
+        for(_res = _addrinfo; _res != NULL; _res = _res->ai_next) {
+            
+            if(_res->ai_family == AF_INET6) {
+                if( NULL == inet_ntop( AF_INET6,
+                                      &((struct sockaddr_in *)_res->ai_addr)->sin_addr,
+                                      _address,
+                                      sizeof(_address) )
+                   ) {
+                    perror("inet_ntop");
+                    return EXIT_FAILURE;
+                }
+                printf("%s\n", _address);
+            } else if(_res->ai_family == AF_INET) {
+                if( NULL == inet_ntop( AF_INET,
+                                      &((struct sockaddr_in *)_res->ai_addr)->sin_addr,
+                                      _address,
+                                      sizeof(_address) )
+                   ) {
+                    perror("inet_ntop");
+                    return EXIT_FAILURE;
+                }
+                printf("%s\n", _address);
+            }
+        }
+        
+        strcpy(ipstr,_address);
+        return ipstr;
+    }
+    
+    
     char * hostname_to_ip_str(char * hostname, int portno) {
         
+        PBPRINTF("CONVERTING %s to IP\n",hostname);
         // connect to www.example.com port 80 (http)
         
         struct addrinfo hints, *res;
@@ -226,10 +352,18 @@ pbsock * connect_to_server_with_key(const char * hostname, int portno, SSL_CTX* 
         hints.ai_family = AF_UNSPEC;  // use IPv4 or IPv6, whichever
         hints.ai_socktype = SOCK_STREAM;
         
+        char * ipstr = (char*)malloc(sizeof(char)*INET6_ADDRSTRLEN);
+        if (ipstr==NULL) {
+            fprintf(stderr,"FAILED TO MALLOC STRING!");
+            exit(1);
+        }
+        
         // we could put "80" instead on "http" on the next line:
         char port_buffer[1024];
         sprintf(port_buffer,"%d",portno);
         getaddrinfo_compat(hostname, port_buffer, &hints, &res);
+        
+       
         
         // make a socket:
         sockfd = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
@@ -241,11 +375,7 @@ pbsock * connect_to_server_with_key(const char * hostname, int portno, SSL_CTX* 
         
         socklen_t len;
         struct sockaddr_storage addr;
-        char * ipstr = (char*)malloc(sizeof(char)*INET6_ADDRSTRLEN);
-        if (ipstr==NULL) {
-            fprintf(stderr,"FAILED TO MALLOC STRING!");
-            exit(1);
-        }
+
         int port;
         size_t llen = sizeof addr;
         getpeername(sockfd, (struct sockaddr*)&addr, &llen);
@@ -356,6 +486,11 @@ void *keep_alive_handler(void * v ) {
 		pthread_cond_timedwait(&(pbs->cond), &(pbs->send_mutex), &ts);
 		pthread_mutex_unlock(&(pbs->send_mutex));
 		//sleep(pbs->keep_alive_time);
+        //PBPRINTF("KEEP ALIVE %lu %lu\n",(unsigned long)time(NULL),pbs->last_recv);
+        if (((unsigned long)time(NULL)-pbs->last_recv)>2*pbs->keep_alive_time && pbs->state==PBSOCK_CONNECTED) {
+            pbsock_set_state(pbs, PBSOCK_DISCONNECTED);
+            PBPRINTF("DISCONNECT THROUGH RECV TIMEOUT!");
+        }
 		if (send_pbmsg(pbs, m)!=12) {
 			PBPRINTF("TCP_UTILS: KEEP ALIVE HAS DETECTED A DISCONNECT -waiting for parent to clean me up?! %s %s\n",pbsock_state_to_string(pbs), pbs->key != NULL ? pbs->key : "");
 			//other side disconnected!
@@ -408,6 +543,7 @@ pbsock * new_pbsock(int client_sock) {
 		PBPRINTF("TCP_UTILS: Failed to amlloc pbssock\n");
 		return NULL;
 	}
+    pbs->last_recv=(unsigned long)time(NULL);
 	pbs->state=PBSOCK_CONNECTING;
 #ifdef PBTHREADS
 	pbs->waiting_threads=0;
@@ -710,6 +846,10 @@ pbmsg * recv_all_pbmsg(pbsock *pbs, int read_all) {
 		FD_SET(pbs->client_sock,&readfds);
 		int max_sd = pbs->client_sock;
 		int activity = select( max_sd + 1 , &readfds , NULL , NULL , NULL);
+        if (pbs->state!=PBSOCK_CONNECTED) {
+            free_pbmsg(m);
+            return NULL;
+        }
 		if (FD_ISSET(pbs->client_sock, &readfds))  {
 			pthread_mutex_lock(&(pbs->send_mutex)); //prevent sending, only SSL-read or write can be called at any given time!
 			//read_size = SSL_read (pbs->ssl, &m->pbmsg_len, 4);
@@ -717,7 +857,8 @@ pbmsg * recv_all_pbmsg(pbsock *pbs, int read_all) {
 			//read_size += SSL_read (pbs->ssl, &m->pbmsg_type, 4);
 			read_size += pb_ssl_read (pbs, &m->pbmsg_type, 4);
 			//read_size += SSL_read (pbs->ssl, &m->pbmsg_from, 4);                 
-			read_size += pb_ssl_read (pbs, &m->pbmsg_from, 4);                 
+			read_size += pb_ssl_read (pbs, &m->pbmsg_from, 4);
+            pbs->last_recv=(unsigned long)time(NULL);
 			if (read_size!=12) {
 				PBPRINTF("TCP_UTILS: Failed to recieve correct size... %d\n",read_size);
 				if (pbs->state!=PBSOCK_EXIT) {

@@ -94,16 +94,12 @@
 }
 
 
--(bool)updatesAllowed {
+-(NSString*)updatesAllowed {
     NSString * x = [loginArray objectForKey:@"updates_allowed"];
-    if (x!=nil) {
-        if (![x isEqualToString:@""] ) {
-            return true;
-        } else {
-            return false;
-        }
+    if (x!=nil && ![x isEqualToString:@""] ) {
+        return x;
     }
-    return false;
+    return nil;
 }
 
 -(NSMutableArray*)pbserverLSWithType:(NSString *)ty {
@@ -173,13 +169,40 @@
     pubsubserver_server = [self->loginInfo objectForKey:@"server"];
     pubsubserver_username = [self->loginInfo objectForKey:@"username"];
     
+    //clear_stun_servers();
     
-    self->turnInfo=[loginArray objectForKey:@"turn"][0];
+    /*for (NSDictionary * t in [loginArray objectForKey:@"turn"]) {
+        NSString * ns_stun_server = [t objectForKey:@"server"];
+        NSString * ns_stun_port = [[t objectForKey:@"port"] stringValue];
+        NSString * ns_stun_username = [t objectForKey:@"username"];
+        NSString * ns_stun_password = [t objectForKey:@"password"];
+        if ([ns_stun_server isEqualToString:@"sfturn.petbot.com"]) {
+            //add_stun_server([ns_stun_server UTF8String], [ns_stun_port UTF8String], [ns_stun_username UTF8String], [ns_stun_password UTF8String]);
+            //add_stun_server("sfturn.petbot.com", "3488", [ns_stun_username UTF8String], [ns_stun_password UTF8String]);
+            add_stun_server("sfturn6.petbot.com", "3498", [ns_stun_username UTF8String], [ns_stun_password UTF8String]);
+        }
+    }*/
     
-    ns_stun_server = [self->turnInfo objectForKey:@"server"];
+    add_stun_server("sfturn.petbot.com", "3478", "misko", "misko");
+    add_stun_server("bangturn.petbot.com", "3478", "misko", "misko");
+    add_stun_server("torturn.petbot.com", "3478", "misko", "misko");
+    add_stun_server("frankturn.petbot.com", "3478", "misko", "misko");
+    //add_stun_server("sfturn.petbot.com", "3498", "misko", "misko");
+    
+    
+    //add_stun_server("sfturn6.petbot.com", "3488", "misko", "misko");
+    //add_stun_server("torturn.petbot.com", "3498", "misko", "misko");
+    stun_server * s = &stun_servers;
+    while(s!=NULL) {
+        PBPRINTF("STUN %s %d\n",s->hostname,s->port);
+        s=s->next;
+    }
+    //self->turnInfo=[loginArray objectForKey:@"turn"][0];
+    
+    /*ns_stun_server = [self->turnInfo objectForKey:@"server"];
     ns_stun_port = [[self->turnInfo objectForKey:@"port"] stringValue];
     ns_stun_username = [self->turnInfo objectForKey:@"username"];
-    ns_stun_password = [self->turnInfo objectForKey:@"password"];
+    ns_stun_password = [self->turnInfo objectForKey:@"password"];*/
 }
 
 -(void)toastStatus:(bool)status Message:(NSString*)msg {

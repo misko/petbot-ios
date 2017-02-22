@@ -131,13 +131,22 @@
 - (IBAction)byePressed:(id)sender {
     NSLog(@"BYE PRESSED");
     bye_pressed=true;
-    if (pbs!=nil) {
-        free_pbsock(pbs);
-        pbs=nil;
-        [gst_backend quit];
-    }
+    [self quit];
 }
 
+-(void)quit {
+    @synchronized(self) {
+        if (pbs!=nil) {
+            free_pbsock(pbs);
+            pbs=nil;
+        }
+        [gst_backend quit];
+        if (pbnio!=NULL && pbnio->agent!=NULL) {
+            g_object_unref(pbnio->agent);
+            pbnio->agent=NULL;
+        }
+    }
+}
 
 -(void)checkSelfie:(bool)activate {
     @synchronized(self) {
@@ -203,7 +212,10 @@
         [selfie_button setHidden:false];
         [selfie_play_button setHidden:true];
     }
+        
+        [[UIApplication sharedApplication] setApplicationIconBadgeNumber:waiting_selfies];
     });
+        
     
     }
 }
@@ -289,14 +301,11 @@
     while (true) {
         pbmsg * m = recv_pbmsg(pbs);
         if (m==NULL) {
-            if (!bye_pressed) {
+            if (!bye_pressed && [status isEqualToString:@""]) {
                 status = @"PetBot connection closed";
             }
-            if (pbs!=nil) {
-                free_pbsock(pbs);
-                pbs=nil;
-                [gst_backend quit];
-            }
+            
+            [self quit];
             return;
         }
         
@@ -309,12 +318,47 @@
                     if (uptime>20) {
                         petbot_found=true;
                         //semd ICE request
+                        
+                        //setup basic ICE
+                        int ret = pipe(ice_thread_pipes_to_child);
+                        assert(ret==0);
+                        ret= pipe(ice_thread_pipes_from_child);
+                        assert(ret==0);
+                        
+                        pbnio =  new_pbnio();
+                        if ([a count]>=5) {
+                            //TODO version is a[3]
+                            if ([a[4] intValue]>1) {
+                                pbnio->mode=NICE_MODE_SDP;
+                            }
+                        }
+                        pbnio->pipe_to_child=ice_thread_pipes_to_child[1];
+                        pbnio->pipe_to_parent=ice_thread_pipes_from_child[1];
+                        pbnio->pipe_from_parent=ice_thread_pipes_to_child[0];
+                        pbnio->pipe_from_child=ice_thread_pipes_from_child[0];
+                        pbnio->controlling=0;
+                        
+                        init_ice(pbnio);
+                        if (pbnio->error!=NULL) {
+                            //something went wrong
+                            NSString * s = [NSString stringWithFormat:@"ICE INITIALIZE FAILED : %@" ,[ NSString stringWithUTF8String:pbnio->error]];
+                            DDLogWarn(@"%@" , s);
+                            status = s;
+                            
+                            
+                            [self quit];
+                            return;
+                        } else {
+                            DDLogWarn(@"ICE INITIALIZE SUCCESS");
+                        }
                         pbmsg * ice_request_m = make_ice_request(ice_thread_pipes_from_child,ice_thread_pipes_to_child);
                         send_pbmsg(pbs, ice_request_m);
                         [self setConnectingText:[NSString stringWithFormat:@"Negotiating with your PetBot..."] ];
                     } else {
                         [self setConnectingText:[NSString stringWithFormat:@"Found your PetBot..."] ];
                     }
+                } else {
+                    PBPRINTF("WTF\n");
                 }
             }
         } else if ((m->pbmsg_type ^  (PBMSG_SUCCESS | PBMSG_RESPONSE | PBMSG_ICE | PBMSG_CLIENT | PBMSG_STRING))==0) {
@@ -322,7 +366,8 @@
             if (bb_streamer_id==0) {
                 bb_streamer_id = m->pbmsg_from;
                 fprintf(stderr,"BBSTREAMER ID %d\n",bb_streamer_id);
-                recvd_ice_response(m,pbnio);
+                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                recvd_ice_response(m,pbnio); //TODO BLOCKING ON PARSING!!!! IF NO OFFER OR INVALID THIS HANGS!
                 if (pbnio->error!=NULL) {
                     
                     //something went wrong
@@ -331,11 +376,8 @@
                     DDLogWarn(@"%@" , s);
                     status = s;
                     
-                    if (pbs!=nil) {
-                        free_pbsock(pbs);
-                        pbs=nil;
-                    }
-                    [gst_backend quit];
+                    
+                    [self quit];
                     return;
                 } else {
                     DDLogWarn(@"ICE NEGOTIATION SUCCESS");
@@ -350,19 +392,17 @@
                     }
                     DDLogWarn(@"%@",s);
                 }
-                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                //dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                     [gst_backend app_functionPBNIO:pbnio];
+                    //});
+                    fprintf(stderr,"LAUNCHED APP FUNCTION\n");
                 });
-                fprintf(stderr,"LAUNCHED APP FUNCTION\n");
             } else {
                 NSLog(@"OH OHHH...someone else connected");
                 status = @"Someone else connected :(";
                 
-                if (pbs!=nil) {
-                    free_pbsock(pbs);
-                    pbs=nil;
-                    [gst_backend quit];
-                }
+                
+                [self quit];
                 return;
             }
         } else if ((m->pbmsg_type ^  (PBMSG_CLIENT | PBMSG_VIDEO | PBMSG_RESPONSE | PBMSG_STRING | PBMSG_SUCCESS))==0) {
@@ -396,11 +436,8 @@
             if (m->pbmsg_from==bb_streamer_id) {
                 PBPRINTF("The other side exited!\n");
                 status = @"PetBot disconnected";
-                if (pbs!=nil) {
-                    free_pbsock(pbs);
-                    pbs=nil;
-                    [gst_backend quit];
-                }
+                
+                [self quit];
                 return;
                 //g_main_loop_quit(main_loop);
             } else {
@@ -486,40 +523,12 @@
     }
     
     DDLogWarn(@"SET STUN");
-    set_stun([ns_stun_server UTF8String], [ns_stun_port UTF8String], [ns_stun_username UTF8String], [ns_stun_password UTF8String]);
+    //add_stun_server([ns_stun_server UTF8String], [ns_stun_port UTF8String], [ns_stun_username UTF8String], [ns_stun_password UTF8String]);
     
     //Ask for version first!
     [self lookForPetBot:0];
     
-    //setup basic ICE
-    int ret = pipe(ice_thread_pipes_to_child);
-    assert(ret==0);
-    ret= pipe(ice_thread_pipes_from_child);
-    assert(ret==0);
-    
-    pbnio =  new_pbnio();
-    pbnio->pipe_to_child=ice_thread_pipes_to_child[1];
-    pbnio->pipe_to_parent=ice_thread_pipes_from_child[1];
-    pbnio->pipe_from_parent=ice_thread_pipes_to_child[0];
-    pbnio->pipe_from_child=ice_thread_pipes_from_child[0];
-    pbnio->controlling=0;
-    
-    init_ice(pbnio);
-    if (pbnio->error!=NULL) {
-        //something went wrong
-        NSString * s = [NSString stringWithFormat:@"ICE INITIALIZE FAILED : %@" ,[ NSString stringWithUTF8String:pbnio->error]];
-        DDLogWarn(@"%@" , s);
-        status = s;
-        
-        if (pbs!=nil) {
-            free_pbsock(pbs);
-            pbs=nil;
-        }
-        [gst_backend quit];
-        return;
-    } else {
-        DDLogWarn(@"ICE INITIALIZE SUCCESS");
-    }
+
     //start up the listener
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         [self listenForEvents];
@@ -538,11 +547,8 @@
 
 - (IBAction)abort_pressed:(id)sender {
     [self setConnectingText:@"Aborting!"];
-    if (pbs!=nil) {
-        free_pbsock(pbs);
-        pbs=nil;
-        [gst_backend quit];
-    }
+    
+    [self quit];
 }
 
 -(void)waitSFSPCA {
@@ -616,6 +622,14 @@
     }];
 }
 
+
+-(void)appBackground {
+    //NSLog(@"BACKGROUND!");
+    [self quit];
+}
+-(void)appForeground {
+    //NSLog(@"FOREGROUND!");
+}
 -(void)viewDidAppear:(BOOL)animated {
     NSLog(@"APPEARED!");
 }
@@ -623,6 +637,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appBackground) name:UIApplicationDidEnterBackgroundNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appForeground) name:UIApplicationWillEnterForegroundNotification object:nil];
+    [[UIApplication sharedApplication] setIdleTimerDisabled: YES];
     if (debug_mode==FALSE) {
         [message_label setHidden:TRUE];
         [fps_label setHidden:TRUE];
@@ -631,7 +648,7 @@
     petbot_found=false;
     bye_pressed=false;
     [self setConnectingText:@"Connecting..."];
-    
+    pbnio=NULL;
     [message_label setText:@""];
     [fps_label setText:@""];
     [pet_name setText:@""];

@@ -78,7 +78,7 @@ static const gchar *state_name[] = {"disconnected", "gathering", "connecting",
 
 static char * str_local_data(NiceAgent *agent, guint stream_id,
     guint component_id);
-static int parse_remote_data(NiceAgent *agent, guint stream_id,
+static int parse_remote_data(pb_nice_io * pbnio,
     guint component_id, char *line);
 static void cb_candidate_gathering_done(NiceAgent *agent, guint stream_id,
     gpointer data);
@@ -133,15 +133,17 @@ NiceAgent * init_ice(pb_nice_io * pbnio);
 	//mem leak free m
 	return our_nice;
 }*/
+
+
 //int start_nice_server_with_nice(int *to_child, int * from_child, pbmsg * ice_request, char * our_nice) {
 int start_nice_server_with_nice(pb_nice_io * pbnio) {
 
 	//we started with the other nice lets negotiate
 	//char * other_nice = ice_request->pbmsg;	
 
-	PBPRINTF("Our nice string, %s\n",pbnio->our_nice);
-	PBPRINTF("Other nice string %s\n",pbnio->other_nice);
-	
+	//PBPRINTF("Our nice string, %s\n",pbnio->our_nice);
+	//PBPRINTF("Other nice string %s\n",pbnio->other_nice);
+
 	pbmsg * m = new_pbmsg_from_str(pbnio->other_nice);
 	send_fd_pbmsg(pbnio->pipe_to_child,m);
 
@@ -150,6 +152,10 @@ int start_nice_server_with_nice(pb_nice_io * pbnio) {
 	while (!(pbnio->negotiation_done))
 		g_cond_wait(&(pbnio->negotiate_cond), &(pbnio->negotiate_mutex));
 	g_mutex_unlock(&(pbnio->negotiate_mutex));
+	if (pbnio->error!=NULL) {
+		PBPRINTF("START NICE SERVER ERROR %s\n",pbnio->error);
+		return -1;
+	}
         PBPRINTF("Returning from start ICE, everything went ok?\n");
 	return 0;
 }
@@ -220,8 +226,9 @@ pb_nice_io * new_pbnio(void) {
 
 //int recvd_ice_response(pbmsg * ice_response, int * from_child, int * to_child) {
 int recvd_ice_response(pbmsg * ice_response, pb_nice_io * pbnio) {
-	assert((ice_response->pbmsg_type ^ (PBMSG_ICE | PBMSG_CLIENT | PBMSG_RESPONSE | PBMSG_SUCCESS | PBMSG_STRING)) == 0) ;
-        PBPRINTF("RECVD ice response sending it to the thread\n");
+	assert( ( (ice_response->pbmsg_type ^ (PBMSG_ICE | PBMSG_CLIENT | PBMSG_RESPONSE | PBMSG_SUCCESS | PBMSG_STRING)) == 0)  ||
+		( (ice_response->pbmsg_type ^ (PBMSG_STRING | PBMSG_WEBRTC | PBMSG_RESPONSE))==0));
+        PBPRINTF("RECVD ice response sending it to the thread %s\n",ice_response->pbmsg);
 	//send_fd_pbmsg(to_child[1],ice_response);
 	send_fd_pbmsg(pbnio->pipe_to_child,ice_response);
 	//PBPRINTF("Waiting for negotiation to finish\n");
@@ -350,6 +357,52 @@ void start_nice(pbsock * pbs) {
 	//PBPRINTF("Waiting for negotiation to finish - Done - %p\n",agent);
 }*/
 
+
+int add_relays(NiceAgent * agent, int stream_id) {
+    int added=0;
+    //add the turn relays
+    stun_server * c = &stun_servers;
+    while (c!=NULL) {
+        PBPRINTF("TYRING RELAY %s | %s %s | %s\n",c->addrv4,c->addrv6,c->user
+                 ,c->passwd);
+        if (c->addrv4[0]!='\0') {
+            gboolean ret = nice_agent_set_relay_info(agent,stream_id,1,c->addrv4, c->port, c->user, c->passwd,NICE_RELAY_TYPE_TURN_UDP);
+            if (ret==FALSE) {
+                PBPRINTF("Failed to set the TURN RELAY!\n");
+            } else {
+                PBPRINTF("ADDED RELAY %s\n",c->addrv4);
+                    added++;
+            }
+            /*ret = nice_agent_set_relay_info(agent,stream_id,1,c->addrv4, c->port, c->user, c->passwd,NICE_RELAY_TYPE_TURN_TCP);
+            if (ret==FALSE) {
+                PBPRINTF("Failed to set the TURN RELAY!\n");
+            } else {
+                PBPRINTF("ADDED RELAY %s\n",c->addrv4);
+                added++;
+            }*/
+        }
+        
+        if (c->addrv6[0]!='\0') {
+            gboolean ret = nice_agent_set_relay_info(agent,stream_id,1,c->addrv6, c->port, c->user, c->passwd,NICE_RELAY_TYPE_TURN_UDP);
+            if (ret==FALSE) {
+                PBPRINTF("Failed to set the TURN RELAY!\n");
+            } else {
+                PBPRINTF("ADDED RELAY %s\n",c->addrv4);
+                added++;
+            }
+            /*ret = nice_agent_set_relay_info(agent,stream_id,1,c->addrv6, c->port, c->user, c->passwd,NICE_RELAY_TYPE_TURN_TCP);
+            if (ret==FALSE) {
+                PBPRINTF("Failed to set the TURN RELAY!\n");
+            } else {
+                PBPRINTF("ADDED RELAY %s\n",c->addrv4);
+                added++;
+            }*/
+        }
+        c=c->next;
+    }
+    return added;
+}
+
 //NiceAgent * init_ice(int controlling, int to_parent, int from_parent) {
 NiceAgent * init_ice(pb_nice_io * pbnio) {
   PBPRINTF("Called init_ice\n");
@@ -362,7 +415,7 @@ NiceAgent * init_ice(pb_nice_io * pbnio) {
     return NULL;
   }
 
-  PBPRINTF("Using stun server '[%s]:%u'\n", stun_addr, stun_port);
+  PBPRINTF("Using stun server '[%s]:%u'\n", stun_servers.hostname , stun_servers.port);
 
   //g_type_init();
 
@@ -381,14 +434,20 @@ NiceAgent * init_ice(pb_nice_io * pbnio) {
     pbnio->error="FAILED TO CREATE NICE AGENT";
     return NULL;
   }
-  
+    //g_object_set(pbnio->agent, "ice-udp",FALSE,NULL);
 
   // Set the STUN settings and controlling mode
-  if (stun_addr) {
-    g_object_set(pbnio->agent, "stun-server", stun_addr, NULL);
-    g_object_set(pbnio->agent, "stun-server-port", stun_port, NULL);
-  }
+   // g_object_set(pbnio->agent, "stun-server", stun_servers.addrv4, NULL);
+   // g_object_set(pbnio->agent, "stun-server-port", stun_servers.port, NULL);
+    
   g_object_set(pbnio->agent, "controlling-mode", pbnio->controlling, NULL);
+#ifndef TARGET_OS_IPHONE
+  if (nice_upnp_enable==1) {
+    g_object_set(pbnio->agent, "upnp", TRUE, NULL);
+  } else {
+    g_object_set(pbnio->agent, "upnp", FALSE, NULL);
+  }
+#endif
 
   // Connect to the signals
   g_signal_connect(pbnio->agent, "candidate-gathering-done",
@@ -406,14 +465,12 @@ NiceAgent * init_ice(pb_nice_io * pbnio) {
       return NULL;
   }
 
-  gboolean ret = nice_agent_set_relay_info(pbnio->agent,pbnio->stream_id,1,stun_addr, stun_port, stun_user, stun_passwd,NICE_RELAY_TYPE_TURN_UDP);
-  if (ret==FALSE) {
-    PBPRINTF("Failed to set the TURN RELAY!\n");
-  }
+    //add the turn relays
+    add_relays(pbnio->agent,pbnio->stream_id);
 
   // Attach to the component to receive the data
   // Without this call, candidates cannot be gathered
-  ret = nice_agent_attach_recv(pbnio->agent, pbnio->stream_id, 1, NULL, cb_nice_recv, NULL);
+  gboolean ret = nice_agent_attach_recv(pbnio->agent, pbnio->stream_id, 1, NULL, cb_nice_recv, NULL);
   //ret = nice_agent_attach_recv(agent, stream_id, 1, NULL, NULL, NULL);
   if (ret==FALSE) {
      PBPRINTF("Failed to attach the component to the NICE agent\n");
@@ -448,16 +505,113 @@ cb_candidate_gathering_done(NiceAgent *agent, guint _stream_id,
 {
   PBPRINTF("SIGNAL candidate gathering done\n");
 
-  gchar * sdp = nice_agent_generate_local_sdp (agent);
-  PBPRINTF("SDP\n%s\n",sdp);
 
   pb_nice_io * pbnio = data;
   //GIOChannel* gpipe  = data;
   // Candidate gathering is done. Send our local candidates over pbmsg
-  char * s = str_local_data(agent, _stream_id, 1);
-  pbmsg * m = new_pbmsg_from_str(s);
-  send_fd_pbmsg(pbnio->pipe_to_parent, m);
-  free_pbmsg(m); 
+    
+    char * s = NULL;
+    if (pbnio->mode==NICE_MODE_OLD) {
+        s = str_local_data(agent, _stream_id, 1);
+    } else if (pbnio->mode==NICE_MODE_SDP) {
+        s = nice_agent_generate_local_sdp (agent);
+    } else if (pbnio->mode==NICE_MODE_WEBRTC) {
+	//assert(1==0);
+	GString *sdpStr;
+	GSList *candidates;
+	GSList *walk;
+	NiceCandidate *lowest_prio_cand = NULL;
+	gchar addr[NICE_ADDRESS_STRING_LEN+1];
+	gchar *ufrag, *pwd;
+	gchar *line;
+
+	nice_agent_get_local_credentials (pbnio->agent, pbnio->stream_id, &ufrag, &pwd);
+	candidates = nice_agent_get_local_candidates (pbnio->agent, pbnio->stream_id, 1);
+
+	for (walk = candidates; walk; walk = walk->next) {
+		NiceCandidate *cand = walk->data;
+		//TODO IPV 6?
+		//if (nice_address_ip_version (&cand->addr) == 6)
+		//	continue;
+
+		if (!lowest_prio_cand ||
+				lowest_prio_cand->priority < cand->priority)
+			lowest_prio_cand = cand;
+	}
+
+
+	//TODO WTF IS THIS?
+	candidates = g_slist_concat (candidates,
+			nice_agent_get_local_candidates (pbnio->agent, pbnio->stream_id, 2));
+
+	nice_address_to_string (&lowest_prio_cand->addr, addr);
+	
+	char * fingerprint = "";
+	if (pbnio->webrtc_fingerprint!=NULL) {
+		fingerprint=pbnio->webrtc_fingerprint;
+	}
+	//generate_fingerprint (CERT_KEY_PEM_FILE);
+
+	sdpStr = g_string_new ("");
+	g_string_append_printf (sdpStr,
+			"v=0\n"
+			"o=- 2750483185 0 IN IP4 %s\n"
+			"s=Streaming test\n"
+			"t=0 0\n"
+			"a=fingerprint:sha-256 %s\n"
+			"a=group:BUNDLE video\n"
+			"m=video %d RTP/SAVPF 96\n"
+			"a=rtpmap:96 H264/90000\n"
+			"a=fmtp:96 profile-level-id=42e01f\n"
+			"a=send\n"
+			"a=mid:video\n"
+			"a=rtcp-mux\n",
+			addr, fingerprint, nice_address_get_port (&lowest_prio_cand->addr));
+	fprintf(stderr,"X 1- !!\n");
+
+
+	char buffer[4096];
+	gchar * sdp = nice_agent_generate_local_stream_sdp(agent,1,TRUE);
+	size_t sdp_offset = 0;
+	size_t buffer_offset = 0;
+	for (sdp_offset=0; sdp[sdp_offset]!='\0'; sdp_offset++) {
+		if (sdp[sdp_offset]=='\n') {
+			buffer[buffer_offset]='\0';
+			if (buffer[0]!='m') {
+				g_string_append_printf(sdpStr,"%s\n",buffer);
+			}
+			buffer_offset=0;
+		} else {
+			buffer[buffer_offset++]=sdp[sdp_offset];
+		}
+	}
+	fprintf(stderr,"X 4 !!\n");
+
+	g_free (ufrag);
+	g_free (pwd);
+	//g_free (fingerprint);
+
+	g_slist_free_full (candidates, (GDestroyNotify) nice_candidate_free);
+
+	//line = g_strdup_printf("{ \"sdp\" : \"%s\" }\n", sdpStr->str);
+	//line = g_strdup_printf("%s\0", sdpStr->str);
+	s = strdup(sdpStr->str);
+	//soup_message_body_append (msg->response_body, SOUP_MEMORY_TAKE, line,
+	//		strlen(line));
+	//component_send_response(new_pbmsg_from_str_wtype(line,PBMSG_WEBRTC | PBMSG_REQUEST | PBMSG_CLIENT | PBMSG_STRING));
+	//component_send_response(new_pbmsg_from_str_wtype(line,PBMSG_WEBRTC | PBMSG_REQUEST | PBMSG_CLIENT | PBMSG_STRING));
+	//g_string_free (sdpStr, FALSE);
+
+	//soup_message_set_status (msg, SOUP_STATUS_OK);
+	//soup_server_unpause_message (server, msg);
+
+	//g_object_unref (server);
+	//g_object_unref (msg);
+    }
+    pbmsg * m = new_pbmsg_from_str(s);
+    send_fd_pbmsg(pbnio->pipe_to_parent, m);
+    free_pbmsg(m);
+    free(s);
 
   //wait to hear response from the other side over pbmsg?
   g_io_add_watch(pbnio->gpipe, G_IO_IN, pipein_remote_info_cb, pbnio);
@@ -472,12 +626,20 @@ pipein_remote_info_cb (GIOChannel *source, GIOCondition cond,
   //gchar *line = NULL;
   int rval;
 
+  gboolean ret = TRUE;
   //there is data waiting lets read it and see if its the right data?
   pbmsg * m = recv_fd_pbmsg(pbnio->pipe_from_parent);
-
-  PBPRINTF( "Remote info is %s\n",m->pbmsg);
-  rval = parse_remote_data(pbnio->agent, pbnio->stream_id, 1, m->pbmsg);
-  gboolean ret = TRUE;
+  if (m==NULL) {
+      PBPRINTF("GOT BLANK MESSAGE TO PARSE??!\n");
+      pbnio->error = "NICE : failed to get NICE from other side";
+      g_mutex_lock(&(pbnio->negotiate_mutex));
+      pbnio->negotiation_done = TRUE;
+      g_cond_signal(&(pbnio->negotiate_cond));
+      g_mutex_unlock(&(pbnio->negotiate_mutex));
+      return ret;
+  }
+  //PBPRINTF( "Remote info is %s\n",m->pbmsg);
+  rval = parse_remote_data(pbnio, 1, m->pbmsg);
   if (rval == EXIT_SUCCESS) {
    ret = FALSE;
   } else {
@@ -502,7 +664,7 @@ cb_component_state_changed(NiceAgent *agent, guint _stream_id,
       _stream_id, component_id, state_name[state], state);
 
   //if (state == NICE_COMPONENT_STATE_READY) {
-  if (state == NICE_COMPONENT_STATE_READY || state == NICE_COMPONENT_STATE_CONNECTED) {
+  if (state == NICE_COMPONENT_STATE_READY || (pbnio->mode!=NICE_MODE_WEBRTC && state == NICE_COMPONENT_STATE_CONNECTED)) {
     NiceCandidate *local, *remote;
 
     // Get current selected candidate pair and print IP address used
@@ -521,8 +683,28 @@ cb_component_state_changed(NiceAgent *agent, guint _stream_id,
         ip_str_buffer[0]='\0';
         sprintf(ip_str_buffer,"[%s]:%d<->[%s]:%d",ipaddr_a,nice_address_get_port(&local->addr),ipaddr_b,nice_address_get_port(&remote->addr));
         pbnio->ice_pair=ip_str_buffer;
+	/*if (pbnio->mode==NICE_MODE_WEBRTC) {
+		if (pbnio->tx_pipeline!=NULL) {
+			gst_element_set_state (pbnio->tx_pipeline, GST_STATE_PLAYING);
+		}
+		if (pbnio->rx_pipeline!=NULL) {
+			gst_element_set_state (pbnio->rx_pipeline, GST_STATE_PLAYING);
+		}
+		component_send_response(new_pbmsg_from_str_wtype("udpsink 127.0.0.1 9090", PBMSG_VIDEO | PBMSG_REQUEST | PBMSG_STRING));
+        	PBPRINTF("NEGOTIATION COMPLETE WEBRTC!: %s\n",ip_str_buffer);
+	}*/
         PBPRINTF("NEGOTIATION COMPLETE: %s\n",ip_str_buffer);
     }
+
+    /*if (pbnio->mode==NICE_MODE_WEBRTC) {
+		if (gst_element_set_state (pbnio->tx_pipeline, GST_STATE_PLAYING)!=GST_STATE_CHANGE_SUCCESS) {
+			fprintf(stderr,"Failed to set TX PIPELIN!\n");
+		}
+		if (gst_element_set_state (pbnio->rx_pipeline, GST_STATE_PLAYING)!=GST_STATE_CHANGE_SUCCESS) {
+			fprintf(stderr,"Failed to set RX PIPELIN!\n");
+		}
+
+    }*/
 
     g_mutex_lock(&(pbnio->negotiate_mutex));
     pbnio->negotiation_done = TRUE;
@@ -628,7 +810,7 @@ str_local_data (NiceAgent *agent, guint _stream_id, guint component_id)
   gchar ipaddr[INET6_ADDRSTRLEN];
   GSList *cands = NULL, *item;
 
-  char * buffer = (char*)malloc(16*1024*sizeof(char));
+  char * buffer = (char*)malloc(1024*1024*sizeof(char));
   if (buffer==NULL) {
     PBPRINTF("failed to ammlloc buffer\n");
     exit(1);
@@ -686,76 +868,106 @@ str_local_data (NiceAgent *agent, guint _stream_id, guint component_id)
 }
 
 
-static int
-parse_remote_data(NiceAgent *agent, guint _stream_id,
-    guint component_id, char *line)
-{
-  fprintf(stderr,"PARSE REMOTE DATA\n");
-  GSList *remote_candidates = NULL;
-  gchar **line_argv = NULL;
-  const gchar *ufrag = NULL;
-  const gchar *passwd = NULL;
-  int result = EXIT_FAILURE;
-  int i;
-
-  line_argv = g_strsplit_set (line, " \t\n", 0);
-  for (i = 0; line_argv && line_argv[i]; i++) {
-    if (strlen (line_argv[i]) == 0)
-      continue;
-
-    // first two args are remote ufrag and password
-    if (!ufrag) {
-      ufrag = line_argv[i];
-    } else if (!passwd) {
-      passwd = line_argv[i];
-    } else {
-      // Remaining args are serialized canidates (at least one is required)
-      NiceCandidate *c = parse_candidate(line_argv[i], _stream_id);
-
-      if (c == NULL) {
-        g_message("failed to parse candidate: %s", line_argv[i]);
-        PBPRINTF("failed to parse candidate: %s", line_argv[i]);
-        goto end;
-      }
-        
-        if (force_relay==TRUE) {
-            if (c->type==NICE_CANDIDATE_TYPE_RELAYED ) {
-                remote_candidates = g_slist_prepend(remote_candidates, c);
-            }
-        } else if (no_candidates==TRUE) {
-            
-        } else {
-            remote_candidates = g_slist_prepend(remote_candidates, c);
-        }
+gboolean add_candidate(NiceCandidate *cand,GSList **remote_candidates) {
+    if (cand==NULL) {
+        return FALSE;
     }
-  }
-  if (ufrag == NULL || passwd == NULL || remote_candidates == NULL) {
-    g_message("line must have at least ufrag, password, and one candidate");
-    PBPRINTF("line must have at least ufrag, password, and one candidate");
-    goto end;
-  }
+    if (force_relay==TRUE) {
+        if (cand->type==NICE_CANDIDATE_TYPE_RELAYED ) {
+            *remote_candidates = g_slist_prepend(*remote_candidates, cand);
+            return TRUE;
+        }
+    } else if (no_candidates==TRUE) {
+        
+    } else {
+        *remote_candidates = g_slist_prepend(*remote_candidates, cand);
+        return TRUE;
+    }
+    return FALSE;
+}
 
-  if (!nice_agent_set_remote_credentials(agent, _stream_id, ufrag, passwd)) {
-    g_message("failed to set remote credentials");
-    PBPRINTF("failed to set remote credentials");
-    goto end;
-  }
-
-  // Note: this will trigger the start of negotiation.
-  if (nice_agent_set_remote_candidates(agent, _stream_id, component_id,
-      remote_candidates) < 1) {
-    g_message("failed to set remote candidates");
-    PBPRINTF("failed to set remote candidates");
-    goto end;
-  }
-
-  result = EXIT_SUCCESS;
-
- end:
-  if (line_argv != NULL)
-    g_strfreev(line_argv);
-  if (remote_candidates != NULL)
-    g_slist_free_full(remote_candidates, (GDestroyNotify)&nice_candidate_free);
-
-  return result;
+static int
+parse_remote_data(pb_nice_io * pbnio,
+                  guint component_id, char *line)
+{
+    PBPRINTF("PARSE REMOTE DATA\n");
+    GSList *remote_candidates = NULL;
+    
+    const gchar *ufrag = NULL;
+    const gchar *passwd = NULL;
+    int result = EXIT_FAILURE;
+    gchar **line_argv = NULL;
+    
+    if (pbnio->mode==NICE_MODE_OLD) {
+        line_argv = g_strsplit_set (line, " \t\n", 0);
+        int i;
+        for (i = 0; line_argv && line_argv[i]; i++) {
+            if (strlen (line_argv[i]) == 0)
+                continue;
+            
+            // first two args are remote ufrag and password
+            if (!ufrag) {
+                ufrag = line_argv[i];
+            } else if (!passwd) {
+                passwd = line_argv[i];
+            } else {
+                // Remaining args are serialized canidates (at least one is required)
+                NiceCandidate *cand = parse_candidate(line_argv[i], pbnio->stream_id);
+                add_candidate(cand,&remote_candidates);
+            }
+        }
+    } else if (pbnio->mode==NICE_MODE_SDP || pbnio->mode==NICE_MODE_WEBRTC) {
+        //CANDIDATES
+	ufrag = get_substring ("^a=ice-ufrag:([A-Za-z0-9\\+\\/]+)$", line);
+	passwd = get_substring ("^a=ice-pwd:([A-Za-z0-9\\+\\/]+)$", line);
+        gchar ** sdp_lines = g_strsplit (line, "\n", 0);
+        guint i =0;
+        for (i = 0; sdp_lines && sdp_lines[i]; i++) {
+            if (g_str_has_prefix (sdp_lines[i], "a=ice-ufrag:")) {
+                //sdp_lines[i] + 12
+		if (ufrag==NULL) {
+                	ufrag = get_substring ("^a=ice-ufrag:([A-Za-z0-9\\+\\/]+)$", sdp_lines[i]);
+		}
+            } else if (g_str_has_prefix (sdp_lines[i], "a=ice-pwd:")) {
+                //sdp_lines[i] + 10
+		if (passwd==NULL) {
+                	passwd = get_substring ("^a=ice-pwd:([A-Za-z0-9\\+\\/]+)$", sdp_lines[i]);
+		}
+            } else if (g_str_has_prefix (sdp_lines[i], "a=candidate:")) {
+                NiceCandidate * cand = nice_agent_parse_remote_candidate_sdp(pbnio->agent,pbnio->stream_id,sdp_lines[i]);
+                add_candidate(cand,&remote_candidates);
+            }
+        }
+        
+    } else {
+        PBPRINTF("WTF !! NO HANDLED XXDAFSF\n");
+	assert(1==0);
+    }
+    
+    if (ufrag == NULL || passwd == NULL || remote_candidates == NULL) {
+        g_message("line must have at least ufrag, password, and one candidate");
+        PBPRINTF("line must have at least ufrag, password, and one candidate");
+        goto end;
+    }
+    
+    if (!nice_agent_set_remote_credentials(pbnio->agent, pbnio->stream_id, ufrag, passwd)) {
+        g_message("failed to set remote credentials");
+        PBPRINTF("failed to set remote credentials");
+        goto end;
+    }
+    result= EXIT_SUCCESS;
+    
+    // Note: this will trigger the start of negotiation.
+    if (nice_agent_set_remote_candidates(pbnio->agent, pbnio->stream_id, component_id,
+                                         remote_candidates) < 1) {
+        g_message("failed to set remote candidates");
+        PBPRINTF("failed to set remote candidates");
+        goto end;
+    }
+end:
+    if (line_argv != NULL)
+        g_strfreev(line_argv);
+    if (remote_candidates != NULL)
+        g_slist_free_full(remote_candidates, (GDestroyNotify)&nice_candidate_free);
+    return result;
 }

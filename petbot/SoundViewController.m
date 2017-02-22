@@ -225,7 +225,7 @@
     }
     if ([cell_name isEqualToString:@"update"]) {
         ButtonCell * bc = cell;
-        if ([self updatesAllowed]) {
+        if ([self updatesAllowed]!=nil) {
             [bc.ui_button setEnabled:true];
             [bc.ui_button addTarget:self action:@selector(updateButton:) forControlEvents:UIControlEventTouchUpInside];
         } else {
@@ -496,7 +496,14 @@
 }
 
 -(IBAction)updateButton:(id)sender {
-        [self send_msg:"UPDATE updates@updates.petbot.ca:/" type:(PBMSG_UPDATE | PBMSG_STRING | PBMSG_REQUEST)];
+    NSString * updates_allowed= [self updatesAllowed];
+    if (updates_allowed!=nil && ![updates_allowed isEqualToString:@""]) {
+        if ([updates_allowed isEqualToString:@"dev"]) {
+            [self send_msg:"UPDATE updates-dev@updates.petbot.ca:/" type:(PBMSG_UPDATE | PBMSG_STRING | PBMSG_REQUEST)];
+        } else {
+            [self send_msg:"UPDATE updates@updates.petbot.ca:/" type:(PBMSG_UPDATE | PBMSG_STRING | PBMSG_REQUEST)];
+        }
+        
         UIAlertController *controller = [UIAlertController alertControllerWithTitle:@"Updating..."
                                                                             message:@"Do not unplug! Please wait until your petbot speaks \"PetBot operational\". Signing in again during this update will stop the update"
                                                                      preferredStyle:UIAlertControllerStyleAlert];
@@ -507,6 +514,7 @@
                                                             }];
         [controller addAction:alertAction];
         [self presentViewController:controller animated:YES completion:nil];
+    }
 }
 
 -(IBAction)helpButton:(id)sender {

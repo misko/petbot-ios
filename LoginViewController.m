@@ -38,6 +38,8 @@
         [self toastStatus:success Message:status];
         status=nil;
     }
+    
+    [[UIApplication sharedApplication] setIdleTimerDisabled: NO];
     [_login_button setEnabled:TRUE];
     [status_label setText:@""];
     
@@ -194,6 +196,7 @@
     [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
     [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
     [request setHTTPBody:jsonData];
+    [request setTimeoutInterval:10.0];
 
      [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
         
