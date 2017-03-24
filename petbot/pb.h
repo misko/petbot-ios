@@ -2,7 +2,7 @@
 #define PB_HEADER
 
 
-#define RELEASE 1
+//#define RELEASE 1
 
 #ifdef TARGET_OS_IPHONE
 #include <agent.h>

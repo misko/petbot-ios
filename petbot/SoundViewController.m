@@ -54,7 +54,6 @@
     
     int max_record_time;
 }
-@property (strong, nonatomic) IBOutlet UISlider *volumeSlider;
 @property (strong, nonatomic) IBOutlet UIButton *doneButton;
 
 @end
@@ -162,6 +161,7 @@
         if ([config objectForKey:@"master_volume"]!=nil) {
             [sc.ui_slider setEnabled:true];
             [sc.ui_slider setValue:[[config objectForKey:@"master_volume"] floatValue]/63];
+            //[sc.ui_slider removeTarget:nil action:NULL forControlEvents:UIControlEventAllEvents];
             [sc.ui_slider addTarget:self action:@selector(volumeChange:) forControlEvents:UIControlEventValueChanged];
         } else {
             [sc.ui_slider setEnabled:false];
@@ -170,6 +170,7 @@
     if ([cell_name isEqualToString:@"device_mute"]) {
         SwitchCell * sc = cell;
         [sc.ui_switch setEnabled:true];
+        [sc.ui_switch removeTarget:nil action:NULL forControlEvents:UIControlEventAllEvents];
         [sc.ui_switch addTarget:self action:@selector(setMute:) forControlEvents:UIControlEventValueChanged];
         NSString * device_mute_str =  [[NSUserDefaults standardUserDefaults] stringForKey:@"device_mute"];
         if (device_mute_str==nil || [device_mute_str isEqualToString:@""] || [device_mute_str isEqualToString:@"OFF"]) {
@@ -181,6 +182,7 @@
     if ([cell_name isEqualToString:@"selfie_sound_url"]) {
         ButtonCell * bc = cell;
         if (sounds!=nil && [config objectForKey:@"selfie_sound_url"]!=nil) {
+            [bc.ui_button removeTarget:nil action:NULL forControlEvents:UIControlEventAllEvents];
             [bc.ui_button addTarget:self action:@selector(selfieSoundSelect:) forControlEvents:UIControlEventTouchUpInside];
             [bc.ui_button setEnabled:true];
         } else {
@@ -190,6 +192,7 @@
     if ([cell_name isEqualToString:@"alert_sound"]) {
         ButtonCell * bc = cell;
         if (sounds!=nil) {
+            [bc.ui_button removeTarget:nil action:NULL forControlEvents:UIControlEventAllEvents];
             [bc.ui_button addTarget:self action:@selector(alertSoundSelect:) forControlEvents:UIControlEventTouchUpInside];
             [bc.ui_button setEnabled:true];
         } else {
@@ -198,8 +201,11 @@
     }
     if ([cell_name isEqualToString:@"record"]) {
         rc = cell;
+        [rc.ui_record_button removeTarget:nil action:NULL forControlEvents:UIControlEventAllEvents];
         [rc.ui_record_button addTarget:self action:@selector(recordTapped:) forControlEvents:UIControlEventTouchUpInside];
+        [rc.ui_play_button removeTarget:nil action:NULL forControlEvents:UIControlEventAllEvents];
         [rc.ui_play_button addTarget:self action:@selector(playTapped:) forControlEvents:UIControlEventTouchUpInside];
+        [rc.ui_upload_button removeTarget:nil action:NULL forControlEvents:UIControlEventAllEvents];
         [rc.ui_upload_button addTarget:self action:@selector(uploadTapped:) forControlEvents:UIControlEventTouchUpInside];
         
         
@@ -218,6 +224,7 @@
         if ([config objectForKey:@"pb_led_enable"]!=nil) {
             [sc.ui_switch setOn:[[config objectForKey:@"pb_led_enable"] intValue]==1];
             [sc.ui_switch setEnabled:true];
+            [sc.ui_switch removeTarget:nil action:NULL forControlEvents:UIControlEventAllEvents];
             [sc.ui_switch addTarget:self action:@selector(setLED:) forControlEvents:UIControlEventValueChanged];
         } else {
             [sc.ui_switch setEnabled:false];
@@ -227,6 +234,7 @@
         ButtonCell * bc = cell;
         if ([self updatesAllowed]!=nil) {
             [bc.ui_button setEnabled:true];
+            [bc.ui_button removeTarget:nil action:NULL forControlEvents:UIControlEventAllEvents];
             [bc.ui_button addTarget:self action:@selector(updateButton:) forControlEvents:UIControlEventTouchUpInside];
         } else {
             [bc.ui_button setEnabled:false];
@@ -234,10 +242,12 @@
     }
     if ([cell_name isEqualToString:@"reboot"]) {
         ButtonCell * bc = cell;
+        [bc.ui_button removeTarget:nil action:NULL forControlEvents:UIControlEventAllEvents];
         [bc.ui_button addTarget:self action:@selector(rebootButton:) forControlEvents:UIControlEventTouchUpInside];
     }
     if ([cell_name isEqualToString:@"help"]) {
         ButtonCell * bc = cell;
+        [bc.ui_button removeTarget:nil action:NULL forControlEvents:UIControlEventAllEvents];
         [bc.ui_button addTarget:self action:@selector(helpButton:) forControlEvents:UIControlEventTouchUpInside];
     }
     
@@ -250,6 +260,7 @@
             [vc.ui_stepper setMinimumValue:1];
             [vc.ui_stepper setValue:[[config objectForKey:@"selfie_timeout"] floatValue]/(60*60)];
             [vc.ui_label setText:[self secondsToStr:[vc.ui_stepper value]*60*60]];
+            [vc.ui_stepper removeTarget:nil action:NULL forControlEvents:UIControlEventAllEvents];
             [vc.ui_stepper addTarget:self action:@selector(selfieTimeoutChange:) forControlEvents:UIControlEventValueChanged];
             [vc.ui_stepper setEnabled:true];
         } else {
@@ -265,6 +276,7 @@
             [vc.ui_stepper setMinimumValue:15];
             [vc.ui_stepper setValue:[[config objectForKey:@"selfie_length"] floatValue]];
             [vc.ui_label setText:[self secondsToStr:[vc.ui_stepper value]]];
+            [vc.ui_stepper removeTarget:nil action:NULL forControlEvents:UIControlEventAllEvents];
             [vc.ui_stepper addTarget:self action:@selector(selfieLengthChange:) forControlEvents:UIControlEventValueChanged];
             [vc.ui_stepper setEnabled:true];
         } else {
@@ -277,6 +289,7 @@
         if ([config objectForKey:@"pb_selfie_enable"]!=nil) {
             [sc.ui_switch setOn:[[config objectForKey:@"pb_selfie_enable"] intValue]==1];
             [sc.ui_switch setEnabled:true];
+            [sc.ui_switch removeTarget:nil action:NULL forControlEvents:UIControlEventAllEvents];
             [sc.ui_switch addTarget:self action:@selector(setSelfie:) forControlEvents:UIControlEventValueChanged];
         } else {
             [sc.ui_switch setEnabled:false];
@@ -287,6 +300,7 @@
         if ([config objectForKey:@"selfie_pet_sensitivity"]!=nil) {
             [sc.ui_slider setEnabled:true];
             [sc.ui_slider setValue:[[config objectForKey:@"selfie_pet_sensitivity"] floatValue]];
+            //[sc.ui_slider removeTarget:nil action:NULL forControlEvents:UIControlEventAllEvents];
             [sc.ui_slider addTarget:self action:@selector(selfieSensitivityChange:) forControlEvents:UIControlEventValueChanged];
         } else {
             [sc.ui_slider setEnabled:false];
@@ -297,6 +311,8 @@
         if ([config objectForKey:@"selfie_mot_sensitivity"]!=nil) {
             [sc.ui_slider setEnabled:true];
             [sc.ui_slider setValue:[[config objectForKey:@"selfie_mot_sensitivity"] floatValue]];
+            NSLog(@"SETTING FLOAT TO %f" ,[[config objectForKey:@"selfie_mot_sensitivity"] floatValue]);
+            //[sc.ui_slider removeTarget:nil action:NULL forControlEvents:UIControlEventAllEvents];
             [sc.ui_slider addTarget:self action:@selector(motionSensitivityChange:) forControlEvents:UIControlEventValueChanged];
         } else {
             [sc.ui_slider setEnabled:false];
@@ -311,7 +327,7 @@
         [sc.ui_switch addTarget:self action:@selector(changeSwitch:) forControlEvents:UIControlEventValueChanged];
         //[ addTarget:<#(nullable id)#> action:<#(nonnull SEL)#> forControlEvents:<#(UIControlEvents)#>];
     }*/
-    NSLog(@"PROCESSED %@\n",cell_name);
+    //NSLog(@"PROCESSED %@\n",cell_name);
     
     return cell;
 }
@@ -624,6 +640,15 @@
     }
     if ((m->pbmsg_type ^ (PBMSG_CONFIG_SET | PBMSG_STRING | PBMSG_RESPONSE | PBMSG_SUCCESS))==0) {
         //just set something... lets check it?
+        NSMutableDictionary * config_update = [self parseConfig:[NSString stringWithUTF8String:m->pbmsg]];
+        for(id key in config_update) {
+            id value = [config_update objectForKey:key];
+            [config setValue:value forKey:key];
+        }
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [_tableview reloadData];
+        });
     }
     if ((m->pbmsg_type ^  (PBMSG_SUCCESS | PBMSG_RESPONSE | PBMSG_CONFIG_GET | PBMSG_STRING))==0) {
         config = [self parseConfig:[NSString stringWithUTF8String:m->pbmsg]];

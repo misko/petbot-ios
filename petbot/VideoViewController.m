@@ -309,7 +309,8 @@
             return;
         }
         
-        if ( (m->pbmsg_type ^ (PBMSG_CLIENT | PBMSG_STRING))==0 && strncmp(m->pbmsg,"UPTIME",strlen("UPTIME"))==0) {
+        if ( (m->pbmsg_type ^ (PBMSG_CLIENT | PBMSG_STRING))==0 &&
+            strncmp(m->pbmsg,"UPTIME",strlen("UPTIME"))==0) {
             if (petbot_found==false) {
                 NSString *msg = [NSString stringWithUTF8String:m->pbmsg];
                 NSArray * a = [msg componentsSeparatedByString:@" "];
@@ -317,7 +318,6 @@
                     int uptime = [a[1] intValue];
                     if (uptime>20) {
                         petbot_found=true;
-                        //semd ICE request
                         
                         //setup basic ICE
                         int ret = pipe(ice_thread_pipes_to_child);
@@ -338,7 +338,7 @@
                         pbnio->pipe_from_child=ice_thread_pipes_from_child[0];
                         pbnio->controlling=0;
                         
-                        init_ice(pbnio);
+                        init_ice(pbnio); //TODO WATCH OUT FOR TIMEOUTS HERE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                         if (pbnio->error!=NULL) {
                             //something went wrong
                             NSString * s = [NSString stringWithFormat:@"ICE INITIALIZE FAILED : %@" ,[ NSString stringWithUTF8String:pbnio->error]];
@@ -361,6 +361,11 @@
                     PBPRINTF("WTF\n");
                 }
             }
+        } else if ((m->pbmsg_type ^  (PBMSG_SUCCESS | PBMSG_RESPONSE | PBMSG_WEBRTC | PBMSG_CLIENT | PBMSG_STRING))==0) {
+            NSLog(@"OH OHHH...someone else connected");
+            status = @"Someone else connected :(";
+            [self quit];
+            return;
         } else if ((m->pbmsg_type ^  (PBMSG_SUCCESS | PBMSG_RESPONSE | PBMSG_ICE | PBMSG_CLIENT | PBMSG_STRING))==0) {
             //[self gstreamerSetUIMessage:@"Negotiating with your PetBot..."];
             if (bb_streamer_id==0) {

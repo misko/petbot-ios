@@ -20,12 +20,22 @@
     return self;
 }
 
+
 - (IBAction)sliderChange:(UISlider*)sender {
     [_sliderLabel setText:[NSString stringWithFormat:@"%.0f\%",100*[_ui_slider value]]];
 }
 
 -(void)layoutSubviews{
     [super layoutSubviews];
+    //[_ui_slider removeTarget:nil action:NULL forControlEvents:UIControlEventAllEvents];
+    [_sliderLabel setText:[NSString stringWithFormat:@"%.0f\%",100*[_ui_slider value]]];
+    [_ui_slider addTarget:self action:@selector(sliderChange:) forControlEvents:UIControlEventValueChanged];
+}
+
+-(void)prepareForReuse {
+    //[_ui_slider removeTarget:nil action:NULL forControlEvents:UIControlEventAllEvents];
+    [_ui_slider removeTarget:nil action:NULL forControlEvents:UIControlEventAllEvents];
+    [_sliderLabel setText:[NSString stringWithFormat:@"%.0f\%",100*[_ui_slider value]]];
     [_ui_slider addTarget:self action:@selector(sliderChange:) forControlEvents:UIControlEventValueChanged];
 }
 
